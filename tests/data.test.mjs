@@ -27,8 +27,9 @@ test("every non-airbnb place has GPS coordinates", () => {
     if (p.category === "airbnb") continue;
     assert.equal(typeof p.lat, "number", `lat not a number on ${p.id}`);
     assert.equal(typeof p.lng, "number", `lng not a number on ${p.id}`);
-    assert.ok(p.lat > 2 && p.lat < 3, `lat out of Melaka range on ${p.id}: ${p.lat}`);
-    assert.ok(p.lng > 102 && p.lng < 103, `lng out of Melaka range on ${p.id}: ${p.lng}`);
+    // Covers Melaka + Seremban (trip meetup) area on Peninsular Malaysia.
+    assert.ok(p.lat > 2 && p.lat < 3, `lat out of expected range on ${p.id}: ${p.lat}`);
+    assert.ok(p.lng > 101 && p.lng < 103, `lng out of expected range on ${p.id}: ${p.lng}`);
   }
 });
 

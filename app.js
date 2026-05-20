@@ -139,7 +139,7 @@ function escapeHtml(s) {
 
 // --- day views (timeline) ---
 const DAY_SUBTITLE = {
-  1: "Arrival · check-in 3pm",
+  1: "Meet in Seremban · drive to Melaka",
   2: "Full day · explore",
   3: "Final morning · check-out 11am"
 };
@@ -174,9 +174,14 @@ function renderDayView(dayNumber, containerEl) {
 
   const schedule = buildSchedule(primaries, dayNumber);
 
-  // Route button: include airbnb as origin/return.
+  // Route button: include airbnb as origin and/or destination depending on day.
+  // Day 1 starts in Seremban (not Airbnb), so first primary is the origin.
   const airbnb = places.find(p => p.category === "airbnb");
-  const stopsForRoute = airbnb ? [airbnb, ...primaries, airbnb] : primaries;
+  let stopsForRoute = primaries.slice();
+  if (airbnb) {
+    if (dayNumber !== 1) stopsForRoute = [airbnb, ...stopsForRoute];
+    stopsForRoute.push(airbnb);
+  }
   const routeUrl = googleMapsRouteUrl(stopsForRoute);
   const totalMin = schedule.endMin - schedule.startMin;
   const totalHrs = Math.floor(totalMin / 60);

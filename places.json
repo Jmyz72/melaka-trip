@@ -447,5 +447,22 @@
     "lat": 2.1953449,
     "lng": 102.247767,
     "photo": "images/famosa-chicken-rice-ball.jpg"
+  },
+  {
+    "id": "seremban-market",
+    "name": "芙蓉大巴刹 Seremban Central Market",
+    "section": "zapbalang",
+    "category": "food",
+    "mealType": "breakfast",
+    "address": "Jalan Tuanku Munawir, Bandar Seremban, 70000 Seremban, Negeri Sembilan, Malaysia",
+    "mapsUrl": "https://maps.google.com/?cid=6371005338482723188&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "durationFromAirbnbMin": null,
+    "hours": "4am-2pm (Tue closed)",
+    "remarks": "Meet-up · breakfast together",
+    "day": 1,
+    "order": 1,
+    "lat": 2.7307273999999997,
+    "lng": 101.93659559999999,
+    "photo": "images/seremban-market.jpg"
   }
 ]

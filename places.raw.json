@@ -12,7 +12,6 @@
     "day": null,
     "order": 0
   },
-
   {
     "id": "mocity-cosmic-park",
     "name": "Mocity Cosmic Park",
@@ -53,7 +52,6 @@
     "day": 2,
     "order": 20
   },
-
   {
     "id": "old-merchant",
     "name": "The Old Merchant",
@@ -275,7 +273,6 @@
     "day": 2,
     "order": 41
   },
-
   {
     "id": "hock-kee-waffle",
     "name": "Jonker Street Hock Kee Bakes (waffle)",
@@ -366,5 +363,19 @@
     "remarks": "Famous chicken rice ball",
     "day": 2,
     "order": 33
+  },
+  {
+    "id": "seremban-market",
+    "name": "芙蓉大巴刹 Seremban Central Market",
+    "section": "zapbalang",
+    "category": "food",
+    "mealType": "breakfast",
+    "address": "Jalan Tuanku Munawir, Bandar Seremban, 70000 Seremban, Negeri Sembilan, Malaysia",
+    "mapsUrl": "https://maps.google.com/?cid=6371005338482723188&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "durationFromAirbnbMin": null,
+    "hours": "4am-2pm (Tue closed)",
+    "remarks": "Meet-up · breakfast together",
+    "day": 1,
+    "order": 1
   }
 ]

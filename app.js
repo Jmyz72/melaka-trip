@@ -104,3 +104,57 @@ function escapeHtml(s) {
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[c]));
 }
+
+// --- day views ---
+const SLOT_LABEL = {
+  breakfast: "Breakfast 早餐",
+  lunch: "Lunch 午餐",
+  dinner: "Dinner 晚餐",
+  snack: "Snack",
+  dessert: "Dessert / 蛋糕",
+  "late-night": "Late-night 宵夜",
+  drinks: "Drinks",
+  souvenir: "Souvenir 手信",
+  entertainment: "Entertainment 玩",
+  stay: "Stay"
+};
+
+function renderDayView(dayNumber, containerEl) {
+  const dayPlaces = sortDaySchedule(groupByDay(places)[dayNumber]);
+
+  // Pick one primary per mealType; rest become alternatives.
+  const seenMeal = new Set();
+  const primaries = [];
+  const altsByMeal = {};
+  for (const p of dayPlaces) {
+    if (seenMeal.has(p.mealType)) {
+      (altsByMeal[p.mealType] ||= []).push(p);
+    } else {
+      seenMeal.add(p.mealType);
+      primaries.push(p);
+    }
+  }
+
+  containerEl.innerHTML = primaries.map(p => {
+    const alts = altsByMeal[p.mealType] || [];
+    const altsHtml = alts.length === 0 ? "" : `
+      <details class="alternatives">
+        <summary>${alts.length} alternative${alts.length > 1 ? "s" : ""}</summary>
+        ${alts.map(a => renderCardHtml(a)).join("")}
+      </details>
+    `;
+    return `
+      <div class="slot">
+        <div class="meta" style="margin:14px 0 6px;font-weight:600;color:#444">
+          ${SLOT_LABEL[p.mealType] || p.mealType}
+        </div>
+        ${renderCardHtml(p)}
+        ${altsHtml}
+      </div>
+    `;
+  }).join("") || `<p style="color:#666">No places assigned to Day ${dayNumber}.</p>`;
+}
+
+renderDayView(1, views.day1);
+renderDayView(2, views.day2);
+renderDayView(3, views.day3);

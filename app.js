@@ -275,16 +275,38 @@ const FILTERS = [
 let allFilter = "all";
 function countFor(filter) { return places.filter(filter.match).length; }
 function renderAllView() {
-  const active = FILTERS.find(f => f.key === allFilter) || FILTERS[0];
-  const filtered = places.filter(active.match);
   const chips = FILTERS.map(f => `
     <button class="chip" data-key="${f.key}" aria-pressed="${f.key === allFilter}">
       ${f.label}<span class="count">${countFor(f)}</span>
     </button>
   `).join("");
+
+  let listHtml;
+  if (allFilter === "all") {
+    // Group by each non-"all" filter; only render groups that have at least one place.
+    listHtml = FILTERS.filter(f => f.key !== "all").map(f => {
+      const items = places.filter(f.match);
+      if (items.length === 0) return "";
+      return `
+        <div class="all-group">
+          <div class="slot-heading">
+            <span class="slot-dot"></span>
+            <span class="slot-label">${escapeHtml(f.label)}</span>
+            <span class="slot-choices">${items.length}</span>
+          </div>
+          ${items.map(p => renderCardHtml(p, { showDayBadge: true })).join("")}
+        </div>
+      `;
+    }).join("");
+  } else {
+    const active = FILTERS.find(f => f.key === allFilter) || FILTERS[0];
+    const filtered = places.filter(active.match);
+    listHtml = filtered.map(p => renderCardHtml(p, { showDayBadge: true })).join("");
+  }
+
   views.all.innerHTML = `
     <div class="filters">${chips}</div>
-    <div class="list">${filtered.map(p => renderCardHtml(p, { showDayBadge: true })).join("")}</div>
+    <div class="list">${listHtml}</div>
   `;
   for (const chip of views.all.querySelectorAll(".chip")) {
     chip.addEventListener("click", () => { allFilter = chip.dataset.key; renderAllView(); });

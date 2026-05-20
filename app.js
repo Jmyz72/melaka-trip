@@ -202,14 +202,6 @@ function renderCardHtml(p, { showDayBadge = false, hideKicker = false, large = f
 function highlightReservation(s) {
   return s.replace(/RESERVATION NEEDED/g, "<strong>RESERVATION NEEDED</strong>");
 }
-
-function fmtDuration(min) {
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  if (h === 0) return `${m}m`;
-  if (m === 0) return `${h}h`;
-  return `${h}h ${m}m`;
-}
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
@@ -301,15 +293,11 @@ function renderDayView(dayNumber, containerEl) {
     const driveChip = step.driveToNext != null ? `
       <div class="drive-chip">${ICON.car}<span>${step.driveToNext} min drive</span></div>
     ` : "";
-    const waitChip = step.waitMin > 0 ? `
-      <div class="wait-chip"><span>Free time · ${fmtDuration(step.waitMin)} until ${fmtTime(step.arriveMin)}</span></div>
-    ` : "";
     const choicesLabel = choices.length > 1
       ? `<span class="slot-choices">${choices.length} choices</span>`
       : "";
     return `
       <div class="slot timeline-slot">
-        ${waitChip}
         <div class="slot-heading">
           <span class="slot-dot"></span>
           <span class="slot-label">${escapeHtml(SLOT_LABEL[p.mealType] || p.mealType)}</span>

@@ -12,7 +12,8 @@
     "day": null,
     "order": 0,
     "lat": 2.1964627,
-    "lng": 102.229982
+    "lng": 102.229982,
+    "photo": "images/airbnb.jpg"
   },
   {
     "id": "mocity-cosmic-park",
@@ -28,7 +29,8 @@
     "day": 1,
     "order": 20,
     "lat": 2.2158346,
-    "lng": 102.193166
+    "lng": 102.193166,
+    "photo": "images/mocity-cosmic-park.jpg"
   },
   {
     "id": "go-kart",
@@ -43,7 +45,8 @@
     "day": 2,
     "order": 30,
     "lat": 2.2158346,
-    "lng": 102.193166
+    "lng": 102.193166,
+    "photo": "images/go-kart.jpg"
   },
   {
     "id": "atv-zapbalang",
@@ -58,7 +61,8 @@
     "day": 2,
     "order": 20,
     "lat": 2.2155427,
-    "lng": 102.1929213
+    "lng": 102.1929213,
+    "photo": "images/atv-zapbalang.jpg"
   },
   {
     "id": "old-merchant",
@@ -73,7 +77,8 @@
     "day": 1,
     "order": 60,
     "lat": 2.1974868,
-    "lng": 102.2459296
+    "lng": 102.2459296,
+    "photo": "images/old-merchant.jpg"
   },
   {
     "id": "churrrmochi",
@@ -88,7 +93,8 @@
     "day": 1,
     "order": 10,
     "lat": 2.1934791,
-    "lng": 102.2329354
+    "lng": 102.2329354,
+    "photo": "images/churrrmochi.jpg"
   },
   {
     "id": "seafood-96",
@@ -103,7 +109,8 @@
     "day": 1,
     "order": 40,
     "lat": 2.2146329,
-    "lng": 102.1827193
+    "lng": 102.1827193,
+    "photo": "images/seafood-96.jpg"
   },
   {
     "id": "hok-chin",
@@ -118,7 +125,8 @@
     "day": 2,
     "order": 50,
     "lat": 2.2634615,
-    "lng": 102.2393703
+    "lng": 102.2393703,
+    "photo": "images/hok-chin.jpg"
   },
   {
     "id": "muse-peranakan",
@@ -133,7 +141,8 @@
     "day": 2,
     "order": 51,
     "lat": 2.1878554,
-    "lng": 102.2171998
+    "lng": 102.2171998,
+    "photo": "images/muse-peranakan.jpg"
   },
   {
     "id": "chasing-sunsets",
@@ -148,7 +157,8 @@
     "day": 1,
     "order": 41,
     "lat": 2.1674214,
-    "lng": 102.3041102
+    "lng": 102.3041102,
+    "photo": "images/chasing-sunsets.jpg"
   },
   {
     "id": "shixia-shixia",
@@ -163,7 +173,8 @@
     "day": 1,
     "order": 70,
     "lat": 2.198519,
-    "lng": 102.2253065
+    "lng": 102.2253065,
+    "photo": "images/shixia-shixia.jpg"
   },
   {
     "id": "baba-kaya",
@@ -178,7 +189,8 @@
     "day": 2,
     "order": 10,
     "lat": 2.1967375,
-    "lng": 102.2507371
+    "lng": 102.2507371,
+    "photo": "images/baba-kaya.jpg"
   },
   {
     "id": "siang-chiang",
@@ -193,7 +205,8 @@
     "day": 3,
     "order": 10,
     "lat": 2.1990977,
-    "lng": 102.2365874
+    "lng": 102.2365874,
+    "photo": "images/siang-chiang.jpg"
   },
   {
     "id": "mcqueks-satay-celup",
@@ -208,7 +221,8 @@
     "day": 2,
     "order": 52,
     "lat": 2.1888768,
-    "lng": 102.2584677
+    "lng": 102.2584677,
+    "photo": "images/mcqueks-satay-celup.jpg"
   },
   {
     "id": "something-bakery",
@@ -223,7 +237,8 @@
     "day": 2,
     "order": 40,
     "lat": 2.1967172,
-    "lng": 102.2509139
+    "lng": 102.2509139,
+    "photo": "images/something-bakery.jpg"
   },
   {
     "id": "jia-hung-pastry",
@@ -238,7 +253,8 @@
     "day": 3,
     "order": 20,
     "lat": 2.1976626,
-    "lng": 102.2385677
+    "lng": 102.2385677,
+    "photo": "images/jia-hung-pastry.jpg"
   },
   {
     "id": "la-mille-bakers",
@@ -253,7 +269,8 @@
     "day": 2,
     "order": 11,
     "lat": 2.1856531,
-    "lng": 102.2603769
+    "lng": 102.2603769,
+    "photo": "images/la-mille-bakers.jpg"
   },
   {
     "id": "baba-ang",
@@ -268,7 +285,8 @@
     "day": 2,
     "order": 30,
     "lat": 2.1888683,
-    "lng": 102.2601808
+    "lng": 102.2601808,
+    "photo": "images/baba-ang.jpg"
   },
   {
     "id": "hing-loong",
@@ -283,7 +301,8 @@
     "day": 2,
     "order": 31,
     "lat": 2.2021126,
-    "lng": 102.23199
+    "lng": 102.23199,
+    "photo": "images/hing-loong.jpg"
   },
   {
     "id": "dashu-xia-duck",
@@ -298,7 +317,8 @@
     "day": 2,
     "order": 11,
     "lat": 2.1970929,
-    "lng": 102.2325839
+    "lng": 102.2325839,
+    "photo": "images/dashu-xia-duck.jpg"
   },
   {
     "id": "birdcage",
@@ -313,7 +333,8 @@
     "day": 2,
     "order": 41,
     "lat": 2.1971558,
-    "lng": 102.2466381
+    "lng": 102.2466381,
+    "photo": "images/birdcage.jpg"
   },
   {
     "id": "hock-kee-waffle",
@@ -328,7 +349,8 @@
     "day": 2,
     "order": 42,
     "lat": 2.1958886,
-    "lng": 102.2449774
+    "lng": 102.2449774,
+    "photo": "images/hock-kee-waffle.jpg"
   },
   {
     "id": "kopi-harian",
@@ -343,7 +365,8 @@
     "day": 1,
     "order": 5,
     "lat": 2.1964468,
-    "lng": 102.2441426
+    "lng": 102.2441426,
+    "photo": "images/kopi-harian.jpg"
   },
   {
     "id": "fruit-cones",
@@ -358,7 +381,8 @@
     "day": 2,
     "order": 32,
     "lat": 2.1954059,
-    "lng": 102.2493179
+    "lng": 102.2493179,
+    "photo": "images/fruit-cones.jpg"
   },
   {
     "id": "night-market",
@@ -373,7 +397,8 @@
     "day": 2,
     "order": 45,
     "lat": 2.198071,
-    "lng": 102.2357289
+    "lng": 102.2357289,
+    "photo": "images/night-market.jpg"
   },
   {
     "id": "tan-kim-hock",
@@ -388,7 +413,8 @@
     "day": 3,
     "order": 30,
     "lat": 2.1956369,
-    "lng": 102.2452956
+    "lng": 102.2452956,
+    "photo": "images/tan-kim-hock.jpg"
   },
   {
     "id": "hernan-food",
@@ -403,7 +429,8 @@
     "day": 2,
     "order": 43,
     "lat": 2.1965269,
-    "lng": 102.2467365
+    "lng": 102.2467365,
+    "photo": "images/hernan-food.jpg"
   },
   {
     "id": "famosa-chicken-rice-ball",
@@ -418,6 +445,7 @@
     "day": 2,
     "order": 33,
     "lat": 2.1953449,
-    "lng": 102.247767
+    "lng": 102.247767,
+    "photo": "images/famosa-chicken-rice-ball.jpg"
   }
 ]

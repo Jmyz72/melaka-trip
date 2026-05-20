@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public open-vote collection for the Melaka trip planner.
+    // Each doc is keyed by placeId. Schema: { voters: [uid, uid, ...] }
+    match /votes/{placeId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

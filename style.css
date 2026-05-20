@@ -241,6 +241,35 @@ body {
 .card .btn:active { transform: translateY(0); }
 .card .btn svg { width: 14px; height: 14px; }
 
+.vote-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.vote-btn:hover { background: var(--bg-elev); color: var(--day1); border-color: var(--day1); }
+.vote-btn svg { width: 16px; height: 16px; opacity: .55; transition: all 180ms ease; }
+.vote-btn[aria-pressed="true"] {
+  background: var(--day1-soft);
+  color: var(--day1);
+  border-color: var(--day1);
+}
+.vote-btn[aria-pressed="true"] svg { opacity: 1; transform: scale(1.05); }
+.vote-btn:active svg { transform: scale(1.25); transition: transform 80ms ease; }
+.vote-count { font-variant-numeric: tabular-nums; min-width: 12px; }
+
 /* Day slot heading */
 .slot { margin-bottom: 8px; }
 .slot-heading {

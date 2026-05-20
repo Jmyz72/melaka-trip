@@ -1,13 +1,78 @@
 import { groupByDay, sortDaySchedule } from "./lib/grouping.mjs";
 import { buildSchedule, fmtTime } from "./lib/timeline.mjs";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, arrayUnion, arrayRemove
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const places = await fetch("./places.json").then(r => r.json());
+
+// --- Firebase init ---
+const firebaseConfig = {
+  apiKey: "AIzaSyAQyLGKURTB64x_a038gdYTxCGHYDszhj4",
+  authDomain: "project-21c844a6-e5cc-4a62-920.firebaseapp.com",
+  projectId: "project-21c844a6-e5cc-4a62-920",
+  storageBucket: "project-21c844a6-e5cc-4a62-920.firebasestorage.app",
+  messagingSenderId: "810424813381",
+  appId: "1:810424813381:web:a390e6227e83c3be2be02c"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+
+function getUserId() {
+  let uid = localStorage.getItem("melaka_uid");
+  if (!uid) {
+    uid = crypto.randomUUID ? crypto.randomUUID() : "u_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem("melaka_uid", uid);
+  }
+  return uid;
+}
+const userId = getUserId();
+
+let votesByPlace = {};
+function updateAllVoteButtons() {
+  for (const btn of document.querySelectorAll("[data-vote-place]")) {
+    const placeId = btn.dataset.votePlace;
+    const v = votesByPlace[placeId] || { count: 0, voted: false };
+    btn.setAttribute("aria-pressed", v.voted ? "true" : "false");
+    const countEl = btn.querySelector(".vote-count");
+    if (countEl) countEl.textContent = v.count;
+  }
+}
+onSnapshot(collection(db, "votes"), (snap) => {
+  votesByPlace = {};
+  snap.forEach(d => {
+    const voters = d.data().voters || [];
+    votesByPlace[d.id] = { count: voters.length, voted: voters.includes(userId) };
+  });
+  updateAllVoteButtons();
+});
+
+async function toggleVote(placeId) {
+  const ref = doc(db, "votes", placeId);
+  const v = votesByPlace[placeId] || { count: 0, voted: false };
+  try {
+    if (v.voted) {
+      await updateDoc(ref, { voters: arrayRemove(userId) });
+    } else {
+      await setDoc(ref, { voters: arrayUnion(userId) }, { merge: true });
+    }
+  } catch (e) {
+    console.error("vote failed", e);
+  }
+}
+
+document.body.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-vote-place]");
+  if (btn) { e.preventDefault(); toggleVote(btn.dataset.votePlace); }
+});
 
 const ICON = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>',
   car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14"/><path d="M5 17v-4l2-5h10l2 5v4"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg>',
   external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>',
-  route: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 0 0 0-8H10a4 4 0 0 1 0-8h6"/></svg>'
+  route: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 0 0 0-8H10a4 4 0 0 1 0-8h6"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
 };
 
 // --- tab switching ---
@@ -67,6 +132,7 @@ function openSheet(p) {
   sheetBody.innerHTML = renderCardHtml(p, { showDayBadge: true, large: true });
   sheet.hidden = false;
   sheet.setAttribute("aria-hidden", "false");
+  updateAllVoteButtons();
 }
 function closeSheet() {
   sheet.hidden = true;
@@ -124,6 +190,9 @@ function renderCardHtml(p, { showDayBadge = false, hideKicker = false, large = f
         ${remarks}
         <div class="actions">
           <a class="btn" href="${p.mapsUrl}" target="_blank" rel="noopener">Open in Google Maps ${ICON.external}</a>
+          <button class="vote-btn" data-vote-place="${p.id}" aria-pressed="false" aria-label="Vote for ${escapeHtml(p.name)}">
+            ${ICON.heart}<span class="vote-count">0</span>
+          </button>
         </div>
       </div>
     </article>
@@ -259,6 +328,7 @@ function renderDayView(dayNumber, containerEl) {
 renderDayView(1, views.day1);
 renderDayView(2, views.day2);
 renderDayView(3, views.day3);
+updateAllVoteButtons();
 
 // --- all view ---
 const FILTERS = [
@@ -311,5 +381,6 @@ function renderAllView() {
   for (const chip of views.all.querySelectorAll(".chip")) {
     chip.addEventListener("click", () => { allFilter = chip.dataset.key; renderAllView(); });
   }
+  updateAllVoteButtons();
 }
 renderAllView();

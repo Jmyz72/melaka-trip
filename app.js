@@ -261,20 +261,25 @@ renderDayView(2, views.day2);
 renderDayView(3, views.day3);
 
 // --- all view ---
-const CATEGORIES = [
-  { key: "all", label: "All" },
-  { key: "food", label: "Food" },
-  { key: "entertainment", label: "Entertainment" },
-  { key: "souvenir", label: "Souvenir" },
-  { key: "airbnb", label: "Stay" }
+const FILTERS = [
+  { key: "all",           label: "All",           match: () => true },
+  { key: "breakfast",     label: "Breakfast",     match: p => p.mealType === "breakfast" },
+  { key: "lunch",         label: "Lunch",         match: p => p.mealType === "lunch" },
+  { key: "dinner",        label: "Dinner",        match: p => p.mealType === "dinner" },
+  { key: "supper",        label: "Supper",        match: p => p.mealType === "late-night" },
+  { key: "snack-other",   label: "Snack/Other",   match: p => p.mealType === "snack" || p.mealType === "dessert" || p.mealType === "drinks" },
+  { key: "entertainment", label: "Entertainment", match: p => p.category === "entertainment" },
+  { key: "souvenir",      label: "Souvenir",      match: p => p.category === "souvenir" },
+  { key: "stay",          label: "Stay",          match: p => p.category === "airbnb" }
 ];
 let allFilter = "all";
-function countFor(key) { return key === "all" ? places.length : places.filter(p => p.category === key).length; }
+function countFor(filter) { return places.filter(filter.match).length; }
 function renderAllView() {
-  const filtered = allFilter === "all" ? places : places.filter(p => p.category === allFilter);
-  const chips = CATEGORIES.map(c => `
-    <button class="chip" data-cat="${c.key}" aria-pressed="${c.key === allFilter}">
-      ${c.label}<span class="count">${countFor(c.key)}</span>
+  const active = FILTERS.find(f => f.key === allFilter) || FILTERS[0];
+  const filtered = places.filter(active.match);
+  const chips = FILTERS.map(f => `
+    <button class="chip" data-key="${f.key}" aria-pressed="${f.key === allFilter}">
+      ${f.label}<span class="count">${countFor(f)}</span>
     </button>
   `).join("");
   views.all.innerHTML = `
@@ -282,7 +287,7 @@ function renderAllView() {
     <div class="list">${filtered.map(p => renderCardHtml(p, { showDayBadge: true })).join("")}</div>
   `;
   for (const chip of views.all.querySelectorAll(".chip")) {
-    chip.addEventListener("click", () => { allFilter = chip.dataset.cat; renderAllView(); });
+    chip.addEventListener("click", () => { allFilter = chip.dataset.key; renderAllView(); });
   }
 }
 renderAllView();

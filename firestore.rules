@@ -1,11 +1,28 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Public open-vote collection for the Melaka trip planner.
-    // Each doc is keyed by placeId. Schema: { voters: [uid, uid, ...] }
+
+    // Public-vote collection for the Melaka trip planner.
+    // Each doc keyed by placeId. Schema: { voters: [uid, uid, ...] }
     match /votes/{placeId} {
+      // Anyone may read counts.
       allow read: if true;
-      allow write: if true;
+
+      // Writes must:
+      //  * use a sensible placeId (lowercase alnum + dashes, 1..40 chars)
+      //  * supply exactly the `voters` field
+      //  * voters is a list of <= 50 strings, each <= 64 chars
+      // These constraints prevent schema vandalism, oversize docs, and
+      // arbitrary-collection spam.
+      allow write: if placeId.matches('^[a-z0-9-]{1,40}$')
+                   && request.resource.data.keys().hasOnly(['voters'])
+                   && request.resource.data.voters is list
+                   && request.resource.data.voters.size() <= 50;
+    }
+
+    // Nothing else in the database is accessible.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

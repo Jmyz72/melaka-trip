@@ -133,13 +133,21 @@ function renderCardHtml(p, { showDayBadge = false, hideKicker = false, large = f
 function highlightReservation(s) {
   return s.replace(/RESERVATION NEEDED/g, "<strong>RESERVATION NEEDED</strong>");
 }
+
+function fmtDuration(min) {
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
+}
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
 // --- day views (timeline) ---
 const DAY_SUBTITLE = {
-  1: "Meet in Seremban · drive to Melaka",
+  1: "Meet in Seremban · check in Melaka 3pm",
   2: "Full day · explore",
   3: "Final morning · check-out 11am"
 };
@@ -176,11 +184,13 @@ function renderDayView(dayNumber, containerEl) {
 
   // Route button: include airbnb as origin and/or destination depending on day.
   // Day 1 starts in Seremban (not Airbnb), so first primary is the origin.
+  // If airbnb is already among the primaries (e.g. Day 1 check-in stop), don't duplicate.
   const airbnb = places.find(p => p.category === "airbnb");
+  const airbnbInPrimaries = primaries.some(p => p.category === "airbnb");
   let stopsForRoute = primaries.slice();
   if (airbnb) {
-    if (dayNumber !== 1) stopsForRoute = [airbnb, ...stopsForRoute];
-    stopsForRoute.push(airbnb);
+    if (dayNumber !== 1 && !airbnbInPrimaries) stopsForRoute = [airbnb, ...stopsForRoute];
+    if (!airbnbInPrimaries) stopsForRoute.push(airbnb);
   }
   const routeUrl = googleMapsRouteUrl(stopsForRoute);
   const totalMin = schedule.endMin - schedule.startMin;
@@ -227,9 +237,13 @@ function renderDayView(dayNumber, containerEl) {
     const driveChip = step.driveToNext != null ? `
       <div class="drive-chip">${ICON.car}<span>${step.driveToNext} min drive</span></div>
     ` : "";
+    const waitChip = step.waitMin > 0 ? `
+      <div class="wait-chip"><span>Free time · ${fmtDuration(step.waitMin)} until ${fmtTime(step.arriveMin)}</span></div>
+    ` : "";
     const timeStr = `${fmtTime(step.arriveMin)} – ${fmtTime(step.departMin)}`;
     return `
       <div class="slot timeline-slot">
+        ${waitChip}
         <div class="slot-heading">
           <span class="slot-dot"></span>
           <span class="slot-label">${escapeHtml(SLOT_LABEL[p.mealType] || p.mealType)}</span>

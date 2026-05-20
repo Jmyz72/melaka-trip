@@ -8,12 +8,14 @@
     "mapsUrl": "https://maps.app.goo.gl/vsm4QEqhgg5Kee827",
     "durationFromAirbnbMin": 0,
     "hours": "Check-in after 3pm; Check-out 11am",
-    "remarks": "1h 15m from Seremban",
-    "day": null,
-    "order": 0,
+    "remarks": "Check-in 3pm · drop bags",
+    "day": 1,
+    "order": 6,
     "lat": 2.1964627,
     "lng": 102.229982,
-    "photo": "images/airbnb.jpg"
+    "photo": "images/airbnb.jpg",
+    "minArriveMin": 900,
+    "dwellMin": 15
   },
   {
     "id": "mocity-cosmic-park",

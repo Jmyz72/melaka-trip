@@ -228,29 +228,26 @@ function renderDayView(dayNumber, containerEl) {
   const body = schedule.steps.map(step => {
     const p = step.place;
     const alts = altsByMeal[p.mealType] || [];
-    const altsHtml = alts.length === 0 ? "" : `
-      <details class="alternatives">
-        <summary>${alts.length} alternative${alts.length > 1 ? "s" : ""}</summary>
-        ${alts.map(a => renderCardHtml(a, { hideKicker: true })).join("")}
-      </details>
-    `;
+    const choices = [p, ...alts];
     const driveChip = step.driveToNext != null ? `
       <div class="drive-chip">${ICON.car}<span>${step.driveToNext} min drive</span></div>
     ` : "";
     const waitChip = step.waitMin > 0 ? `
       <div class="wait-chip"><span>Free time · ${fmtDuration(step.waitMin)} until ${fmtTime(step.arriveMin)}</span></div>
     ` : "";
-    const timeStr = `${fmtTime(step.arriveMin)} – ${fmtTime(step.departMin)}`;
+    const choicesLabel = choices.length > 1
+      ? `<span class="slot-choices">${choices.length} choices</span>`
+      : "";
     return `
       <div class="slot timeline-slot">
         ${waitChip}
         <div class="slot-heading">
           <span class="slot-dot"></span>
           <span class="slot-label">${escapeHtml(SLOT_LABEL[p.mealType] || p.mealType)}</span>
-          <span class="slot-time">${escapeHtml(timeStr)}</span>
+          ${choicesLabel}
+          <span class="slot-time">${escapeHtml(fmtTime(step.arriveMin))}</span>
         </div>
-        ${renderCardHtml(p, { hideKicker: true })}
-        ${altsHtml}
+        ${choices.map(c => renderCardHtml(c, { hideKicker: true })).join("")}
         ${driveChip}
       </div>
     `;

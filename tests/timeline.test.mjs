@@ -28,15 +28,24 @@ test("fmtTime: noon / midnight / regular", () => {
 });
 
 test("buildSchedule: advances clock by dwell + drive between stops", () => {
+  // Use mealTypes that don't have fixed-time anchors so we exercise the
+  // pure dwell + drive math.
   const day = [
-    { id: "a", mealType: "breakfast", lat: 2.2, lng: 102.25 },
-    { id: "b", mealType: "lunch", lat: 2.21, lng: 102.26 }
+    { id: "a", mealType: "snack", lat: 2.2, lng: 102.25 },
+    { id: "b", mealType: "dessert", lat: 2.21, lng: 102.26 }
   ];
   const { startMin, steps } = buildSchedule(day, 2);
   assert.equal(steps.length, 2);
   assert.equal(steps[0].arriveMin, startMin);
-  assert.equal(steps[0].dwell, DWELL_MIN.breakfast);
-  assert.equal(steps[0].departMin, startMin + DWELL_MIN.breakfast);
+  assert.equal(steps[0].dwell, DWELL_MIN.snack);
+  assert.equal(steps[0].departMin, startMin + DWELL_MIN.snack);
   assert.ok(steps[0].driveToNext > 0);
   assert.equal(steps[1].arriveMin, steps[0].departMin + steps[0].driveToNext);
+});
+
+test("buildSchedule: fixed meal anchors delay arrival when day start is early", () => {
+  const day = [{ id: "a", mealType: "breakfast", lat: 2.2, lng: 102.25 }];
+  const { steps } = buildSchedule(day, 2); // day 2 starts at 9am
+  assert.equal(steps[0].arriveMin, 10 * 60, "breakfast should be anchored to 10am");
+  assert.equal(steps[0].waitMin, 60, "1h wait between 9am day start and 10am breakfast");
 });

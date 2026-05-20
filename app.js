@@ -2,6 +2,13 @@ import { groupByDay, sortDaySchedule, getAlternatives } from "./lib/grouping.mjs
 
 const places = await fetch("./places.json").then(r => r.json());
 
+// --- icons (inline SVGs) ---
+const ICON = {
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>',
+  car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14"/><path d="M5 17v-4l2-5h10l2 5v4"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg>',
+  external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>'
+};
+
 // --- tab switching ---
 const tabs = document.querySelectorAll(".tab");
 const views = {
@@ -14,8 +21,7 @@ const views = {
 
 function selectTab(name) {
   for (const t of tabs) {
-    const isActive = t.dataset.view === name;
-    t.setAttribute("aria-selected", isActive ? "true" : "false");
+    t.setAttribute("aria-selected", t.dataset.view === name ? "true" : "false");
   }
   for (const [key, el] of Object.entries(views)) {
     el.classList.toggle("active", key === name);
@@ -28,9 +34,9 @@ for (const t of tabs) {
 }
 
 // --- map ---
-const DAY_COLOR = { 1: "#d64545", 2: "#3672c3", 3: "#2f9e44" };
-const AIRBNB_COLOR = "#d4a017";
-const UNASSIGNED_COLOR = "#9a9a9a";
+const DAY_COLOR = { 1: "#ea580c", 2: "#0891b2", 3: "#65a30d" };
+const AIRBNB_COLOR = "#d97706";
+const UNASSIGNED_COLOR = "#94a3b8";
 
 function colorFor(p) {
   if (p.category === "airbnb") return AIRBNB_COLOR;
@@ -38,14 +44,15 @@ function colorFor(p) {
   return UNASSIGNED_COLOR;
 }
 
-function makeIcon(color) {
+function makeIcon(p) {
+  const color = colorFor(p);
+  const isAirbnb = p.category === "airbnb";
+  const size = isAirbnb ? 26 : 22;
   return L.divIcon({
     className: "pin",
-    html: `<span style="
-      display:block;width:22px;height:22px;border-radius:50%;
-      background:${color};border:2px solid #fff;
-      box-shadow:0 1px 3px rgba(0,0,0,.4)"></span>`,
-    iconSize: [22, 22], iconAnchor: [11, 11]
+    html: `<span class="pin-inner${isAirbnb ? ' airbnb' : ''}" style="background:${color}"></span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2]
   });
 }
 
@@ -57,7 +64,7 @@ window.__map = map;
 
 const withCoords = places.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
 const markers = withCoords.map(p => {
-  const m = L.marker([p.lat, p.lng], { icon: makeIcon(colorFor(p)) }).addTo(map);
+  const m = L.marker([p.lat, p.lng], { icon: makeIcon(p) }).addTo(map);
   m.on("click", () => openSheet(p));
   return m;
 });
@@ -78,25 +85,65 @@ function closeSheet() {
   sheet.setAttribute("aria-hidden", "true");
 }
 
-function renderCardHtml(p, { showDayBadge = false } = {}) {
-  const dayClass = p.category === "airbnb"
-    ? "airbnb"
-    : (p.day ? `day-${p.day}` : "");
-  const dayBadge = showDayBadge && p.day ? `<span>Day ${p.day}</span>` : "";
-  const dur = p.durationFromAirbnbMin != null
-    ? `<span>${p.durationFromAirbnbMin} min from Airbnb</span>` : "";
-  const hours = p.hours ? `<span>${escapeHtml(p.hours)}</span>` : "";
-  const remarks = p.remarks ? `<p class="remarks">${escapeHtml(p.remarks)}</p>` : "";
+const SLOT_LABEL = {
+  breakfast: "Breakfast 早餐",
+  lunch: "Lunch 午餐",
+  dinner: "Dinner 晚餐",
+  snack: "Snack",
+  dessert: "Dessert 蛋糕",
+  "late-night": "Late-night 宵夜",
+  drinks: "Drinks",
+  souvenir: "Souvenir 手信",
+  entertainment: "Entertainment 玩",
+  stay: "Stay 住宿"
+};
+
+function dayLabelFor(p) {
+  if (p.category === "airbnb") return "Airbnb";
+  if (!p.day) return "Anytime";
+  return `Day ${p.day}`;
+}
+
+function renderCardHtml(p, { showDayBadge = false, hideKicker = false } = {}) {
+  const dayClass = p.category === "airbnb" ? "airbnb" : (p.day ? `day-${p.day}` : "");
+  const slot = SLOT_LABEL[p.mealType] || p.mealType;
+  let kicker = "";
+  if (!hideKicker) {
+    const kickerParts = [];
+    if (showDayBadge) kickerParts.push(dayLabelFor(p));
+    kickerParts.push(slot);
+    kicker = `
+      <div class="kicker">
+        <span class="dot"></span>
+        ${kickerParts.map(escapeHtml).join(" · ")}
+      </div>`;
+  }
+  const metaParts = [];
+  if (p.hours) {
+    metaParts.push(`<span class="meta-item">${ICON.clock}${escapeHtml(p.hours)}</span>`);
+  }
+  if (p.durationFromAirbnbMin != null) {
+    metaParts.push(`<span class="meta-item">${ICON.car}${p.durationFromAirbnbMin} min from Airbnb</span>`);
+  }
+  const meta = metaParts.length ? `<div class="meta">${metaParts.join("")}</div>` : "";
+  const remarks = p.remarks ? `<p class="remarks">${highlightReservation(escapeHtml(p.remarks))}</p>` : "";
   return `
     <article class="card ${dayClass}">
+      ${kicker}
       <h3>${escapeHtml(p.name)}</h3>
-      <div class="meta">${dayBadge}${hours}${dur}</div>
+      ${meta}
       ${remarks}
       <div class="actions">
-        <a class="btn" href="${p.mapsUrl}" target="_blank" rel="noopener">Open in Google Maps</a>
+        <a class="btn" href="${p.mapsUrl}" target="_blank" rel="noopener">
+          Open in Google Maps ${ICON.external}
+        </a>
       </div>
     </article>
   `;
+}
+
+function highlightReservation(s) {
+  return s.replace(/RESERVATION NEEDED/g, "<strong>RESERVATION NEEDED</strong>");
 }
 
 function escapeHtml(s) {
@@ -106,23 +153,21 @@ function escapeHtml(s) {
 }
 
 // --- day views ---
-const SLOT_LABEL = {
-  breakfast: "Breakfast 早餐",
-  lunch: "Lunch 午餐",
-  dinner: "Dinner 晚餐",
-  snack: "Snack",
-  dessert: "Dessert / 蛋糕",
-  "late-night": "Late-night 宵夜",
-  drinks: "Drinks",
-  souvenir: "Souvenir 手信",
-  entertainment: "Entertainment 玩",
-  stay: "Stay"
+const DAY_SUBTITLE = {
+  1: "Arrival · check-in 3pm",
+  2: "Full day · explore",
+  3: "Final morning · check-out 11am"
 };
 
 function renderDayView(dayNumber, containerEl) {
   const dayPlaces = sortDaySchedule(groupByDay(places)[dayNumber]);
+  const intro = `
+    <div class="day-intro">
+      <p class="day-title">Day ${dayNumber}</p>
+      <p class="day-sub">${DAY_SUBTITLE[dayNumber] || ""}</p>
+    </div>
+  `;
 
-  // Pick one primary per mealType; rest become alternatives.
   const seenMeal = new Set();
   const primaries = [];
   const altsByMeal = {};
@@ -135,24 +180,29 @@ function renderDayView(dayNumber, containerEl) {
     }
   }
 
-  containerEl.innerHTML = primaries.map(p => {
-    const alts = altsByMeal[p.mealType] || [];
-    const altsHtml = alts.length === 0 ? "" : `
-      <details class="alternatives">
-        <summary>${alts.length} alternative${alts.length > 1 ? "s" : ""}</summary>
-        ${alts.map(a => renderCardHtml(a)).join("")}
-      </details>
-    `;
-    return `
-      <div class="slot">
-        <div class="meta" style="margin:14px 0 6px;font-weight:600;color:#444">
-          ${SLOT_LABEL[p.mealType] || p.mealType}
-        </div>
-        ${renderCardHtml(p)}
-        ${altsHtml}
-      </div>
-    `;
-  }).join("") || `<p style="color:#666">No places assigned to Day ${dayNumber}.</p>`;
+  const body = primaries.length === 0
+    ? `<p class="empty">No places assigned to Day ${dayNumber}.</p>`
+    : primaries.map(p => {
+        const alts = altsByMeal[p.mealType] || [];
+        const altsHtml = alts.length === 0 ? "" : `
+          <details class="alternatives">
+            <summary>${alts.length} alternative${alts.length > 1 ? "s" : ""}</summary>
+            ${alts.map(a => renderCardHtml(a, { hideKicker: true })).join("")}
+          </details>
+        `;
+        return `
+          <div class="slot">
+            <div class="slot-heading">
+              <span class="slot-dot"></span>
+              <span class="slot-label">${escapeHtml(SLOT_LABEL[p.mealType] || p.mealType)}</span>
+            </div>
+            ${renderCardHtml(p, { hideKicker: true })}
+            ${altsHtml}
+          </div>
+        `;
+      }).join("");
+
+  containerEl.innerHTML = intro + body;
 }
 
 renderDayView(1, views.day1);
@@ -165,17 +215,23 @@ const CATEGORIES = [
   { key: "food", label: "Food" },
   { key: "entertainment", label: "Entertainment" },
   { key: "souvenir", label: "Souvenir" },
-  { key: "airbnb", label: "Airbnb" }
+  { key: "airbnb", label: "Stay" }
 ];
 
 let allFilter = "all";
+
+function countFor(key) {
+  return key === "all" ? places.length : places.filter(p => p.category === key).length;
+}
 
 function renderAllView() {
   const filtered = allFilter === "all"
     ? places
     : places.filter(p => p.category === allFilter);
   const chips = CATEGORIES.map(c => `
-    <button class="chip" data-cat="${c.key}" aria-pressed="${c.key === allFilter}">${c.label}</button>
+    <button class="chip" data-cat="${c.key}" aria-pressed="${c.key === allFilter}">
+      ${c.label}<span class="count">${countFor(c.key)}</span>
+    </button>
   `).join("");
   views.all.innerHTML = `
     <div class="filters">${chips}</div>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Melaka 3D2N</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Melaka 3D2N</h1>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Trip views">
+    <button class="tab" data-view="map" aria-selected="true">🗺 Map</button>
+    <button class="tab" data-view="day1" aria-selected="false">Day 1</button>
+    <button class="tab" data-view="day2" aria-selected="false">Day 2</button>
+    <button class="tab" data-view="day3" aria-selected="false">Day 3</button>
+    <button class="tab" data-view="all" aria-selected="false">All</button>
+  </nav>
+
+  <main id="app">
+    <section id="view-map" class="view active"><div id="leaflet-map"></div></section>
+    <section id="view-day1" class="view"></section>
+    <section id="view-day2" class="view"></section>
+    <section id="view-day3" class="view"></section>
+    <section id="view-all" class="view"></section>
+  </main>
+
+  <div id="sheet" class="sheet" hidden aria-hidden="true">
+    <button id="sheet-close" class="sheet-close" aria-label="Close">×</button>
+    <div id="sheet-body"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

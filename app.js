@@ -281,28 +281,28 @@ function renderAllView() {
     </button>
   `).join("");
 
-  let listHtml;
-  if (allFilter === "all") {
-    // Group by each non-"all" filter; only render groups that have at least one place.
-    listHtml = FILTERS.filter(f => f.key !== "all").map(f => {
-      const items = places.filter(f.match);
-      if (items.length === 0) return "";
-      return `
-        <div class="all-group">
-          <div class="slot-heading">
-            <span class="slot-dot"></span>
-            <span class="slot-label">${escapeHtml(f.label)}</span>
-            <span class="slot-choices">${items.length}</span>
-          </div>
-          ${items.map(p => renderCardHtml(p, { showDayBadge: true })).join("")}
+  // Filter first, then group by Day so the All view reads in trip order.
+  const active = FILTERS.find(f => f.key === allFilter) || FILTERS[0];
+  const filtered = places.filter(active.match);
+  const dayBuckets = [1, 2, 3, null];
+  const listHtml = dayBuckets.map(d => {
+    const items = filtered
+      .filter(p => (p.day ?? null) === d)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    if (items.length === 0) return "";
+    const label = d == null ? "Anytime" : `Day ${d}`;
+    const dayCls = d == null ? "all-group" : `all-group all-group-day-${d}`;
+    return `
+      <div class="${dayCls}">
+        <div class="slot-heading">
+          <span class="slot-dot"></span>
+          <span class="slot-label">${escapeHtml(label)}</span>
+          <span class="slot-choices">${items.length}</span>
         </div>
-      `;
-    }).join("");
-  } else {
-    const active = FILTERS.find(f => f.key === allFilter) || FILTERS[0];
-    const filtered = places.filter(active.match);
-    listHtml = filtered.map(p => renderCardHtml(p, { showDayBadge: true })).join("");
-  }
+        ${items.map(p => renderCardHtml(p, { showDayBadge: false })).join("")}
+      </div>
+    `;
+  }).join("") || `<p class="empty">No places match this filter.</p>`;
 
   views.all.innerHTML = `
     <div class="filters">${chips}</div>

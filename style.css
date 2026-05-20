@@ -265,9 +265,12 @@ body {
   text-transform: uppercase;
   color: var(--fg-soft);
 }
-#view-day1 .slot-heading .slot-dot { background: var(--day1); }
-#view-day2 .slot-heading .slot-dot { background: var(--day2); }
-#view-day3 .slot-heading .slot-dot { background: var(--day3); }
+#view-day1 .slot-heading .slot-dot,
+.all-group-day-1 .slot-heading .slot-dot { background: var(--day1); }
+#view-day2 .slot-heading .slot-dot,
+.all-group-day-2 .slot-heading .slot-dot { background: var(--day2); }
+#view-day3 .slot-heading .slot-dot,
+.all-group-day-3 .slot-heading .slot-dot { background: var(--day3); }
 
 /* Day intro banner */
 .day-intro {

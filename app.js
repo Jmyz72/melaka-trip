@@ -158,3 +158,35 @@ function renderDayView(dayNumber, containerEl) {
 renderDayView(1, views.day1);
 renderDayView(2, views.day2);
 renderDayView(3, views.day3);
+
+// --- all view ---
+const CATEGORIES = [
+  { key: "all", label: "All" },
+  { key: "food", label: "Food" },
+  { key: "entertainment", label: "Entertainment" },
+  { key: "souvenir", label: "Souvenir" },
+  { key: "airbnb", label: "Airbnb" }
+];
+
+let allFilter = "all";
+
+function renderAllView() {
+  const filtered = allFilter === "all"
+    ? places
+    : places.filter(p => p.category === allFilter);
+  const chips = CATEGORIES.map(c => `
+    <button class="chip" data-cat="${c.key}" aria-pressed="${c.key === allFilter}">${c.label}</button>
+  `).join("");
+  views.all.innerHTML = `
+    <div class="filters">${chips}</div>
+    <div class="list">${filtered.map(p => renderCardHtml(p, { showDayBadge: true })).join("")}</div>
+  `;
+  for (const chip of views.all.querySelectorAll(".chip")) {
+    chip.addEventListener("click", () => {
+      allFilter = chip.dataset.cat;
+      renderAllView();
+    });
+  }
+}
+
+renderAllView();

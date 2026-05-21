@@ -12,7 +12,24 @@
     "day": 1,
     "order": 6,
     "minArriveMin": 900,
-    "dwellMin": 15
+    "dwellMin": 15,
+    "committed": true
+  },
+  {
+    "id": "airbnb-checkout",
+    "name": "Airbnb",
+    "section": "airbnb",
+    "category": "airbnb",
+    "mealType": "stay",
+    "mapsUrl": "https://maps.app.goo.gl/vsm4QEqhgg5Kee827",
+    "durationFromAirbnbMin": 0,
+    "hours": "Check-in after 3pm; Check-out 11am",
+    "remarks": "Checkout by 11am · grab bags, head out for breakfast/lunch",
+    "day": 3,
+    "order": 30,
+    "minArriveMin": 660,
+    "dwellMin": 10,
+    "committed": true
   },
   {
     "id": "mocity-cosmic-park",
@@ -167,9 +184,9 @@
     "mapsUrl": "https://maps.app.goo.gl/VUvShuatqeZ9f88k9",
     "durationFromAirbnbMin": 10,
     "hours": "7am-2pm",
-    "remarks": "breakfast alternative",
+    "remarks": "Post-checkout breakfast/lunch — candidate",
     "day": 3,
-    "order": 10
+    "order": 40
   },
   {
     "id": "mcqueks-satay-celup",
@@ -206,9 +223,11 @@
     "mapsUrl": "https://maps.app.goo.gl/7Kuh4Gwpy7XxgksA6",
     "durationFromAirbnbMin": 4,
     "hours": "Best arrival 10:30-11am",
-    "remarks": "面包伴手礼",
+    "remarks": "面包伴手礼 · fresh bread window 10:30-11am",
     "day": 3,
-    "order": 20
+    "order": 10,
+    "committed": true,
+    "minArriveMin": 630
   },
   {
     "id": "la-mille-bakers",
@@ -310,9 +329,10 @@
     "mapsUrl": "https://maps.app.goo.gl/ASDQnk3oVcB1etjn9",
     "durationFromAirbnbMin": 6,
     "hours": "9am-5:30pm",
-    "remarks": "First day lunch candidate",
+    "remarks": "First-day lunch · stop before checking in",
     "day": 1,
-    "order": 5
+    "order": 5,
+    "committed": true
   },
   {
     "id": "fruit-cones",
@@ -351,7 +371,8 @@
     "hours": "9am-6pm",
     "remarks": "买手信",
     "day": 3,
-    "order": 30
+    "order": 20,
+    "committed": true
   },
   {
     "id": "hernan-food",
@@ -391,6 +412,7 @@
     "hours": "4am-2pm (Tue closed)",
     "remarks": "Meet-up · breakfast together",
     "day": 1,
-    "order": 1
+    "order": 1,
+    "committed": true
   }
 ]

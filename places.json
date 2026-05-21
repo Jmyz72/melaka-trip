@@ -15,7 +15,27 @@
     "lng": 102.229982,
     "photo": "images/airbnb.jpg",
     "minArriveMin": 900,
-    "dwellMin": 15
+    "dwellMin": 15,
+    "committed": true
+  },
+  {
+    "id": "airbnb-checkout",
+    "name": "Airbnb",
+    "section": "airbnb",
+    "category": "airbnb",
+    "mealType": "stay",
+    "mapsUrl": "https://maps.app.goo.gl/vsm4QEqhgg5Kee827",
+    "durationFromAirbnbMin": 0,
+    "hours": "Check-in after 3pm; Check-out 11am",
+    "remarks": "Checkout by 11am · grab bags, head out for breakfast/lunch",
+    "day": 3,
+    "order": 30,
+    "lat": 2.1964627,
+    "lng": 102.229982,
+    "photo": "images/airbnb.jpg",
+    "minArriveMin": 660,
+    "dwellMin": 10,
+    "committed": true
   },
   {
     "id": "mocity-cosmic-park",
@@ -203,9 +223,9 @@
     "mapsUrl": "https://maps.app.goo.gl/VUvShuatqeZ9f88k9",
     "durationFromAirbnbMin": 10,
     "hours": "7am-2pm",
-    "remarks": "breakfast alternative",
+    "remarks": "Post-checkout breakfast/lunch — candidate",
     "day": 3,
-    "order": 10,
+    "order": 40,
     "lat": 2.1990977,
     "lng": 102.2365874,
     "photo": "images/siang-chiang.jpg"
@@ -251,12 +271,14 @@
     "mapsUrl": "https://maps.app.goo.gl/7Kuh4Gwpy7XxgksA6",
     "durationFromAirbnbMin": 4,
     "hours": "Best arrival 10:30-11am",
-    "remarks": "面包伴手礼",
+    "remarks": "面包伴手礼 · fresh bread window 10:30-11am",
     "day": 3,
-    "order": 20,
+    "order": 10,
     "lat": 2.1976626,
     "lng": 102.2385677,
-    "photo": "images/jia-hung-pastry.jpg"
+    "photo": "images/jia-hung-pastry.jpg",
+    "committed": true,
+    "minArriveMin": 630
   },
   {
     "id": "la-mille-bakers",
@@ -379,12 +401,13 @@
     "mapsUrl": "https://maps.app.goo.gl/ASDQnk3oVcB1etjn9",
     "durationFromAirbnbMin": 6,
     "hours": "9am-5:30pm",
-    "remarks": "First day lunch candidate",
+    "remarks": "First-day lunch · stop before checking in",
     "day": 1,
     "order": 5,
     "lat": 2.1964468,
     "lng": 102.2441426,
-    "photo": "images/kopi-harian.jpg"
+    "photo": "images/kopi-harian.jpg",
+    "committed": true
   },
   {
     "id": "fruit-cones",
@@ -429,10 +452,11 @@
     "hours": "9am-6pm",
     "remarks": "买手信",
     "day": 3,
-    "order": 30,
+    "order": 20,
     "lat": 2.1956369,
     "lng": 102.2452956,
-    "photo": "images/tan-kim-hock.jpg"
+    "photo": "images/tan-kim-hock.jpg",
+    "committed": true
   },
   {
     "id": "hernan-food",
@@ -481,6 +505,7 @@
     "order": 1,
     "lat": 2.7307273999999997,
     "lng": 101.93659559999999,
-    "photo": "images/seremban-market.jpg"
+    "photo": "images/seremban-market.jpg",
+    "committed": true
   }
 ]

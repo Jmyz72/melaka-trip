@@ -66,9 +66,12 @@ const currentLeaders = new Map();
 function leaderKey(dayNum, meal) { return `${dayNum}:${meal}`; }
 
 // Compute what the leader would be RIGHT NOW for a given (day, meal),
-// using current votesByPlace.
+// using current votesByPlace. Committed places aren't part of the
+// vote-driven slot — they're already in the timeline on their own row, so
+// only non-committed candidates compete here.
 function computeLeaderId(dayNum, meal) {
-  const candidates = (groupByDay(places)[dayNum] || []).filter(p => p.mealType === meal);
+  const candidates = (groupByDay(places)[dayNum] || [])
+    .filter(p => p.mealType === meal && !p.committed);
   if (candidates.length === 0) return null;
   const closedScore = p => contenderStatus(p, dayNum) === "closed" ? 1 : 0;
   candidates.sort((a, b) => {
@@ -259,10 +262,19 @@ function renderDayMap(dayNumber, stops) {
     const isAirbnb = p.category === "airbnb";
     const swatch = isAirbnb ? AIRBNB_COLOR : color;
     const label  = isAirbnb ? "⌂" : String(++realIdx);
-    const extra  = isAirbnb ? " is-airbnb" : "";
+    const extras = [];
+    if (isAirbnb) extras.push("is-airbnb");
+    if (!p.committed) extras.push("is-candidate");
+    const cls = extras.length ? ` ${extras.join(" ")}` : "";
+    // Committed: solid fill with paper-coloured glyph. Candidate: outlined
+    // ring, glyph in the swatch colour, so the eye reads the actual plan
+    // first and the "still deciding" stops second.
+    const style = p.committed
+      ? `background:${swatch};color:var(--paper);border-color:var(--paper);`
+      : `background:var(--paper);color:${swatch};border-color:${swatch};border-style:dashed;`;
     const icon = L.divIcon({
       className: "pin pin-numbered",
-      html: `<span class="pin-num${extra}" style="background:${swatch}">${label}</span>`,
+      html: `<span class="pin-num${cls}" style="${style}">${label}</span>`,
       iconSize: [26, 26],
       iconAnchor: [13, 13]
     });
@@ -389,7 +401,9 @@ function renderRemark(p, { drop = false } = {}) {
 // Full editorial place card (used in itinerary and sheet)
 function renderPlace(p, { dropcap = false, leading = false } = {}) {
   const { cn, main } = splitName(p.name);
-  const badge = leading ? `<span class="leading-badge">★ Leading choice</span>` : "";
+  const badge = p.committed
+    ? `<span class="committed-badge">✓ Booked</span>`
+    : leading ? `<span class="leading-badge">★ Leading choice</span>` : "";
   const photo = p.photo
     ? `<figure class="place-photo">
          <img src="${escapeHtml(p.photo)}" alt="${escapeHtml(main)}" loading="lazy"/>
@@ -492,23 +506,25 @@ function bridgeText(driveMin, fromPlace, toPlace) {
 function renderDayView(dayNumber, containerEl) {
   const dayPlaces = sortDaySchedule(groupByDay(places)[dayNumber]);
 
-  // Group by mealType; preserve slot order from sorted day list.
-  const slotOrder = [];
-  const slotsByMeal = new Map();
+  // Split into committed (each gets its own timeline row) and candidates
+  // (bucketed by mealType, vote-driven leader). Candidate buckets only
+  // contain non-committed places — the committed entries don't compete in
+  // the vote slot at all; they're already on the plan.
+  const closedScore = p => contenderStatus(p, dayNumber) === "closed" ? 1 : 0;
+
+  const candidateSlotOrder = [];
+  const candidatesByMeal = new Map();
   for (const p of dayPlaces) {
-    if (!slotsByMeal.has(p.mealType)) {
-      slotsByMeal.set(p.mealType, []);
-      slotOrder.push(p.mealType);
+    if (p.committed) continue;
+    if (!candidatesByMeal.has(p.mealType)) {
+      candidatesByMeal.set(p.mealType, []);
+      candidateSlotOrder.push(p.mealType);
     }
-    slotsByMeal.get(p.mealType).push(p);
+    candidatesByMeal.get(p.mealType).push(p);
   }
 
-  // Within each slot, the leader is whichever option has the most votes.
-  // Tiebreaks: prefer a place that isn't closed today, then lowest `order`
-  // (so the planner's default wins when nobody voted).
-  const closedScore = p => contenderStatus(p, dayNumber) === "closed" ? 1 : 0;
-  const slots = slotOrder.map(meal => {
-    const list = slotsByMeal.get(meal);
+  const candidateSlots = candidateSlotOrder.map(meal => {
+    const list = candidatesByMeal.get(meal);
     const sorted = [...list].sort((a, b) => {
       const dv = votesOf(b.id) - votesOf(a.id);
       if (dv !== 0) return dv;
@@ -516,14 +532,39 @@ function renderDayView(dayNumber, containerEl) {
       if (dc !== 0) return dc;
       return (a.order ?? 0) - (b.order ?? 0);
     });
-    return { meal, leader: sorted[0], others: sorted.slice(1), total: sorted.length };
+    return {
+      meal,
+      leader: sorted[0],
+      others: sorted.slice(1),
+      total: sorted.length,
+      isCommitted: false
+    };
   });
+
+  const committedSlots = dayPlaces
+    .filter(p => p.committed)
+    .map(p => ({
+      meal: p.mealType,
+      leader: p,
+      others: [],
+      total: 1,
+      isCommitted: true
+    }));
+
+  // Merge committed + candidate slots, ordered by their leader's `order`
+  // so the timeline interleaves correctly (e.g. Day 3: committed souvenir
+  // run before checkout, candidate breakfast after).
+  const slots = [...committedSlots, ...candidateSlots]
+    .sort((a, b) => (a.leader.order ?? 0) - (b.leader.order ?? 0));
 
   const primaries = slots.map(s => s.leader);
   const schedule = buildSchedule(primaries, dayNumber);
 
-  // Remember who's currently leading each slot so snapshot handler can detect flips.
-  for (const s of slots) currentLeaders.set(leaderKey(dayNumber, s.meal), s.leader.id);
+  // Only track candidate slots in currentLeaders — committed places can't
+  // be unseated by votes, so their "leader" never flips.
+  for (const s of slots) {
+    if (!s.isCommitted) currentLeaders.set(leaderKey(dayNumber, s.meal), s.leader.id);
+  }
 
   // Route stops: include Airbnb origin/dest where appropriate
   const airbnb = places.find(p => p.category === "airbnb");
@@ -604,12 +645,16 @@ function renderDayView(dayNumber, containerEl) {
       `;
     }
 
+    const railTag = slot.isCommitted
+      ? `<span class="entry-choices entry-booked">Booked</span>`
+      : others.length ? `<span class="entry-choices">${slot.total} choices</span>` : "";
+
     return `
-      <li class="entry">
+      <li class="entry${slot.isCommitted ? " entry-committed" : " entry-candidate"}">
         <div class="entry-rail">
           <time class="entry-time">${fmtTimeRich(step.arriveMin)}</time>
           <span class="entry-slot">${escapeHtml(SLOT_LABEL[p.mealType] || p.mealType)}</span>
-          ${others.length ? `<span class="entry-choices">${slot.total} choices</span>` : ""}
+          ${railTag}
         </div>
         <div class="entry-body">
           ${warning}

@@ -228,13 +228,13 @@
     "name": "Restoran Baba Ang",
     "section": "zapbalang",
     "category": "food",
-    "mealType": "lunch",
+    "mealType": "dinner",
     "mapsUrl": "https://maps.app.goo.gl/UUuiY9T4jYYj7Pcg6",
     "durationFromAirbnbMin": 8,
     "hours": "11am-2pm; 6pm-9pm",
     "remarks": "Nyonya — RESERVATION NEEDED",
     "day": 2,
-    "order": 30
+    "order": 49
   },
   {
     "id": "hing-loong",

@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 // Precomputes driving times between every pair of places using the Google
-// Distance Matrix API. Writes the result to lib/drives.json, which the app
-// will load at startup (replacing the haversine heuristic for any pair it
-// has a real number for).
+// Routes API (computeRouteMatrix). Writes the result to lib/drives.json,
+// which the app loads at startup (replacing the haversine heuristic for any
+// pair it has a real number for).
 //
 // Setup:
-//   1. In the Google Cloud Console, enable the "Distance Matrix API".
+//   1. In the Google Cloud Console, enable the "Routes API".
 //   2. Create an API key (restrict to that API for safety).
 //   3. Run:  GOOGLE_MAPS_API_KEY=AIza... node tools/precompute-drives.mjs
 //
-// Cost: ~840 elements (29×29 places). At $5/1000 elements that is ~$4.20,
-// which is fully covered by the $200/month free credit. Re-run only when
-// you add or move a place.
+// Cost: ~841 elements (29x29 places) at $5 / 1000 = ~$4.20, fully covered
+// by the $200/month Google Maps free credit. Re-run only when you add or
+// move a place.
 //
 // The script is idempotent and only writes if results differ.
 
@@ -33,48 +33,63 @@ const places = JSON.parse(await readFile(resolve(root, "places.json"), "utf8"));
 const located = places.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
 console.log(`Found ${located.length} located places out of ${places.length}.`);
 
-// Distance Matrix limits: 25 origins × 25 destinations per request, 100
-// elements total. So we batch destinations 10-at-a-time per origin, which
-// keeps every request under 25 elements and well within rate limits.
-const BATCH = 10;
+const waypoint = p => ({ waypoint: { location: { latLng: { latitude: p.lat, longitude: p.lng } } } });
+
+// Routes API limit: 625 elements per request. 29x29 = 841 so we split
+// destinations into two halves and keep origins whole — two calls total.
+const HALF = Math.ceil(located.length / 2);
+const destBatches = [located.slice(0, HALF), located.slice(HALF)];
+
 const table = {};
 let calls = 0;
 
-for (const from of located) {
-  for (let i = 0; i < located.length; i += BATCH) {
-    const dests = located.slice(i, i + BATCH);
-    const params = new URLSearchParams({
-      origins: `${from.lat},${from.lng}`,
-      destinations: dests.map(d => `${d.lat},${d.lng}`).join("|"),
-      mode: "driving",
-      key: API_KEY
-    });
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?${params}`;
-    const res = await fetch(url);
-    if (!res.ok) {
-      console.error(`HTTP ${res.status} for origin ${from.id}`);
-      process.exit(2);
-    }
-    const data = await res.json();
-    calls++;
-    if (data.status !== "OK") {
-      console.error(`API error for origin ${from.id}: ${data.status} ${data.error_message ?? ""}`);
-      process.exit(2);
-    }
-    const row = data.rows[0].elements;
-    for (let j = 0; j < dests.length; j++) {
-      const to = dests[j];
-      const el = row[j];
-      if (el.status !== "OK") continue;
-      const minutes = Math.round(el.duration.value / 60);
-      table[`${from.id}__${to.id}`] = minutes;
-    }
-    process.stdout.write(`. (${calls} calls, ${Object.keys(table).length} pairs)\r`);
+for (const dests of destBatches) {
+  const body = {
+    origins: located.map(waypoint),
+    destinations: dests.map(waypoint),
+    travelMode: "DRIVE",
+    // TRAFFIC_AWARE uses Google's live traffic prediction for the given
+    // departureTime. Day 1 (Fri 22 May 2026) 8am MYT — the long Seremban →
+    // Melaka leg drives at that hour, so its number is the most realistic.
+    // Intra-Melaka pairs will be peak-ish, which is conservative for
+    // planning. Routes API requires departureTime to be in the future and
+    // within 7 days; rerun closer to the date for fresher predictions.
+    routingPreference: "TRAFFIC_AWARE",
+    departureTime: "2026-05-22T08:00:00+08:00"
+  };
+  const res = await fetch("https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": API_KEY,
+      "X-Goog-FieldMask": "originIndex,destinationIndex,duration,distanceMeters,condition"
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error(`HTTP ${res.status}: ${errText}`);
+    process.exit(2);
   }
+  const rows = await res.json();
+  calls++;
+  if (!Array.isArray(rows)) {
+    console.error("Unexpected response shape:", JSON.stringify(rows).slice(0, 500));
+    process.exit(2);
+  }
+  for (const el of rows) {
+    if (el.condition !== "ROUTE_EXISTS") continue;
+    const from = located[el.originIndex];
+    const to = dests[el.destinationIndex];
+    if (!from || !to) continue;
+    const seconds = parseInt(String(el.duration).replace(/s$/, ""), 10);
+    if (!Number.isFinite(seconds)) continue;
+    table[`${from.id}__${to.id}`] = Math.round(seconds / 60);
+  }
+  process.stdout.write(`. (${calls} calls, ${Object.keys(table).length} pairs)\r`);
 }
 process.stdout.write("\n");
 
-// Compare with existing file, skip write if unchanged.
 const outPath = resolve(root, "lib/drives.json");
 let prev = null;
 try { prev = JSON.parse(await readFile(outPath, "utf8")); } catch { /* first run */ }

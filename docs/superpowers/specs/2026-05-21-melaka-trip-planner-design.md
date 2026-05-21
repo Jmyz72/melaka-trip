@@ -150,7 +150,7 @@ melaka-trip/
 3. User creates a GitHub repo named `melaka-trip` (assistant provides exact commands).
 4. Push.
 5. Enable GitHub Pages (Settings → Pages → Source: `main` branch, root).
-6. URL: `https://carsonhew04.github.io/melaka-trip/`.
+6. URL: `https://<your-username>.github.io/melaka-trip/`.
 
 ## Out of scope
 

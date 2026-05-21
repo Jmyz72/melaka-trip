@@ -144,11 +144,11 @@ const DAY_DEK = {
 };
 const DAY_ROMAN = { 1: "One", 2: "Two", 3: "Three" };
 
-// Trip is 21-23 May 2026 (Thu/Fri/Sat). dow is 1=Mon … 7=Sun.
+// Trip is 22-24 May 2026 (Fri/Sat/Sun). dow is 1=Mon … 7=Sun.
 const TRIP_DAYS = {
-  1: { date: "21 May", dowName: "Thursday", dow: 4 },
-  2: { date: "22 May", dowName: "Friday",   dow: 5 },
-  3: { date: "23 May", dowName: "Saturday", dow: 6 }
+  1: { date: "22 May", dowName: "Friday",   dow: 5 },
+  2: { date: "23 May", dowName: "Saturday", dow: 6 },
+  3: { date: "24 May", dowName: "Sunday",   dow: 7 }
 };
 
 // Pre-parse hours once at load time so we don't re-parse on every render.
@@ -479,7 +479,7 @@ function renderDayView(dayNumber, containerEl) {
 
   const headerHtml = `
     <header class="day-header">
-      <div class="day-folio">Day <span class="accent">${String(dayNumber).padStart(2, "0")}</span> of 03 · ${escapeHtml(["Thursday","Friday","Saturday"][dayNumber-1] || "")}</div>
+      <div class="day-folio">Day <span class="accent">${String(dayNumber).padStart(2, "0")}</span> of 03 · ${escapeHtml(TRIP_DAYS[dayNumber]?.dowName || "")}</div>
       <h2 class="day-title">Day <span class="accent">${DAY_ROMAN[dayNumber]}</span></h2>
       <p class="day-dek">${escapeHtml(DAY_DEK[dayNumber] || "")}</p>
       <div class="day-meta">

@@ -202,7 +202,10 @@ function selectTab(name) {
   const dayMatch = name.match(/^day(\d)$/);
   if (dayMatch) {
     const dm = dayMaps.get(Number(dayMatch[1]));
-    if (dm) dm.invalidateSize();
+    if (dm) {
+      dm.invalidateSize();
+      if (dm._dayBounds) dm.fitBounds(dm._dayBounds, { padding: [30, 30] });
+    }
   }
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
 }
@@ -274,7 +277,12 @@ function renderDayMap(dayNumber, stops) {
     }).addTo(dm);
   }
 
-  dm.fitBounds(L.featureGroup(markers).getBounds(), { padding: [30, 30] });
+  const bounds = L.featureGroup(markers).getBounds();
+  dm.fitBounds(bounds, { padding: [30, 30] });
+  // Stash bounds so selectTab() can re-fit when the tab first becomes
+  // visible — fitBounds called while display:none measures 0x0 and lands
+  // on a useless zoom level.
+  dm._dayBounds = bounds;
   dayMaps.set(dayNumber, dm);
 }
 

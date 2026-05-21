@@ -1,6 +1,7 @@
 import { groupByDay, sortDaySchedule } from "./lib/grouping.mjs";
 import { buildSchedule, fmtTime, haversineKm, setDriveTable } from "./lib/timeline.mjs";
 import { parseHours, checkVisit, fmtClock } from "./lib/hours.mjs";
+import { recommendNow, currentMealBand, tripPhase, minutesInKL } from "./lib/now.mjs";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, arrayUnion, arrayRemove
@@ -196,7 +197,8 @@ const views = {
   table: document.getElementById("view-table"),
   day1: document.getElementById("view-day1"),
   day2: document.getElementById("view-day2"),
-  day3: document.getElementById("view-day3")
+  day3: document.getElementById("view-day3"),
+  now: document.getElementById("view-now")
 };
 // The "Index" view used to be its own tab. It now lives below the leaflet
 // map inside view-map (rendered into this container by renderAllView).
@@ -972,6 +974,21 @@ function renderAllView() {
 }
 renderAllView();
 updateAllVoteButtons();
+
+// ─── Now view ───────────────────────────────────────────────────
+let nowState = { lat: null, lng: null, gpsStatus: "idle" }; // idle | loading | granted | denied
+let nowTimer = null;
+let nowWatchId = null;
+
+function renderNowView() {
+  const result = recommendNow(places, {
+    now: new Date(),
+    lat: nowState.lat,
+    lng: nowState.lng
+  });
+  views.now.innerHTML = `<div class="now-wrap"><pre>${escapeHtml(JSON.stringify(result, null, 2))}</pre></div>`;
+}
+renderNowView();
 
 // ─── Sheet (place detail modal) ─────────────────────────────────
 const sheet = document.getElementById("sheet");

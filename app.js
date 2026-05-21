@@ -218,6 +218,14 @@ function selectTab(name) {
     }
   }
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  if (name === "now") {
+    startNowGps();
+    startNowTicker();
+    renderNowView();
+  } else {
+    stopNowTicker();
+    stopNowGps();
+  }
 }
 for (const t of tabs) t.addEventListener("click", () => selectTab(t.dataset.view));
 
@@ -1149,6 +1157,45 @@ function nowEmpty(empty) {
   `;
 }
 
+function startNowGps() {
+  if (nowState.gpsStatus !== "idle") return;
+  if (!("geolocation" in navigator)) {
+    nowState.gpsStatus = "unavailable";
+    renderNowView();
+    return;
+  }
+  nowState.gpsStatus = "loading";
+  renderNowView();
+  nowWatchId = navigator.geolocation.watchPosition(
+    (pos) => {
+      nowState.lat = pos.coords.latitude;
+      nowState.lng = pos.coords.longitude;
+      nowState.gpsStatus = "granted";
+      renderNowView();
+    },
+    (_err) => {
+      nowState.gpsStatus = "denied";
+      renderNowView();
+    },
+    { enableHighAccuracy: false, maximumAge: 60_000, timeout: 15_000 }
+  );
+}
+
+function stopNowGps() {
+  if (nowWatchId != null && "geolocation" in navigator) {
+    navigator.geolocation.clearWatch(nowWatchId);
+    nowWatchId = null;
+  }
+}
+
+function startNowTicker() {
+  if (nowTimer) return;
+  nowTimer = setInterval(renderNowView, 60_000);
+}
+function stopNowTicker() {
+  if (nowTimer) { clearInterval(nowTimer); nowTimer = null; }
+}
+
 function renderNowView() {
   const result = recommendNow(places, {
     now: new Date(),
@@ -1197,13 +1244,12 @@ function renderNowView() {
     });
   }
 
-  // GPS prompt — Task 7 will wire navigator.geolocation. For now just
-  // bounce back to idle so the button re-renders.
+  // GPS prompt — request geolocation when user taps the button.
   const gpsBtn = views.now.querySelector("#now-gps-prompt");
   if (gpsBtn) {
     gpsBtn.addEventListener("click", () => {
       nowState.gpsStatus = "idle";
-      renderNowView();
+      startNowGps();
     });
   }
 

@@ -259,7 +259,7 @@ function makeIcon(p) {
 // each renderDayView so vote-induced leader flips redraw pins + polyline.
 const dayMaps = new Map();
 
-function renderDayMap(dayNumber, stops) {
+function renderDayMap(dayNumber, stops, contenders = []) {
   const prev = dayMaps.get(dayNumber);
   if (prev) { prev.remove(); dayMaps.delete(dayNumber); }
 
@@ -267,7 +267,8 @@ function renderDayMap(dayNumber, stops) {
   if (!el) return;
 
   const located = stops.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
-  if (located.length === 0) return;
+  const locatedContenders = contenders.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
+  if (located.length === 0 && locatedContenders.length === 0) return;
 
   const dm = L.map(el, {
     zoomControl: true,
@@ -308,6 +309,22 @@ function renderDayMap(dayNumber, stops) {
     L.polyline(located.map(p => [p.lat, p.lng]), {
       color: polylineColor, weight: 3, opacity: 0.6, dashArray: "6 6", lineCap: "round"
     }).addTo(dm);
+  }
+
+  // Non-leader candidates for this day: small ghost dots (no number, no
+  // polyline) so you can see how the alternatives sit geographically
+  // relative to the chosen route.
+  for (const p of locatedContenders) {
+    const swatch = colorFor(p);
+    const icon = L.divIcon({
+      className: "pin pin-contender",
+      html: `<span class="pin-dot" style="background:${swatch}"></span>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
+    });
+    const marker = L.marker([p.lat, p.lng], { icon }).addTo(dm);
+    marker.on("click", () => openSheet(p));
+    markers.push(marker);
   }
 
   const bounds = L.featureGroup(markers).getBounds();
@@ -724,7 +741,10 @@ function renderDayView(dayNumber, containerEl) {
     </div>
   `;
 
-  renderDayMap(dayNumber, stopsForRoute);
+  // Pass non-leader candidates (one of each slot's `.others`) so the day
+  // map shows every option for this day, not just the chosen route.
+  const dayContenders = slots.flatMap(s => s.others);
+  renderDayMap(dayNumber, stopsForRoute, dayContenders);
 }
 
 renderDayView(1, views.day1);

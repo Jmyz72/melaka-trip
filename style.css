@@ -1414,6 +1414,18 @@ body {
   font-weight: 700;
 }
 
+/* Day-map "ghost" pin for non-leader candidates — small dot, no number */
+.pin-contender .pin-dot {
+  display: block;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--paper);
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
+  opacity: 0.78;
+  transition: transform .15s ease, opacity .15s ease;
+}
+.pin-contender:hover .pin-dot { opacity: 1; transform: scale(1.25); }
+
 /* Per-day inline route map (sits above the itinerary) */
 .day-map {
   height: 320px;

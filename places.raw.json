@@ -352,7 +352,7 @@
     "name": "Jonker Night Market",
     "section": "jonker",
     "category": "entertainment",
-    "mealType": "entertainment",
+    "mealType": "night-market",
     "mapsUrl": "https://maps.app.goo.gl/1CkDNzXbEfxiJUNc8",
     "durationFromAirbnbMin": 13,
     "hours": "6pm-11pm",

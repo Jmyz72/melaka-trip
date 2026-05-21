@@ -8,7 +8,8 @@ const VALID_CATEGORIES = ["food", "entertainment", "souvenir", "airbnb"];
 const VALID_SECTIONS = ["entertainment", "zapbalang", "jonker", "airbnb"];
 const VALID_MEAL_TYPES = [
   "breakfast", "lunch", "dinner", "snack", "dessert",
-  "late-night", "drinks", "souvenir", "entertainment", "stay"
+  "late-night", "drinks", "souvenir", "entertainment", "stay",
+  "night-market"
 ];
 
 test("every place has the required fields", () => {

@@ -137,6 +137,7 @@ const SLOT_LABEL = {
   drinks:    "Drinks",
   souvenir:  "Souvenir · 手信",
   entertainment: "An outing · 玩",
+  "night-market": "Night market · 夜市",
   stay:      "Stay · 住宿"
 };
 
@@ -694,6 +695,7 @@ const MEAL_GROUPS = [
   { key: "drinks",        label: "Drinks",                match: p => p.mealType === "drinks" },
   { key: "dessert",       label: "Dessert · 蛋糕",        match: p => p.mealType === "dessert" },
   { key: "snack",         label: "Snacks",                match: p => p.mealType === "snack" },
+  { key: "night-market",  label: "Night Market · 夜市",   match: p => p.mealType === "night-market" },
   { key: "entertainment", label: "Outings · 玩",          match: p => p.category === "entertainment" },
   { key: "souvenir",      label: "Souvenirs · 手信",      match: p => p.category === "souvenir" },
   { key: "stay",          label: "Stay · 住宿",           match: p => p.category === "airbnb" }

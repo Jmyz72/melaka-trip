@@ -101,6 +101,7 @@ function rerenderAll() {
   renderDayView(1, views.day1);
   renderDayView(2, views.day2);
   renderDayView(3, views.day3);
+  renderTableView();
   renderAllView();
   updateAllVoteButtons();
 }
@@ -192,6 +193,7 @@ function fmtTimeRich(min) {
 const tabs = document.querySelectorAll(".contents .tab");
 const views = {
   map: document.getElementById("view-map"),
+  table: document.getElementById("view-table"),
   day1: document.getElementById("view-day1"),
   day2: document.getElementById("view-day2"),
   day3: document.getElementById("view-day3")
@@ -750,6 +752,130 @@ function renderDayView(dayNumber, containerEl) {
 renderDayView(1, views.day1);
 renderDayView(2, views.day2);
 renderDayView(3, views.day3);
+
+// ─── Itinerary table view ──────────────────────────────────────
+// Compact at-a-glance grid: every slot of every day as a row, with the
+// leading choice on the left and the other candidates listed beside it.
+// Reuses the same leader-selection logic as the day views so votes flow
+// through.
+function buildDaySlots(dayNumber) {
+  const dayPlaces = sortDaySchedule(groupByDay(places)[dayNumber]);
+  const closedScore = p => contenderStatus(p, dayNumber) === "closed" ? 1 : 0;
+
+  const candidateSlotOrder = [];
+  const candidatesByMeal = new Map();
+  for (const p of dayPlaces) {
+    if (p.committed) continue;
+    if (!candidatesByMeal.has(p.mealType)) {
+      candidatesByMeal.set(p.mealType, []);
+      candidateSlotOrder.push(p.mealType);
+    }
+    candidatesByMeal.get(p.mealType).push(p);
+  }
+  const candidateSlots = candidateSlotOrder.map(meal => {
+    const sorted = [...candidatesByMeal.get(meal)].sort((a, b) => {
+      const dv = votesOf(b.id) - votesOf(a.id);
+      if (dv !== 0) return dv;
+      const dc = closedScore(a) - closedScore(b);
+      if (dc !== 0) return dc;
+      return (a.order ?? 0) - (b.order ?? 0);
+    });
+    return { meal, leader: sorted[0], others: sorted.slice(1), isCommitted: false };
+  });
+  const committedSlots = dayPlaces.filter(p => p.committed).map(p => ({
+    meal: p.mealType, leader: p, others: [], isCommitted: true
+  }));
+  return [...committedSlots, ...candidateSlots]
+    .sort((a, b) => (a.leader.order ?? 0) - (b.leader.order ?? 0));
+}
+
+function renderTableRow(step, slot, dayNumber) {
+  const p = step.place;
+  const { cn, main } = splitName(p.name);
+  const slotLabel = SLOT_LABEL[p.mealType] || p.mealType;
+  const leaderBadge = slot.isCommitted
+    ? `<span class="tbl-badge tbl-badge-booked">✓ Booked</span>`
+    : slot.others.length ? `<span class="tbl-badge tbl-badge-leading">★ Leading</span>` : "";
+  const leaderCn = cn ? `<span class="tbl-cn">${escapeHtml(cn)}</span>` : "";
+  const leaderHtml = `
+    <div class="tbl-leader">
+      <button class="tbl-name-btn" data-place-id="${p.id}" type="button">
+        <span class="tbl-name">${escapeHtml(main)}</span>${leaderCn}
+      </button>
+      ${leaderBadge}
+    </div>
+  `;
+  const altsHtml = slot.others.length
+    ? `<ul class="tbl-alts">${slot.others.map(o => {
+        const n = splitName(o.name);
+        const v = votesOf(o.id);
+        const status = contenderStatus(o, dayNumber);
+        const closedTag = status === "closed"
+          ? `<span class="tbl-alt-closed">closed</span>` : "";
+        return `<li>
+          <button class="tbl-name-btn" data-place-id="${o.id}" type="button">${escapeHtml(n.main)}</button>
+          ${closedTag}
+          <span class="tbl-alt-votes" title="Votes">${v > 0 ? `♥ ${v}` : ""}</span>
+        </li>`;
+      }).join("")}</ul>`
+    : `<span class="tbl-dash">—</span>`;
+  return `
+    <tr class="${slot.isCommitted ? "tbl-row-booked" : ""}">
+      <td class="tbl-time">${fmtTimeRich(step.arriveMin)}</td>
+      <td class="tbl-slot">${escapeHtml(slotLabel)}</td>
+      <td class="tbl-leader-cell">${leaderHtml}</td>
+      <td class="tbl-alts-cell">${altsHtml}</td>
+    </tr>
+  `;
+}
+
+function renderTableView() {
+  const days = [1, 2, 3].map(dayNumber => {
+    const slots = buildDaySlots(dayNumber);
+    const primaries = slots.map(s => s.leader);
+    const schedule = buildSchedule(primaries, dayNumber);
+    const trip = TRIP_DAYS[dayNumber];
+    const rows = schedule.steps.map((step, idx) => renderTableRow(step, slots[idx], dayNumber)).join("");
+    return `
+      <section class="tbl-day tbl-day-${dayNumber}">
+        <header class="tbl-day-head">
+          <div class="tbl-day-folio">Day ${String(dayNumber).padStart(2, "0")} · ${escapeHtml(trip?.dowName || "")} · ${escapeHtml(trip?.date || "")}</div>
+          <h3 class="tbl-day-title">Day <span class="accent">${DAY_ROMAN[dayNumber]}</span></h3>
+        </header>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th class="tbl-time">Time</th>
+                <th class="tbl-slot">Slot</th>
+                <th class="tbl-leader-cell">Leading choice</th>
+                <th class="tbl-alts-cell">Alternatives</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </section>
+    `;
+  }).join("");
+
+  views.table.innerHTML = `
+    <div class="tbl-intro">
+      <h2>The Itinerary</h2>
+      <p>Every slot across three days, with alternatives beside the leading choice.</p>
+    </div>
+    ${days}
+  `;
+}
+renderTableView();
+
+// Clicking a place name in the table opens its detail sheet.
+views.table.addEventListener("click", (e) => {
+  const btn = e.target.closest(".tbl-name-btn[data-place-id]");
+  if (!btn) return;
+  const p = places.find(x => x.id === btn.dataset.placeId);
+  if (p) openSheet(p);
+});
 
 // ─── Index (all places) view — grouped by meal/course ───────────
 // Each group has: key, label (display), match (place predicate).

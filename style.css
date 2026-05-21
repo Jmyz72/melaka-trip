@@ -1459,6 +1459,216 @@ body {
   font-size: 18px;
 }
 
+/* ─────────────────────────────────────────  Itinerary table  ───────────────────────────────────────── */
+
+.tbl-intro {
+  text-align: center;
+  margin: 4px 0 28px;
+}
+.tbl-intro h2 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(40px, 10vw, 64px);
+  line-height: 1;
+  letter-spacing: -.025em;
+  margin: 0;
+  font-variation-settings: "opsz" 64;
+}
+.tbl-intro p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 8px 0 0;
+}
+
+.tbl-day { margin-bottom: 40px; }
+.tbl-day-head {
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.tbl-day-folio {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.tbl-day-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink);
+  margin-left: auto;
+}
+.tbl-day-1 .tbl-day-title .accent { color: var(--red); }
+.tbl-day-2 .tbl-day-title .accent { color: var(--jade); }
+.tbl-day-3 .tbl-day-title .accent { color: var(--indigo); }
+
+.tbl-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -22px;
+  padding: 0 22px;
+}
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 14px;
+  min-width: 540px;
+}
+.tbl thead th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper-soft);
+}
+.tbl tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px dotted var(--rule);
+  vertical-align: top;
+}
+.tbl tbody tr:last-child td { border-bottom: 0; }
+
+.tbl .tbl-time {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink);
+  width: 78px;
+}
+.tbl .tbl-time small {
+  font-weight: 400;
+  font-size: 9px;
+  margin-left: 1px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.tbl .tbl-slot {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  width: 130px;
+}
+.tbl .tbl-leader-cell { width: 38%; }
+.tbl .tbl-alts-cell  { width: auto; }
+
+.tbl-leader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tbl-name-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.25;
+  letter-spacing: -.005em;
+  border-bottom: 1px solid transparent;
+  transition: color .15s ease, border-color .15s ease;
+}
+.tbl-name-btn:hover { color: var(--red); border-bottom-color: var(--red); }
+.tbl-cn {
+  display: block;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 1px;
+  letter-spacing: 0;
+}
+
+.tbl-badge {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.tbl-badge-booked { background: var(--jade); color: var(--paper); }
+.tbl-badge-leading { background: var(--ink); color: var(--paper); }
+
+.tbl-row-booked .tbl-leader-cell {
+  border-left: 3px solid var(--jade);
+  padding-left: 10px;
+}
+
+.tbl-alts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tbl-alts li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.tbl-alts .tbl-name-btn {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.tbl-alts .tbl-name-btn:hover { color: var(--red); }
+.tbl-alt-closed {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--red);
+  background: var(--red-soft);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+.tbl-alt-votes {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tbl-dash { color: var(--ink-faint); font-family: var(--font-mono); }
+
 /* ─────────────────────────────────────────  Reduced motion  ───────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

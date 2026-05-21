@@ -53,7 +53,8 @@
     "lng": 102.193166,
     "photo": "images/mocity-cosmic-park.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -72,7 +73,8 @@
     "lng": 102.193166,
     "photo": "images/go-kart.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -91,7 +93,8 @@
     "lng": 102.1929213,
     "photo": "images/atv-zapbalang.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -108,7 +111,11 @@
     "order": 60,
     "lat": 2.1974868,
     "lng": 102.2459296,
-    "photo": "images/old-merchant.jpg"
+    "photo": "images/old-merchant.jpg",
+    "extraDays": [
+      1,
+      3
+    ]
   },
   {
     "id": "churrrmochi",
@@ -126,7 +133,8 @@
     "lng": 102.2329354,
     "photo": "images/churrrmochi.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -145,7 +153,8 @@
     "lng": 102.1827193,
     "photo": "images/seafood-96.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -164,7 +173,8 @@
     "lng": 102.2393703,
     "photo": "images/hok-chin.jpg",
     "extraDays": [
-      1
+      1,
+      3
     ]
   },
   {
@@ -183,7 +193,8 @@
     "lng": 102.2171998,
     "photo": "images/muse-peranakan.jpg",
     "extraDays": [
-      1
+      1,
+      3
     ]
   },
   {
@@ -202,7 +213,8 @@
     "lng": 102.3041102,
     "photo": "images/chasing-sunsets.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -219,7 +231,11 @@
     "order": 70,
     "lat": 2.198519,
     "lng": 102.2253065,
-    "photo": "images/shixia-shixia.jpg"
+    "photo": "images/shixia-shixia.jpg",
+    "extraDays": [
+      1,
+      3
+    ]
   },
   {
     "id": "baba-kaya",
@@ -237,6 +253,7 @@
     "lng": 102.2507371,
     "photo": "images/baba-kaya.jpg",
     "extraDays": [
+      1,
       3
     ]
   },
@@ -257,6 +274,7 @@
     "photo": "images/siang-chiang.jpg",
     "minArriveMin": 690,
     "extraDays": [
+      1,
       2
     ]
   },
@@ -276,7 +294,8 @@
     "lng": 102.2584677,
     "photo": "images/mcqueks-satay-celup.jpg",
     "extraDays": [
-      1
+      1,
+      3
     ]
   },
   {
@@ -295,7 +314,8 @@
     "lng": 102.2509139,
     "photo": "images/something-bakery.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -331,7 +351,8 @@
     "lng": 102.2603769,
     "photo": "images/la-mille-bakers.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -350,7 +371,8 @@
     "lng": 102.2601808,
     "photo": "images/baba-ang.jpg",
     "extraDays": [
-      1
+      1,
+      3
     ]
   },
   {
@@ -367,7 +389,11 @@
     "order": 34,
     "lat": 2.1888683,
     "lng": 102.2601808,
-    "photo": "images/baba-ang.jpg"
+    "photo": "images/baba-ang.jpg",
+    "extraDays": [
+      1,
+      3
+    ]
   },
   {
     "id": "hing-loong",
@@ -383,7 +409,11 @@
     "order": 31,
     "lat": 2.2021126,
     "lng": 102.23199,
-    "photo": "images/hing-loong.jpg"
+    "photo": "images/hing-loong.jpg",
+    "extraDays": [
+      1,
+      3
+    ]
   },
   {
     "id": "dashu-xia-duck",
@@ -401,6 +431,7 @@
     "lng": 102.2325839,
     "photo": "images/dashu-xia-duck.jpg",
     "extraDays": [
+      1,
       3
     ]
   },
@@ -420,7 +451,8 @@
     "lng": 102.2466381,
     "photo": "images/birdcage.jpg",
     "extraDays": [
-      1
+      1,
+      3
     ]
   },
   {
@@ -439,7 +471,8 @@
     "lng": 102.2449774,
     "photo": "images/hock-kee-waffle.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -475,7 +508,8 @@
     "lng": 102.2493179,
     "photo": "images/fruit-cones.jpg",
     "extraDays": [
-      1
+      1,
+      3
     ]
   },
   {
@@ -494,7 +528,8 @@
     "lng": 102.2357289,
     "photo": "images/night-market.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -530,7 +565,8 @@
     "lng": 102.2467365,
     "photo": "images/hernan-food.jpg",
     "extraDays": [
-      2
+      2,
+      3
     ]
   },
   {
@@ -547,7 +583,11 @@
     "order": 33,
     "lat": 2.1953449,
     "lng": 102.247767,
-    "photo": "images/famosa-chicken-rice-ball.jpg"
+    "photo": "images/famosa-chicken-rice-ball.jpg",
+    "extraDays": [
+      1,
+      3
+    ]
   },
   {
     "id": "seremban-market",

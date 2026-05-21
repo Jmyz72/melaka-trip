@@ -790,9 +790,21 @@ function renderIndexItem(p) {
 }
 
 function renderAllView() {
+  // Dedupe by mapsUrl so each physical place appears once. When a primary
+  // entry (e.g. baba-ang) and its same-coord duplicate (baba-ang-lunch,
+  // hock-kee-waffle-day1, airbnb-checkout) collide, the primary wins so
+  // the Index reads as a directory of locations, not slot assignments.
+  const isSuffixDup = p => /-(day1|lunch|checkout)$/.test(p.id);
+  const primaryByUrl = new Map();
+  for (const p of places) {
+    const cur = primaryByUrl.get(p.mapsUrl);
+    if (!cur || (isSuffixDup(cur) && !isSuffixDup(p))) primaryByUrl.set(p.mapsUrl, p);
+  }
+  const dedupedPlaces = [...primaryByUrl.values()];
+
   const seen = new Set();
   const sections = MEAL_GROUPS.map(g => {
-    const items = places
+    const items = dedupedPlaces
       .filter(p => g.match(p) && !seen.has(p.id))
       .sort((a, b) => (a.day ?? 9) - (b.day ?? 9) || (a.order ?? 0) - (b.order ?? 0));
     items.forEach(p => seen.add(p.id));
@@ -809,7 +821,7 @@ function renderAllView() {
   }).join("");
 
   // Any remaining unmatched places
-  const leftovers = places.filter(p => !seen.has(p.id));
+  const leftovers = dedupedPlaces.filter(p => !seen.has(p.id));
   const leftoverSection = leftovers.length ? `
     <section class="index-day">
       <header class="index-day-head">

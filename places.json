@@ -51,7 +51,10 @@
     "order": 25,
     "lat": 2.2158346,
     "lng": 102.193166,
-    "photo": "images/mocity-cosmic-park.jpg"
+    "photo": "images/mocity-cosmic-park.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "go-kart",
@@ -67,7 +70,10 @@
     "order": 30,
     "lat": 2.2158346,
     "lng": 102.193166,
-    "photo": "images/go-kart.jpg"
+    "photo": "images/go-kart.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "atv-zapbalang",
@@ -83,7 +89,10 @@
     "order": 20,
     "lat": 2.2155427,
     "lng": 102.1929213,
-    "photo": "images/atv-zapbalang.jpg"
+    "photo": "images/atv-zapbalang.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "old-merchant",
@@ -99,7 +108,10 @@
     "order": 60,
     "lat": 2.1974868,
     "lng": 102.2459296,
-    "photo": "images/old-merchant.jpg"
+    "photo": "images/old-merchant.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "churrrmochi",
@@ -116,7 +128,9 @@
     "lat": 2.1934791,
     "lng": 102.2329354,
     "photo": "images/churrrmochi.jpg",
-    "extraDays": [2]
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "seafood-96",
@@ -132,7 +146,10 @@
     "order": 40,
     "lat": 2.2146329,
     "lng": 102.1827193,
-    "photo": "images/seafood-96.jpg"
+    "photo": "images/seafood-96.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "hok-chin",
@@ -148,7 +165,10 @@
     "order": 50,
     "lat": 2.2634615,
     "lng": 102.2393703,
-    "photo": "images/hok-chin.jpg"
+    "photo": "images/hok-chin.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "muse-peranakan",
@@ -164,7 +184,10 @@
     "order": 51,
     "lat": 2.1878554,
     "lng": 102.2171998,
-    "photo": "images/muse-peranakan.jpg"
+    "photo": "images/muse-peranakan.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "chasing-sunsets",
@@ -180,7 +203,10 @@
     "order": 41,
     "lat": 2.1674214,
     "lng": 102.3041102,
-    "photo": "images/chasing-sunsets.jpg"
+    "photo": "images/chasing-sunsets.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "shixia-shixia",
@@ -196,7 +222,10 @@
     "order": 70,
     "lat": 2.198519,
     "lng": 102.2253065,
-    "photo": "images/shixia-shixia.jpg"
+    "photo": "images/shixia-shixia.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "baba-kaya",
@@ -212,7 +241,10 @@
     "order": 10,
     "lat": 2.1967375,
     "lng": 102.2507371,
-    "photo": "images/baba-kaya.jpg"
+    "photo": "images/baba-kaya.jpg",
+    "extraDays": [
+      3
+    ]
   },
   {
     "id": "siang-chiang",
@@ -229,7 +261,10 @@
     "lat": 2.1990977,
     "lng": 102.2365874,
     "photo": "images/siang-chiang.jpg",
-    "minArriveMin": 690
+    "minArriveMin": 690,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "mcqueks-satay-celup",
@@ -245,7 +280,10 @@
     "order": 52,
     "lat": 2.1888768,
     "lng": 102.2584677,
-    "photo": "images/mcqueks-satay-celup.jpg"
+    "photo": "images/mcqueks-satay-celup.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "something-bakery",
@@ -316,7 +354,10 @@
     "order": 49,
     "lat": 2.1888683,
     "lng": 102.2601808,
-    "photo": "images/baba-ang.jpg"
+    "photo": "images/baba-ang.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "baba-ang-lunch",
@@ -364,7 +405,10 @@
     "order": 11,
     "lat": 2.1970929,
     "lng": 102.2325839,
-    "photo": "images/dashu-xia-duck.jpg"
+    "photo": "images/dashu-xia-duck.jpg",
+    "extraDays": [
+      3
+    ]
   },
   {
     "id": "birdcage",
@@ -454,7 +498,10 @@
     "order": 50,
     "lat": 2.198071,
     "lng": 102.2357289,
-    "photo": "images/night-market.jpg"
+    "photo": "images/night-market.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "tan-kim-hock",

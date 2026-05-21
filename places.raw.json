@@ -42,7 +42,10 @@
     "hours": "Fri 11am-12:30am; Sat-Sun 10am-12:30am",
     "remarks": "玩 — same lot as ATV/Go-Kart",
     "day": 1,
-    "order": 25
+    "order": 25,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "go-kart",
@@ -55,7 +58,10 @@
     "hours": "until 5pm",
     "remarks": "Same place as Mocity Cosmic Park",
     "day": 1,
-    "order": 30
+    "order": 30,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "atv-zapbalang",
@@ -68,7 +74,10 @@
     "hours": "Not stated",
     "remarks": "",
     "day": 1,
-    "order": 20
+    "order": 20,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "old-merchant",
@@ -81,7 +90,10 @@
     "hours": "5pm-2am",
     "remarks": "Chill drinks — optional",
     "day": 2,
-    "order": 60
+    "order": 60,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "churrrmochi",
@@ -110,7 +122,10 @@
     "hours": "3pm-11:45pm",
     "remarks": "手抓海鲜 — dinner",
     "day": 1,
-    "order": 40
+    "order": 40,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "hok-chin",
@@ -123,7 +138,10 @@
     "hours": "5:30pm-11:30pm (Sun closed)",
     "remarks": "海鲜 — dinner alternative",
     "day": 2,
-    "order": 50
+    "order": 50,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "muse-peranakan",
@@ -136,7 +154,10 @@
     "hours": "12pm-10pm",
     "remarks": "晚餐 — dinner alternative",
     "day": 2,
-    "order": 51
+    "order": 51,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "chasing-sunsets",
@@ -149,7 +170,10 @@
     "hours": "5pm-12am",
     "remarks": "晚餐 — dinner alternative",
     "day": 1,
-    "order": 41
+    "order": 41,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "shixia-shixia",
@@ -162,7 +186,10 @@
     "hours": "5pm-1am",
     "remarks": "宵夜 lok-lok",
     "day": 2,
-    "order": 70
+    "order": 70,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "baba-kaya",
@@ -175,7 +202,10 @@
     "hours": "Fri 8am-2:30pm; Sat-Sun 7:30am-2:30pm",
     "remarks": "早餐",
     "day": 2,
-    "order": 10
+    "order": 10,
+    "extraDays": [
+      3
+    ]
   },
   {
     "id": "siang-chiang",
@@ -189,7 +219,10 @@
     "remarks": "Post-checkout brunch ~11:30am — candidate",
     "day": 3,
     "order": 20,
-    "minArriveMin": 690
+    "minArriveMin": 690,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "mcqueks-satay-celup",
@@ -202,7 +235,10 @@
     "hours": "4pm-11pm",
     "remarks": "吃爽 — dinner alternative",
     "day": 2,
-    "order": 52
+    "order": 52,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "something-bakery",
@@ -261,7 +297,10 @@
     "hours": "11am-2pm; 6pm-9pm",
     "remarks": "Nyonya — RESERVATION NEEDED",
     "day": 2,
-    "order": 49
+    "order": 49,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "baba-ang-lunch",
@@ -300,7 +339,10 @@
     "hours": "7am-1:30pm",
     "remarks": "Duck noodle breakfast alternative",
     "day": 2,
-    "order": 11
+    "order": 11,
+    "extraDays": [
+      3
+    ]
   },
   {
     "id": "birdcage",
@@ -375,7 +417,10 @@
     "hours": "6pm-11pm",
     "remarks": "夜市 — Fri/Sat/Sun only",
     "day": 1,
-    "order": 50
+    "order": 50,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "tan-kim-hock",

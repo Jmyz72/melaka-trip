@@ -615,15 +615,19 @@ function renderDayView(dayNumber, containerEl) {
   // (bucketed by mealType, vote-driven leader). Candidate buckets only
   // contain non-committed places — the committed entries don't compete in
   // the vote slot at all; they're already on the plan. Cross-day places
-  // claimed by another day's leader are also excluded here.
+  // claimed by another day's leader are also excluded here. So is any
+  // cross-day candidate whose mealType is already committed on this day
+  // (avoids a duplicate slot row of the same kind of meal).
   const closedScore = p => contenderStatus(p, dayNumber) === "closed" ? 1 : 0;
   const claims = computeClaims();
+  const committedMeals = new Set(dayPlaces.filter(p => p.committed).map(p => p.mealType));
 
   const candidateSlotOrder = [];
   const candidatesByMeal = new Map();
   for (const p of dayPlaces) {
     if (p.committed) continue;
     if (claims.has(p.id) && claims.get(p.id) !== dayNumber) continue;
+    if (committedMeals.has(p.mealType)) continue;
     if (!candidatesByMeal.has(p.mealType)) {
       candidatesByMeal.set(p.mealType, []);
       candidateSlotOrder.push(p.mealType);

@@ -325,12 +325,39 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 window.__map = map;
 const withCoords = places.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
+const markersById = new Map();
 const markers = withCoords.map(p => {
   const m = L.marker([p.lat, p.lng], { icon: makeIcon(p) }).addTo(map);
   m.on("click", () => openSheet(p));
+  markersById.set(p.id, m);
   return m;
 });
 map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [40, 40] });
+
+// Clicking an index item flies the Atlas map to that pin and pulses it.
+// Lets you tap a name in the list and immediately see its position
+// without opening the full place sheet first.
+function flashMarkerForId(id) {
+  const m = markersById.get(id);
+  if (!m) return;
+  document.getElementById("leaflet-map").scrollIntoView({ behavior: "smooth", block: "start" });
+  setTimeout(() => {
+    map.flyTo(m.getLatLng(), Math.max(map.getZoom(), 16), { duration: 0.7 });
+    const el = m._icon;
+    if (el) {
+      el.classList.add("pin-flash");
+      setTimeout(() => el.classList.remove("pin-flash"), 1800);
+    }
+  }, 220);
+}
+
+document.body.addEventListener("click", (e) => {
+  if (e.target.closest("a, button")) return;
+  const item = e.target.closest(".index-item[data-place-id]");
+  if (!item) return;
+  e.preventDefault();
+  flashMarkerForId(item.dataset.placeId);
+});
 
 // ─── Place renderers ────────────────────────────────────────────
 function dayKickerLabel(p) {
@@ -725,7 +752,7 @@ function renderIndexItem(p) {
   const { cn, main } = splitName(p.name);
   const dayCls = p.category === "airbnb" ? "" : (p.day ? `day-${p.day}` : "");
   return `
-    <article class="index-item ${dayCls}">
+    <article class="index-item ${dayCls}" data-place-id="${p.id}" role="button" tabindex="0" aria-label="Locate ${escapeHtml(main)} on the map">
       <div class="index-item-photo" style="${p.photo ? `background-image:url('${escapeHtml(p.photo)}')` : ""}"></div>
       <div class="index-item-body">
         <div class="index-item-kicker">${escapeHtml(dayKickerLabel(p))}</div>

@@ -45,13 +45,39 @@ onSnapshot(collection(db, "votes"), (snap) => {
     const voters = d.data().voters || [];
     votesByPlace[d.id] = { count: voters.length, voted: voters.includes(userId) };
   });
-  rerenderAll();
+  applyVoteSnapshot();
 });
 
 function votesOf(id) { return votesByPlace[id]?.count || 0; }
 
-// Re-render everything that depends on vote counts (which slot is "leading", etc).
-// Called on every Firestore snapshot.
+// Tracks the currently rendered leader per (day:mealType). Used by the
+// snapshot handler to decide between a cheap vote-button refresh and a full
+// re-render (only needed when a leader actually flips).
+const currentLeaders = new Map();
+function leaderKey(dayNum, meal) { return `${dayNum}:${meal}`; }
+
+// Compute what the leader would be RIGHT NOW for a given (day, meal),
+// using current votesByPlace.
+function computeLeaderId(dayNum, meal) {
+  const candidates = (groupByDay(places)[dayNum] || []).filter(p => p.mealType === meal);
+  if (candidates.length === 0) return null;
+  candidates.sort((a, b) => (votesOf(b.id) - votesOf(a.id)) || ((a.order ?? 0) - (b.order ?? 0)));
+  return candidates[0].id;
+}
+
+// On every snapshot: always refresh button counts (cheap). Only re-render
+// the day/index views if a slot leader has flipped (expensive — destroys
+// and rebuilds ~120 DOM nodes plus images).
+function applyVoteSnapshot() {
+  updateAllVoteButtons();
+  let leaderFlipped = false;
+  for (const [key, leaderId] of currentLeaders) {
+    const [d, meal] = key.split(":");
+    if (computeLeaderId(Number(d), meal) !== leaderId) { leaderFlipped = true; break; }
+  }
+  if (leaderFlipped) rerenderAll();
+}
+
 function rerenderAll() {
   renderDayView(1, views.day1);
   renderDayView(2, views.day2);
@@ -333,6 +359,9 @@ function renderDayView(dayNumber, containerEl) {
 
   const primaries = slots.map(s => s.leader);
   const schedule = buildSchedule(primaries, dayNumber);
+
+  // Remember who's currently leading each slot so snapshot handler can detect flips.
+  for (const s of slots) currentLeaders.set(leaderKey(dayNumber, s.meal), s.leader.id);
 
   // Route stops: include Airbnb origin/dest where appropriate
   const airbnb = places.find(p => p.category === "airbnb");

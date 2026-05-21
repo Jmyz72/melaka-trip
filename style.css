@@ -46,27 +46,10 @@ body {
   font-size: 17px;
   line-height: 1.6;
   color: var(--ink);
-  background:
-    /* very subtle off-white speckling */
-    radial-gradient(circle at 20% 10%, rgba(255,255,255,.35) 0, transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(168,52,35,.04) 0, transparent 50%),
-    var(--paper);
-  background-attachment: fixed;
+  background: var(--paper);
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-/* A near-imperceptible noise/paper grain — pseudo overlay using inline SVG */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: .25;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
 }
 
 ::selection { background: var(--ink); color: var(--paper); }
@@ -161,9 +144,7 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(239, 228, 206, .92);
-  -webkit-backdrop-filter: blur(8px) saturate(140%);
-  backdrop-filter: blur(8px) saturate(140%);
+  background: var(--paper);
   border-bottom: 1px solid var(--rule);
   padding: 0;
 }

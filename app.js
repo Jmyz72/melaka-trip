@@ -96,6 +96,7 @@ function applyVoteSnapshot() {
     if (computeLeaderId(Number(d), meal) !== leaderId) { leaderFlipped = true; break; }
   }
   if (leaderFlipped) rerenderAll();
+  if (views.now.classList.contains("active")) renderNowView();
 }
 
 function rerenderAll() {

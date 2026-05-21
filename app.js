@@ -1258,6 +1258,19 @@ function renderNowView() {
 }
 renderNowView();
 
+// In the Now view, tapping an alternative card opens the place sheet
+// directly (the global click handler at app.js elsewhere flies the Atlas
+// map, which would do nothing visible while the Now tab is active).
+views.now.addEventListener("click", (e) => {
+  const item = e.target.closest(".index-item[data-place-id]");
+  if (!item) return;
+  if (e.target.closest("a, button")) return; // let Maps link / vote button work
+  e.preventDefault();
+  e.stopPropagation(); // prevent the body-level flash handler from firing
+  const p = places.find(x => x.id === item.dataset.placeId);
+  if (p) openSheet(p);
+});
+
 // ─── Sheet (place detail modal) ─────────────────────────────────
 const sheet = document.getElementById("sheet");
 const sheetBackdrop = document.getElementById("sheet-backdrop");

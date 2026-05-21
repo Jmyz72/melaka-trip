@@ -976,17 +976,238 @@ renderAllView();
 updateAllVoteButtons();
 
 // ─── Now view ───────────────────────────────────────────────────
-let nowState = { lat: null, lng: null, gpsStatus: "idle" }; // idle | loading | granted | denied
+let nowState = {
+  lat: null,
+  lng: null,
+  gpsStatus: "idle", // idle | loading | granted | denied | unavailable
+  filter: localStorage.getItem("melaka_now_filter") || null
+};
 let nowTimer = null;
 let nowWatchId = null;
+
+const NOW_FILTERS = [
+  { key: "food",     label: "Food only",          sub: "饿了" },
+  { key: "walking",  label: "Walking only",       sub: "≤ 1.5 km" },
+  { key: "non-food", label: "Souvenir · Outings", sub: "其他" }
+];
+
+const TRIP_START_KL = "2026-05-22T11:00:00+08:00";
+
+function fmtLocalDateTime(d) {
+  // Trust the browser TZ; users will be in Asia/KL during the trip.
+  const date = d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+  let h = d.getHours();
+  const m = d.getMinutes();
+  const period = h >= 12 ? "pm" : "am";
+  h = h % 12; if (h === 0) h = 12;
+  return `${date} · ${h}:${String(m).padStart(2, "0")}${period}`;
+}
+
+function findNearestPlace(lat, lng) {
+  let best = null;
+  let bestKm = Infinity;
+  for (const p of places) {
+    if (typeof p.lat !== "number" || typeof p.lng !== "number") continue;
+    const d = haversineKm({ lat, lng }, p);
+    if (d < bestKm) { bestKm = d; best = p; }
+  }
+  return best ? { place: best, distKm: bestKm } : null;
+}
+
+function nowGpsLine() {
+  const s = nowState.gpsStatus;
+  if (s === "loading")     return `<span class="now-gps"><span class="now-gps-pin">◉</span> Locating<span class="now-ellipsis">…</span></span>`;
+  if (s === "unavailable") return `<span class="now-gps muted"><span class="now-gps-pin">◌</span> Location unavailable</span>`;
+  if (s === "granted" && typeof nowState.lat === "number") {
+    const near = findNearestPlace(nowState.lat, nowState.lng);
+    if (near) {
+      const { main } = splitName(near.place.name);
+      return `<span class="now-gps"><span class="now-gps-pin">●</span> Near <em>${escapeHtml(main)}</em></span>`;
+    }
+    return `<span class="now-gps"><span class="now-gps-pin">●</span> Located</span>`;
+  }
+  // idle | denied
+  return `<button id="now-gps-prompt" class="now-gps-btn" type="button"><span class="now-gps-pin">◎</span> Tap to share location</button>`;
+}
+
+function nowContextStrip(ctx) {
+  const now = new Date();
+  const dayLabel = ctx && ctx.dayNumber
+    ? `<span class="now-dayfolio">Day <span class="accent">${String(ctx.dayNumber).padStart(2, "0")}</span> of 03</span>`
+    : "";
+  return `
+    <header class="now-strip">
+      <div class="now-strip-rule">
+        <span class="pip"></span>
+        <span class="now-strip-kicker">Today’s Programme · 今日</span>
+        <span class="now-strip-line"></span>
+      </div>
+      <div class="now-strip-row">
+        <time class="now-clock" datetime="${now.toISOString()}">${escapeHtml(fmtLocalDateTime(now))}</time>
+        ${dayLabel}
+        <span class="now-gps-wrap">${nowGpsLine()}</span>
+      </div>
+    </header>
+  `;
+}
+
+function nowChips() {
+  return `
+    <div class="now-chips" role="tablist" aria-label="Filter recommendations">
+      ${NOW_FILTERS.map(f => {
+        const on = nowState.filter === f.key;
+        return `<button type="button" class="now-chip" data-now-filter="${f.key}" aria-pressed="${on}">
+          <span class="now-chip-label">${escapeHtml(f.label)}</span>
+          <span class="now-chip-sub">${escapeHtml(f.sub)}</span>
+        </button>`;
+      }).join("")}
+    </div>
+  `;
+}
+
+function nowReasonLine(top, ctx) {
+  const bits = [];
+  if (top.closeMin != null) {
+    bits.push(`Open until <b>${fmtTime(top.closeMin % 1440)}</b>`);
+  }
+  if (top.distKm != null) {
+    const km = Math.round(top.distKm * 10) / 10;
+    bits.push(`${km} km away`);
+  }
+  if (top.place.mealType && ctx && top.place.mealType === ctx.currentMealBand) {
+    bits.push(`matches <b>${escapeHtml(ctx.currentMealBand)}</b>`);
+  }
+  let line = bits.join(" · ");
+  if (top.checkStatus === "closing-soon") {
+    line = `<span class="now-warn">Closing soon</span> — ${line}`;
+  }
+  return line || "Open now";
+}
+
+function nowHero(top, ctx) {
+  const p = top.place;
+  const { cn, main } = splitName(p.name);
+  const photoStyle = p.photo ? `background-image:url('${escapeHtml(p.photo)}')` : "";
+  const slot = SLOT_LABEL[p.mealType] || p.mealType || "Now";
+  const remark = p.remarks ? `<p class="now-hero-remark">${escapeHtml(p.remarks)}</p>` : "";
+  return `
+    <article class="now-hero" data-place-id="${p.id}" role="button" tabindex="0" aria-label="Open ${escapeHtml(main)}">
+      <div class="now-hero-photo" style="${photoStyle}">
+        <span class="now-hero-stamp">The Lead<br><em>领头</em></span>
+      </div>
+      <div class="now-hero-body">
+        <div class="now-hero-kicker">
+          <span class="now-hero-slot">${escapeHtml(slot)}</span>
+          <span class="now-hero-dot">·</span>
+          <span class="now-hero-pick">Pick of the hour</span>
+        </div>
+        <h2 class="now-hero-name">
+          ${escapeHtml(main)}${cn ? `<span class="cn">${escapeHtml(cn)}</span>` : ""}
+        </h2>
+        ${remark}
+        <p class="now-hero-reason">${nowReasonLine(top, ctx)}</p>
+        <div class="now-hero-foot">
+          <a class="now-hero-maps" href="${escapeHtml(p.mapsUrl)}" target="_blank" rel="noopener">Open in Maps ${ICON.external}</a>
+          <button class="vote-btn" data-vote-place="${p.id}" aria-pressed="false" aria-label="Vote for ${escapeHtml(main)}">
+            ${ICON.heart}<span class="vote-count">0</span>
+          </button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function nowEmpty(empty) {
+  const now = new Date();
+  if (empty.reason === "pre-trip") {
+    const ms = new Date(TRIP_START_KL).getTime() - now.getTime();
+    const hours = Math.max(0, Math.round(ms / 3600000));
+    return `
+      <section class="now-empty">
+        <p class="now-empty-kicker">Not yet</p>
+        <h2 class="now-empty-title">Trip starts <em>Fri 22 May</em> at 11am.</h2>
+        <p class="now-empty-sub">in <b>${hours}h</b> · until then, browse the Atlas.</p>
+      </section>
+    `;
+  }
+  if (empty.reason === "post-trip") {
+    return `
+      <section class="now-empty">
+        <p class="now-empty-kicker">Curtain</p>
+        <h2 class="now-empty-title">Trip’s over <span class="now-wave">👋</span></h2>
+        <p class="now-empty-sub">Open the Day views to look back.</p>
+      </section>
+    `;
+  }
+  // nothing-open
+  return `
+    <section class="now-empty">
+      <p class="now-empty-kicker">Closed shutters</p>
+      <h2 class="now-empty-title">Nothing open right now.</h2>
+      <p class="now-empty-sub">Try a Day view or come back in an hour.</p>
+    </section>
+  `;
+}
 
 function renderNowView() {
   const result = recommendNow(places, {
     now: new Date(),
     lat: nowState.lat,
-    lng: nowState.lng
+    lng: nowState.lng,
+    filter: nowState.filter
   });
-  views.now.innerHTML = `<div class="now-wrap"><pre>${escapeHtml(JSON.stringify(result, null, 2))}</pre></div>`;
+
+  if (result.empty) {
+    views.now.innerHTML = `
+      <div class="now-wrap">
+        ${nowContextStrip(result.context)}
+        ${nowEmpty(result.empty)}
+      </div>
+    `;
+  } else {
+    const altsHtml = result.alternatives.length
+      ? `<section class="now-alts">
+          <header class="now-alts-head">
+            <h3>Other places open now</h3>
+            <span class="now-alts-count">${result.alternatives.length} ${result.alternatives.length === 1 ? "stop" : "stops"}</span>
+          </header>
+          <div class="now-alts-list index-list">
+            ${result.alternatives.map(a => renderIndexItem(a.place)).join("")}
+          </div>
+        </section>`
+      : "";
+    views.now.innerHTML = `
+      <div class="now-wrap">
+        ${nowContextStrip(result.context)}
+        ${nowChips()}
+        ${nowHero(result.top, result.context)}
+        ${altsHtml}
+      </div>
+    `;
+  }
+
+  // Wire chip click handlers (toggle / clear / persist).
+  for (const btn of views.now.querySelectorAll("[data-now-filter]")) {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.nowFilter;
+      nowState.filter = (nowState.filter === key) ? null : key;
+      if (nowState.filter) localStorage.setItem("melaka_now_filter", nowState.filter);
+      else localStorage.removeItem("melaka_now_filter");
+      renderNowView();
+    });
+  }
+
+  // GPS prompt — Task 7 will wire navigator.geolocation. For now just
+  // bounce back to idle so the button re-renders.
+  const gpsBtn = views.now.querySelector("#now-gps-prompt");
+  if (gpsBtn) {
+    gpsBtn.addEventListener("click", () => {
+      nowState.gpsStatus = "idle";
+      renderNowView();
+    });
+  }
+
+  updateAllVoteButtons();
 }
 renderNowView();
 

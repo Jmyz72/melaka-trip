@@ -183,9 +183,10 @@
     "mapsUrl": "https://maps.app.goo.gl/VUvShuatqeZ9f88k9",
     "durationFromAirbnbMin": 10,
     "hours": "7am-2pm",
-    "remarks": "Post-checkout brunch — candidate",
+    "remarks": "Post-checkout brunch ~11:30am — candidate",
     "day": 3,
-    "order": 20
+    "order": 20,
+    "minArriveMin": 690
   },
   {
     "id": "mcqueks-satay-celup",

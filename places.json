@@ -222,12 +222,13 @@
     "mapsUrl": "https://maps.app.goo.gl/VUvShuatqeZ9f88k9",
     "durationFromAirbnbMin": 10,
     "hours": "7am-2pm",
-    "remarks": "Post-checkout brunch — candidate",
+    "remarks": "Post-checkout brunch ~11:30am — candidate",
     "day": 3,
     "order": 20,
     "lat": 2.1990977,
     "lng": 102.2365874,
-    "photo": "images/siang-chiang.jpg"
+    "photo": "images/siang-chiang.jpg",
+    "minArriveMin": 690
   },
   {
     "id": "mcqueks-satay-celup",

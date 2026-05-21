@@ -1341,6 +1341,37 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,.35);
 }
 
+/* Numbered pins used on per-day inline maps */
+.pin-numbered .pin-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2.5px solid var(--paper);
+  box-shadow: 0 1px 3px rgba(0,0,0,.35);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+.pin-numbered .pin-num.is-airbnb {
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Per-day inline route map (sits above the itinerary) */
+.day-map {
+  height: 320px;
+  margin: 0 0 28px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.day-map .leaflet-container { height: 100%; }
+
 /* ─────────────────────────────────────────  Footer / Colophon  ───────────────────────────────────────── */
 
 .colophon {

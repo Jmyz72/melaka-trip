@@ -197,6 +197,13 @@ function selectTab(name) {
   for (const t of tabs) t.setAttribute("aria-selected", t.dataset.view === name ? "true" : "false");
   for (const [key, el] of Object.entries(views)) el.classList.toggle("active", key === name);
   if (name === "map" && window.__map) window.__map.invalidateSize();
+  // Day maps are initialized while their tab is display:none, so Leaflet
+  // measures 0x0 until the tab becomes active. Refresh on first show.
+  const dayMatch = name.match(/^day(\d)$/);
+  if (dayMatch) {
+    const dm = dayMaps.get(Number(dayMatch[1]));
+    if (dm) dm.invalidateSize();
+  }
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
 }
 for (const t of tabs) t.addEventListener("click", () => selectTab(t.dataset.view));
@@ -221,6 +228,56 @@ function makeIcon(p) {
     iconAnchor: [size / 2, size / 2]
   });
 }
+// Per-day inline map instances, keyed by dayNumber. Cleared and rebuilt
+// each renderDayView so vote-induced leader flips redraw pins + polyline.
+const dayMaps = new Map();
+
+function renderDayMap(dayNumber, stops) {
+  const prev = dayMaps.get(dayNumber);
+  if (prev) { prev.remove(); dayMaps.delete(dayNumber); }
+
+  const el = document.getElementById(`day-${dayNumber}-map`);
+  if (!el) return;
+
+  const located = stops.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
+  if (located.length === 0) return;
+
+  const dm = L.map(el, {
+    zoomControl: true,
+    scrollWheelZoom: false,
+    attributionControl: false
+  });
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(dm);
+
+  const color = DAY_COLOR[dayNumber] || UNASSIGNED_COLOR;
+  const markers = [];
+  let realIdx = 0;
+  located.forEach((p) => {
+    const isAirbnb = p.category === "airbnb";
+    const swatch = isAirbnb ? AIRBNB_COLOR : color;
+    const label  = isAirbnb ? "⌂" : String(++realIdx);
+    const extra  = isAirbnb ? " is-airbnb" : "";
+    const icon = L.divIcon({
+      className: "pin pin-numbered",
+      html: `<span class="pin-num${extra}" style="background:${swatch}">${label}</span>`,
+      iconSize: [26, 26],
+      iconAnchor: [13, 13]
+    });
+    const marker = L.marker([p.lat, p.lng], { icon }).addTo(dm);
+    marker.on("click", () => openSheet(p));
+    markers.push(marker);
+  });
+
+  if (located.length >= 2) {
+    L.polyline(located.map(p => [p.lat, p.lng]), {
+      color, weight: 3, opacity: 0.6, dashArray: "6 6", lineCap: "round"
+    }).addTo(dm);
+  }
+
+  dm.fitBounds(L.featureGroup(markers).getBounds(), { padding: [30, 30] });
+  dayMaps.set(dayNumber, dm);
+}
+
 const map = L.map("leaflet-map", { zoomControl: true });
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19, attribution: "© OpenStreetMap contributors"
@@ -561,9 +618,12 @@ function renderDayView(dayNumber, containerEl) {
   containerEl.innerHTML = `
     <div class="day-spread">
       ${headerHtml}
+      <div class="day-map" id="day-${dayNumber}-map" aria-label="Map of Day ${dayNumber} stops"></div>
       <ol class="itinerary">${entries}</ol>
     </div>
   `;
+
+  renderDayMap(dayNumber, stopsForRoute);
 }
 
 renderDayView(1, views.day1);

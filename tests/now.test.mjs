@@ -97,3 +97,61 @@ test("recommendNow: post-trip empty state", () => {
   const r = recommendNow(FIXTURE, { now: new Date("2026-05-30T10:00:00+08:00") });
   assert.equal(r.empty.reason, "post-trip");
 });
+
+test("recommendNow: with GPS, closer place wins ties on meal-fit", () => {
+  const places = [
+    { id: "near", name: "Near", category: "food", mealType: "lunch",
+      hours: "11am-3pm", lat: 2.197, lng: 102.252,
+      mapsUrl: "https://x/n", order: 1 },
+    { id: "far",  name: "Far",  category: "food", mealType: "lunch",
+      hours: "11am-3pm", lat: 2.250, lng: 102.300,
+      mapsUrl: "https://x/f", order: 2 }
+  ];
+  const r = recommendNow(places, {
+    now: new Date("2026-05-22T12:30:00+08:00"),
+    lat: 2.197, lng: 102.252
+  });
+  assert.equal(r.top.place.id, "near");
+});
+
+test("recommendNow: closing-soon place demoted below fully-open peer", () => {
+  const places = [
+    { id: "lunch-soon", name: "Closing", category: "food", mealType: "lunch",
+      hours: "11am-3pm", lat: 2.197, lng: 102.252,
+      mapsUrl: "https://x/c", order: 1 },
+    { id: "open-wide", name: "Wide Open", category: "food", mealType: "lunch",
+      hours: "11am-9pm", lat: 2.197, lng: 102.252,
+      mapsUrl: "https://x/w", order: 2 }
+  ];
+  const r = recommendNow(places, {
+    now: new Date("2026-05-22T14:55:00+08:00")
+  });
+  assert.equal(r.top.place.id, "open-wide");
+});
+
+test("recommendNow: filter 'food' excludes souvenir", () => {
+  const places = [
+    { id: "shop", name: "Shop", category: "souvenir", mealType: "souvenir",
+      hours: "9am-9pm", lat: 2.197, lng: 102.252,
+      mapsUrl: "https://x/s", order: 1 },
+    { id: "eat", name: "Eat", category: "food", mealType: "lunch",
+      hours: "11am-3pm", lat: 2.197, lng: 102.252,
+      mapsUrl: "https://x/e", order: 2 }
+  ];
+  const r = recommendNow(places, {
+    now: new Date("2026-05-22T12:30:00+08:00"),
+    filter: "food"
+  });
+  assert.equal(r.alternatives.find(a => a.place.id === "shop"), undefined);
+  assert.equal(r.top.place.id, "eat");
+});
+
+test("recommendNow: nothing-open empty state during trip", () => {
+  const places = [
+    { id: "x", name: "X", category: "food", mealType: "lunch",
+      hours: "11am-3pm", lat: 2.197, lng: 102.252,
+      mapsUrl: "https://x/x", order: 1 }
+  ];
+  const r = recommendNow(places, { now: new Date("2026-05-22T05:00:00+08:00") });
+  assert.equal(r.empty.reason, "nothing-open");
+});

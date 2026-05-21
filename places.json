@@ -108,10 +108,7 @@
     "order": 60,
     "lat": 2.1974868,
     "lng": 102.2459296,
-    "photo": "images/old-merchant.jpg",
-    "extraDays": [
-      1
-    ]
+    "photo": "images/old-merchant.jpg"
   },
   {
     "id": "churrrmochi",
@@ -222,10 +219,7 @@
     "order": 70,
     "lat": 2.198519,
     "lng": 102.2253065,
-    "photo": "images/shixia-shixia.jpg",
-    "extraDays": [
-      1
-    ]
+    "photo": "images/shixia-shixia.jpg"
   },
   {
     "id": "baba-kaya",

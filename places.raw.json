@@ -90,10 +90,7 @@
     "hours": "5pm-2am",
     "remarks": "Chill drinks — optional",
     "day": 2,
-    "order": 60,
-    "extraDays": [
-      1
-    ]
+    "order": 60
   },
   {
     "id": "churrrmochi",
@@ -186,10 +183,7 @@
     "hours": "5pm-1am",
     "remarks": "宵夜 lok-lok",
     "day": 2,
-    "order": 70,
-    "extraDays": [
-      1
-    ]
+    "order": 70
   },
   {
     "id": "baba-kaya",

@@ -403,7 +403,7 @@ function renderRemark(p, { drop = false } = {}) {
 function renderPlace(p, { dropcap = false, leading = false } = {}) {
   const { cn, main } = splitName(p.name);
   const badge = p.committed
-    ? `<span class="committed-badge">✓ Booked</span>`
+    ? `<span class="committed-badge" aria-label="Booked">✓</span>`
     : leading ? `<span class="leading-badge">★ Leading choice</span>` : "";
   const photo = p.photo
     ? `<figure class="place-photo">
@@ -647,7 +647,7 @@ function renderDayView(dayNumber, containerEl) {
     }
 
     const railTag = slot.isCommitted
-      ? `<span class="entry-choices entry-booked">Booked</span>`
+      ? `<span class="entry-choices entry-booked" aria-label="Booked">✓</span>`
       : others.length ? `<span class="entry-choices">${slot.total} choices</span>` : "";
 
     return `

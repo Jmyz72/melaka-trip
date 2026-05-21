@@ -10,7 +10,7 @@
     "hours": "Check-in after 3pm; Check-out 11am",
     "remarks": "Check-in 3pm · drop bags",
     "day": 1,
-    "order": 6,
+    "order": 15,
     "minArriveMin": 900,
     "dwellMin": 15,
     "committed": true
@@ -94,7 +94,7 @@
     "hours": "12pm-7pm",
     "remarks": "IG: churrrmochi — preorder and pickup",
     "day": 1,
-    "order": 10
+    "order": 6
   },
   {
     "id": "hock-kee-waffle-day1",
@@ -105,9 +105,9 @@
     "mapsUrl": "https://maps.app.goo.gl/c9Y9rDcXHeAgkWnK6",
     "durationFromAirbnbMin": 7,
     "hours": "9:30am-6pm",
-    "remarks": "waffle — alternative to Churrrmochi",
+    "remarks": "waffle — alternative",
     "day": 1,
-    "order": 11
+    "order": 7
   },
   {
     "id": "birdcage-day1",
@@ -118,9 +118,48 @@
     "mapsUrl": "https://maps.app.goo.gl/6b4CcsXyvat4Kijx5",
     "durationFromAirbnbMin": 8,
     "hours": "3pm-7pm",
-    "remarks": "买蛋糕 — alternative to Churrrmochi",
+    "remarks": "买蛋糕 — alternative",
     "day": 1,
-    "order": 12
+    "order": 8
+  },
+  {
+    "id": "something-bakery-day1",
+    "name": "Something Bakery",
+    "section": "zapbalang",
+    "category": "food",
+    "mealType": "dessert",
+    "mapsUrl": "https://maps.app.goo.gl/aH4GM1PN97FgjGLu5",
+    "durationFromAirbnbMin": 11,
+    "hours": "11am-10pm",
+    "remarks": "千层蛋糕 — alternative",
+    "day": 1,
+    "order": 9
+  },
+  {
+    "id": "la-mille-bakers-day1",
+    "name": "LA Mille Bakers",
+    "section": "zapbalang",
+    "category": "food",
+    "mealType": "dessert",
+    "mapsUrl": "https://maps.app.goo.gl/35D5AhA66c2iKsYLA",
+    "durationFromAirbnbMin": 8,
+    "hours": "8:30am-6pm",
+    "remarks": "Croissant — alternative",
+    "day": 1,
+    "order": 10
+  },
+  {
+    "id": "hernan-food-day1",
+    "name": "Hernan Food Jonker (和南猫山王)",
+    "section": "jonker",
+    "category": "food",
+    "mealType": "dessert",
+    "mapsUrl": "https://maps.app.goo.gl/5dJpJwRdW1NYS73N6",
+    "durationFromAirbnbMin": 17,
+    "hours": "10am-8pm",
+    "remarks": "猫山王 durian — alternative",
+    "day": 1,
+    "order": 11
   },
   {
     "id": "seafood-96",

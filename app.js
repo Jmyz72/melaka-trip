@@ -65,51 +65,12 @@ function votesOf(id) { return votesByPlace[id]?.count || 0; }
 const currentLeaders = new Map();
 function leaderKey(dayNum, meal) { return `${dayNum}:${meal}`; }
 
-// Compute cross-day leader claims. A place with `extraDays` is eligible
-// on multiple days; it can only WIN one day's slot. Iterating in
-// ascending day order means the lower-numbered day claims a tie, but a
-// higher-voted slot still wins because we sort by votes first. Returns
-// Map<placeId, claimedDayNumber>.
-function computeClaims() {
-  const claims = new Map();
-  const closedScoreFor = (p, d) => contenderStatus(p, d) === "closed" ? 1 : 0;
-  const dayGroups = groupByDay(places);
-  for (const day of [1, 2, 3]) {
-    const bucket = new Map();
-    for (const p of dayGroups[day] || []) {
-      if (p.committed) continue;
-      if (claims.has(p.id) && claims.get(p.id) !== day) continue;
-      if (!bucket.has(p.mealType)) bucket.set(p.mealType, []);
-      bucket.get(p.mealType).push(p);
-    }
-    for (const [, list] of bucket) {
-      const sorted = [...list].sort((a, b) => {
-        const dv = votesOf(b.id) - votesOf(a.id);
-        if (dv !== 0) return dv;
-        const dc = closedScoreFor(a, day) - closedScoreFor(b, day);
-        if (dc !== 0) return dc;
-        return (a.order ?? 0) - (b.order ?? 0);
-      });
-      const leader = sorted[0];
-      if (leader && Array.isArray(leader.extraDays) && leader.extraDays.length > 0) {
-        claims.set(leader.id, day);
-      }
-    }
-  }
-  return claims;
-}
-
 // Compute what the leader would be RIGHT NOW for a given (day, meal),
 // using current votesByPlace. Committed places aren't part of the
 // vote-driven slot — they're already in the timeline on their own row.
-// Cross-day candidates already claimed by another day are excluded so the
-// snapshot handler detects leader flips correctly.
-function computeLeaderId(dayNum, meal, claims) {
-  const _claims = claims || computeClaims();
+function computeLeaderId(dayNum, meal) {
   const candidates = (groupByDay(places)[dayNum] || []).filter(p =>
-    p.mealType === meal &&
-    !p.committed &&
-    (!_claims.has(p.id) || _claims.get(p.id) === dayNum)
+    p.mealType === meal && !p.committed
   );
   if (candidates.length === 0) return null;
   const closedScore = p => contenderStatus(p, dayNum) === "closed" ? 1 : 0;
@@ -128,11 +89,10 @@ function computeLeaderId(dayNum, meal, claims) {
 // and rebuilds ~120 DOM nodes plus images).
 function applyVoteSnapshot() {
   updateAllVoteButtons();
-  const claims = computeClaims();
   let leaderFlipped = false;
   for (const [key, leaderId] of currentLeaders) {
     const [d, meal] = key.split(":");
-    if (computeLeaderId(Number(d), meal, claims) !== leaderId) { leaderFlipped = true; break; }
+    if (computeLeaderId(Number(d), meal) !== leaderId) { leaderFlipped = true; break; }
   }
   if (leaderFlipped) rerenderAll();
 }
@@ -614,20 +574,13 @@ function renderDayView(dayNumber, containerEl) {
   // Split into committed (each gets its own timeline row) and candidates
   // (bucketed by mealType, vote-driven leader). Candidate buckets only
   // contain non-committed places — the committed entries don't compete in
-  // the vote slot at all; they're already on the plan. Cross-day places
-  // claimed by another day's leader are also excluded here. So is any
-  // cross-day candidate whose mealType is already committed on this day
-  // (avoids a duplicate slot row of the same kind of meal).
+  // the vote slot at all; they're already on the plan.
   const closedScore = p => contenderStatus(p, dayNumber) === "closed" ? 1 : 0;
-  const claims = computeClaims();
-  const committedMeals = new Set(dayPlaces.filter(p => p.committed).map(p => p.mealType));
 
   const candidateSlotOrder = [];
   const candidatesByMeal = new Map();
   for (const p of dayPlaces) {
     if (p.committed) continue;
-    if (claims.has(p.id) && claims.get(p.id) !== dayNumber) continue;
-    if (committedMeals.has(p.mealType)) continue;
     if (!candidatesByMeal.has(p.mealType)) {
       candidatesByMeal.set(p.mealType, []);
       candidateSlotOrder.push(p.mealType);

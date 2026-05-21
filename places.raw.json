@@ -42,11 +42,7 @@
     "hours": "Fri 11am-12:30am; Sat-Sun 10am-12:30am",
     "remarks": "玩 — same lot as ATV/Go-Kart",
     "day": 1,
-    "order": 25,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 25
   },
   {
     "id": "go-kart",
@@ -59,11 +55,7 @@
     "hours": "until 5pm",
     "remarks": "Same place as Mocity Cosmic Park",
     "day": 1,
-    "order": 30,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 30
   },
   {
     "id": "atv-zapbalang",
@@ -76,11 +68,7 @@
     "hours": "Not stated",
     "remarks": "",
     "day": 1,
-    "order": 20,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 20
   },
   {
     "id": "old-merchant",
@@ -93,11 +81,7 @@
     "hours": "5pm-2am",
     "remarks": "Chill drinks — optional",
     "day": 2,
-    "order": 60,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 60
   },
   {
     "id": "churrrmochi",
@@ -110,11 +94,7 @@
     "hours": "12pm-7pm",
     "remarks": "IG: churrrmochi — preorder and pickup",
     "day": 1,
-    "order": 6,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 6
   },
   {
     "id": "seafood-96",
@@ -127,11 +107,7 @@
     "hours": "3pm-11:45pm",
     "remarks": "手抓海鲜 — dinner",
     "day": 1,
-    "order": 40,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 40
   },
   {
     "id": "hok-chin",
@@ -144,11 +120,7 @@
     "hours": "5:30pm-11:30pm (Sun closed)",
     "remarks": "海鲜 — dinner alternative",
     "day": 2,
-    "order": 50,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 50
   },
   {
     "id": "muse-peranakan",
@@ -161,11 +133,7 @@
     "hours": "12pm-10pm",
     "remarks": "晚餐 — dinner alternative",
     "day": 2,
-    "order": 51,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 51
   },
   {
     "id": "chasing-sunsets",
@@ -178,11 +146,7 @@
     "hours": "5pm-12am",
     "remarks": "晚餐 — dinner alternative",
     "day": 1,
-    "order": 41,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 41
   },
   {
     "id": "shixia-shixia",
@@ -195,11 +159,7 @@
     "hours": "5pm-1am",
     "remarks": "宵夜 lok-lok",
     "day": 2,
-    "order": 70,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 70
   },
   {
     "id": "baba-kaya",
@@ -212,11 +172,7 @@
     "hours": "Fri 8am-2:30pm; Sat-Sun 7:30am-2:30pm",
     "remarks": "早餐",
     "day": 2,
-    "order": 10,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 10
   },
   {
     "id": "siang-chiang",
@@ -230,11 +186,7 @@
     "remarks": "Post-checkout brunch ~11:30am — candidate",
     "day": 3,
     "order": 20,
-    "minArriveMin": 690,
-    "extraDays": [
-      1,
-      2
-    ]
+    "minArriveMin": 690
   },
   {
     "id": "mcqueks-satay-celup",
@@ -247,11 +199,7 @@
     "hours": "4pm-11pm",
     "remarks": "吃爽 — dinner alternative",
     "day": 2,
-    "order": 52,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 52
   },
   {
     "id": "something-bakery",
@@ -264,11 +212,7 @@
     "hours": "11am-10pm",
     "remarks": "千层蛋糕",
     "day": 1,
-    "order": 8,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 8
   },
   {
     "id": "jia-hung-pastry",
@@ -295,11 +239,7 @@
     "hours": "8:30am-6pm",
     "remarks": "Croissant",
     "day": 1,
-    "order": 9,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 9
   },
   {
     "id": "baba-ang",
@@ -312,11 +252,7 @@
     "hours": "11am-2pm; 6pm-9pm",
     "remarks": "Nyonya — RESERVATION NEEDED",
     "day": 2,
-    "order": 49,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 49
   },
   {
     "id": "baba-ang-lunch",
@@ -329,11 +265,7 @@
     "hours": "11am-2pm; 6pm-9pm",
     "remarks": "Nyonya — RESERVATION NEEDED · same place as dinner option",
     "day": 2,
-    "order": 34,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 34
   },
   {
     "id": "hing-loong",
@@ -346,11 +278,7 @@
     "hours": "8am-5pm",
     "remarks": "排骨面 — breakfast/lunch alternative",
     "day": 2,
-    "order": 31,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 31
   },
   {
     "id": "dashu-xia-duck",
@@ -363,11 +291,7 @@
     "hours": "7am-1:30pm",
     "remarks": "Duck noodle breakfast alternative",
     "day": 2,
-    "order": 11,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 11
   },
   {
     "id": "birdcage",
@@ -380,11 +304,7 @@
     "hours": "3pm-7pm",
     "remarks": "买蛋糕 — dessert alternative",
     "day": 2,
-    "order": 41,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 41
   },
   {
     "id": "hock-kee-waffle",
@@ -397,11 +317,7 @@
     "hours": "9:30am-6pm",
     "remarks": "waffle",
     "day": 1,
-    "order": 7,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 7
   },
   {
     "id": "kopi-harian",
@@ -428,11 +344,7 @@
     "hours": "11am-7:30pm",
     "remarks": "Near 马六甲河 and 红屋 — must try mixberry",
     "day": 2,
-    "order": 44,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 44
   },
   {
     "id": "night-market",
@@ -445,11 +357,7 @@
     "hours": "6pm-11pm",
     "remarks": "夜市 — Fri/Sat/Sun only",
     "day": 1,
-    "order": 50,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 50
   },
   {
     "id": "tan-kim-hock",
@@ -476,11 +384,7 @@
     "hours": "10am-8pm",
     "remarks": "猫山王 durian",
     "day": 1,
-    "order": 10,
-    "extraDays": [
-      2,
-      3
-    ]
+    "order": 10
   },
   {
     "id": "famosa-chicken-rice-ball",
@@ -493,11 +397,7 @@
     "hours": "9:30am-8pm",
     "remarks": "Famous chicken rice ball",
     "day": 2,
-    "order": 33,
-    "extraDays": [
-      1,
-      3
-    ]
+    "order": 33
   },
   {
     "id": "seremban-market",

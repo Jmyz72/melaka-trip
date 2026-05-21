@@ -194,9 +194,11 @@ const views = {
   map: document.getElementById("view-map"),
   day1: document.getElementById("view-day1"),
   day2: document.getElementById("view-day2"),
-  day3: document.getElementById("view-day3"),
-  all: document.getElementById("view-all")
+  day3: document.getElementById("view-day3")
 };
+// The "Index" view used to be its own tab. It now lives below the leaflet
+// map inside view-map (rendered into this container by renderAllView).
+const indexContainer = document.getElementById("index-content");
 function selectTab(name) {
   for (const t of tabs) t.setAttribute("aria-selected", t.dataset.view === name ? "true" : "false");
   for (const [key, el] of Object.entries(views)) el.classList.toggle("active", key === name);
@@ -753,7 +755,7 @@ function renderAllView() {
     </section>
   ` : "";
 
-  views.all.innerHTML = `
+  indexContainer.innerHTML = `
     <div class="index-intro">
       <h2>The Index</h2>
       <p>Every place, sorted by course — breakfast through bedtime.</p>

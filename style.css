@@ -208,17 +208,21 @@ body {
 .view { display: none; }
 .view.active { display: block; }
 
-/* Map view fills its own container, breaks out of padding */
+/* Atlas & Index view: leaflet map breaks out of #app padding to span
+   edge-to-edge, then the index content reinstates its own padding. */
 #view-map.active {
   display: block;
   padding: 0;
   margin: 0 -22px;
 }
 #leaflet-map {
-  height: calc(100dvh - 220px);
-  min-height: 420px;
+  height: 60dvh;
+  min-height: 360px;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
+}
+#index-content {
+  padding: 32px 22px 8px;
 }
 .leaflet-container {
   background: var(--paper-deep) !important;

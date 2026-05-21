@@ -24,11 +24,10 @@
     "mapsUrl": "https://maps.app.goo.gl/vsm4QEqhgg5Kee827",
     "durationFromAirbnbMin": 0,
     "hours": "Check-in after 3pm; Check-out 11am",
-    "remarks": "Checkout by 11am · grab bags, head out for breakfast/lunch",
+    "remarks": "Checkout by 11am · grab bags, head out for brunch",
     "day": 3,
-    "order": 30,
-    "minArriveMin": 660,
-    "dwellMin": 10,
+    "order": 10,
+    "dwellMin": 15,
     "committed": true
   },
   {
@@ -184,9 +183,9 @@
     "mapsUrl": "https://maps.app.goo.gl/VUvShuatqeZ9f88k9",
     "durationFromAirbnbMin": 10,
     "hours": "7am-2pm",
-    "remarks": "Post-checkout breakfast/lunch — candidate",
+    "remarks": "Post-checkout brunch — candidate",
     "day": 3,
-    "order": 40
+    "order": 20
   },
   {
     "id": "mcqueks-satay-celup",
@@ -223,11 +222,10 @@
     "mapsUrl": "https://maps.app.goo.gl/7Kuh4Gwpy7XxgksA6",
     "durationFromAirbnbMin": 4,
     "hours": "Best arrival 10:30-11am",
-    "remarks": "面包伴手礼 · fresh bread window 10:30-11am",
+    "remarks": "面包伴手礼 · freshest bread is the morning batch",
     "day": 3,
-    "order": 10,
-    "committed": true,
-    "minArriveMin": 630
+    "order": 30,
+    "committed": true
   },
   {
     "id": "la-mille-bakers",
@@ -371,7 +369,7 @@
     "hours": "9am-6pm",
     "remarks": "买手信",
     "day": 3,
-    "order": 20,
+    "order": 40,
     "committed": true
   },
   {

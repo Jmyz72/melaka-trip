@@ -221,9 +221,27 @@ for (const t of tabs) t.addEventListener("click", () => selectTab(t.dataset.view
 const DAY_COLOR = { 1: "#a83423", 2: "#2f5e4a", 3: "#2c3e63" };
 const AIRBNB_COLOR = "#8a6618";
 const UNASSIGNED_COLOR = "#9b8458";
+
+// Per-category palette — pin colour follows the Index grouping (course)
+// rather than the day. Lets the Atlas map show the rhythm of meals/outings
+// across the trip, complementing the day-keyed inline maps.
+const MEAL_COLOR = {
+  breakfast:      "#c89849",  // amber
+  lunch:          "#6a7e3b",  // olive
+  dinner:         "#872b3f",  // wine
+  dessert:        "#c47a8e",  // rose
+  snack:          "#d68b5e",  // coral
+  drinks:         "#5a3e2a",  // coffee
+  "late-night":   "#2c3e63",  // midnight
+  "night-market": "#a83423",  // lantern red
+  entertainment:  "#d18936",  // persimmon
+  souvenir:       "#a07b3a",  // brass (deep)
+  stay:           AIRBNB_COLOR
+};
+
 function colorFor(p) {
   if (p.category === "airbnb") return AIRBNB_COLOR;
-  if (p.day === 1 || p.day === 2 || p.day === 3) return DAY_COLOR[p.day];
+  if (p.mealType && MEAL_COLOR[p.mealType]) return MEAL_COLOR[p.mealType];
   return UNASSIGNED_COLOR;
 }
 function makeIcon(p) {
@@ -258,12 +276,12 @@ function renderDayMap(dayNumber, stops) {
   });
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(dm);
 
-  const color = DAY_COLOR[dayNumber] || UNASSIGNED_COLOR;
+  const polylineColor = DAY_COLOR[dayNumber] || UNASSIGNED_COLOR;
   const markers = [];
   let realIdx = 0;
   located.forEach((p) => {
     const isAirbnb = p.category === "airbnb";
-    const swatch = isAirbnb ? AIRBNB_COLOR : color;
+    const swatch = colorFor(p);
     const label  = isAirbnb ? "⌂" : String(++realIdx);
     const extras = [];
     if (isAirbnb) extras.push("is-airbnb");
@@ -288,7 +306,7 @@ function renderDayMap(dayNumber, stops) {
 
   if (located.length >= 2) {
     L.polyline(located.map(p => [p.lat, p.lng]), {
-      color, weight: 3, opacity: 0.6, dashArray: "6 6", lineCap: "round"
+      color: polylineColor, weight: 3, opacity: 0.6, dashArray: "6 6", lineCap: "round"
     }).addTo(dm);
   }
 

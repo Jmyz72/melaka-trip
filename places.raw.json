@@ -41,8 +41,8 @@
     "durationFromAirbnbMin": 9,
     "hours": "Fri 11am-12:30am; Sat-Sun 10am-12:30am",
     "remarks": "玩 — same lot as ATV/Go-Kart",
-    "day": 1,
-    "order": 25
+    "day": 2,
+    "order": 36
   },
   {
     "id": "go-kart",
@@ -54,8 +54,8 @@
     "durationFromAirbnbMin": 9,
     "hours": "until 5pm",
     "remarks": "Same place as Mocity Cosmic Park",
-    "day": 1,
-    "order": 30
+    "day": 2,
+    "order": 37
   },
   {
     "id": "atv-zapbalang",
@@ -67,8 +67,8 @@
     "durationFromAirbnbMin": null,
     "hours": "Not stated",
     "remarks": "",
-    "day": 1,
-    "order": 20
+    "day": 2,
+    "order": 35
   },
   {
     "id": "old-merchant",
@@ -106,8 +106,8 @@
     "durationFromAirbnbMin": 11,
     "hours": "3pm-11:45pm",
     "remarks": "手抓海鲜 — dinner",
-    "day": 1,
-    "order": 40
+    "day": 2,
+    "order": 53
   },
   {
     "id": "hok-chin",
@@ -132,8 +132,8 @@
     "durationFromAirbnbMin": 8,
     "hours": "12pm-10pm",
     "remarks": "晚餐 — dinner alternative",
-    "day": 2,
-    "order": 51
+    "day": 1,
+    "order": 41
   },
   {
     "id": "chasing-sunsets",
@@ -146,7 +146,7 @@
     "hours": "5pm-12am",
     "remarks": "晚餐 — dinner alternative",
     "day": 1,
-    "order": 41
+    "order": 40
   },
   {
     "id": "shixia-shixia",

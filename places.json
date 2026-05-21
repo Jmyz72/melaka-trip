@@ -47,8 +47,8 @@
     "durationFromAirbnbMin": 9,
     "hours": "Fri 11am-12:30am; Sat-Sun 10am-12:30am",
     "remarks": "玩 — same lot as ATV/Go-Kart",
-    "day": 1,
-    "order": 25,
+    "day": 2,
+    "order": 36,
     "lat": 2.2158346,
     "lng": 102.193166,
     "photo": "images/mocity-cosmic-park.jpg"
@@ -63,8 +63,8 @@
     "durationFromAirbnbMin": 9,
     "hours": "until 5pm",
     "remarks": "Same place as Mocity Cosmic Park",
-    "day": 1,
-    "order": 30,
+    "day": 2,
+    "order": 37,
     "lat": 2.2158346,
     "lng": 102.193166,
     "photo": "images/go-kart.jpg"
@@ -79,8 +79,8 @@
     "durationFromAirbnbMin": null,
     "hours": "Not stated",
     "remarks": "",
-    "day": 1,
-    "order": 20,
+    "day": 2,
+    "order": 35,
     "lat": 2.2155427,
     "lng": 102.1929213,
     "photo": "images/atv-zapbalang.jpg"
@@ -127,8 +127,8 @@
     "durationFromAirbnbMin": 11,
     "hours": "3pm-11:45pm",
     "remarks": "手抓海鲜 — dinner",
-    "day": 1,
-    "order": 40,
+    "day": 2,
+    "order": 53,
     "lat": 2.2146329,
     "lng": 102.1827193,
     "photo": "images/seafood-96.jpg"
@@ -159,8 +159,8 @@
     "durationFromAirbnbMin": 8,
     "hours": "12pm-10pm",
     "remarks": "晚餐 — dinner alternative",
-    "day": 2,
-    "order": 51,
+    "day": 1,
+    "order": 41,
     "lat": 2.1878554,
     "lng": 102.2171998,
     "photo": "images/muse-peranakan.jpg"
@@ -176,7 +176,7 @@
     "hours": "5pm-12am",
     "remarks": "晚餐 — dinner alternative",
     "day": 1,
-    "order": 41,
+    "order": 40,
     "lat": 2.1674214,
     "lng": 102.3041102,
     "photo": "images/chasing-sunsets.jpg"

@@ -11,12 +11,11 @@
     "remarks": "Check-in 3pm · drop bags",
     "day": 1,
     "order": 15,
-    "lat": 2.1964627,
-    "lng": 102.229982,
-    "photo": "images/airbnb.jpg",
     "minArriveMin": 900,
     "dwellMin": 15,
-    "committed": true
+    "committed": true,
+    "lat": 2.1964627,
+    "lng": 102.229982
   },
   {
     "id": "airbnb-checkout",
@@ -30,11 +29,10 @@
     "remarks": "Checkout by 11am · grab bags, head out for brunch",
     "day": 3,
     "order": 10,
-    "lat": 2.1964627,
-    "lng": 102.229982,
-    "photo": "images/airbnb.jpg",
     "dwellMin": 15,
-    "committed": true
+    "committed": true,
+    "lat": 2.1964627,
+    "lng": 102.229982
   },
   {
     "id": "mocity-cosmic-park",
@@ -50,8 +48,7 @@
     "day": 1,
     "order": 25,
     "lat": 2.2158346,
-    "lng": 102.193166,
-    "photo": "images/mocity-cosmic-park.jpg"
+    "lng": 102.193166
   },
   {
     "id": "go-kart",
@@ -66,8 +63,7 @@
     "day": 1,
     "order": 30,
     "lat": 2.2158346,
-    "lng": 102.193166,
-    "photo": "images/go-kart.jpg"
+    "lng": 102.193166
   },
   {
     "id": "atv-zapbalang",
@@ -82,8 +78,7 @@
     "day": 1,
     "order": 20,
     "lat": 2.2155427,
-    "lng": 102.1929213,
-    "photo": "images/atv-zapbalang.jpg"
+    "lng": 102.1929213
   },
   {
     "id": "old-merchant",
@@ -98,8 +93,7 @@
     "day": 2,
     "order": 60,
     "lat": 2.1974868,
-    "lng": 102.2459296,
-    "photo": "images/old-merchant.jpg"
+    "lng": 102.2459296
   },
   {
     "id": "churrrmochi",
@@ -114,8 +108,7 @@
     "day": 1,
     "order": 6,
     "lat": 2.1934791,
-    "lng": 102.2329354,
-    "photo": "images/churrrmochi.jpg"
+    "lng": 102.2329354
   },
   {
     "id": "seafood-96",
@@ -130,8 +123,7 @@
     "day": 1,
     "order": 40,
     "lat": 2.2146329,
-    "lng": 102.1827193,
-    "photo": "images/seafood-96.jpg"
+    "lng": 102.1827193
   },
   {
     "id": "hok-chin",
@@ -146,8 +138,7 @@
     "day": 2,
     "order": 50,
     "lat": 2.2634615,
-    "lng": 102.2393703,
-    "photo": "images/hok-chin.jpg"
+    "lng": 102.2393703
   },
   {
     "id": "muse-peranakan",
@@ -162,8 +153,7 @@
     "day": 2,
     "order": 51,
     "lat": 2.1878554,
-    "lng": 102.2171998,
-    "photo": "images/muse-peranakan.jpg"
+    "lng": 102.2171998
   },
   {
     "id": "chasing-sunsets",
@@ -178,8 +168,7 @@
     "day": 1,
     "order": 41,
     "lat": 2.1674214,
-    "lng": 102.3041102,
-    "photo": "images/chasing-sunsets.jpg"
+    "lng": 102.3041102
   },
   {
     "id": "shixia-shixia",
@@ -194,8 +183,7 @@
     "day": 2,
     "order": 70,
     "lat": 2.198519,
-    "lng": 102.2253065,
-    "photo": "images/shixia-shixia.jpg"
+    "lng": 102.2253065
   },
   {
     "id": "baba-kaya",
@@ -210,8 +198,7 @@
     "day": 2,
     "order": 10,
     "lat": 2.1967375,
-    "lng": 102.2507371,
-    "photo": "images/baba-kaya.jpg"
+    "lng": 102.2507371
   },
   {
     "id": "siang-chiang",
@@ -225,10 +212,9 @@
     "remarks": "Post-checkout brunch ~11:30am — candidate",
     "day": 3,
     "order": 20,
+    "minArriveMin": 690,
     "lat": 2.1990977,
-    "lng": 102.2365874,
-    "photo": "images/siang-chiang.jpg",
-    "minArriveMin": 690
+    "lng": 102.2365874
   },
   {
     "id": "mcqueks-satay-celup",
@@ -243,8 +229,7 @@
     "day": 2,
     "order": 52,
     "lat": 2.1888768,
-    "lng": 102.2584677,
-    "photo": "images/mcqueks-satay-celup.jpg"
+    "lng": 102.2584677
   },
   {
     "id": "something-bakery",
@@ -259,8 +244,7 @@
     "day": 1,
     "order": 8,
     "lat": 2.1967172,
-    "lng": 102.2509139,
-    "photo": "images/something-bakery.jpg"
+    "lng": 102.2509139
   },
   {
     "id": "jia-hung-pastry",
@@ -274,10 +258,9 @@
     "remarks": "面包伴手礼 · freshest bread is the morning batch",
     "day": 3,
     "order": 30,
+    "committed": true,
     "lat": 2.1976626,
-    "lng": 102.2385677,
-    "photo": "images/jia-hung-pastry.jpg",
-    "committed": true
+    "lng": 102.2385677
   },
   {
     "id": "la-mille-bakers",
@@ -292,8 +275,7 @@
     "day": 1,
     "order": 9,
     "lat": 2.1856531,
-    "lng": 102.2603769,
-    "photo": "images/la-mille-bakers.jpg"
+    "lng": 102.2603769
   },
   {
     "id": "baba-ang",
@@ -308,8 +290,7 @@
     "day": 2,
     "order": 49,
     "lat": 2.1888683,
-    "lng": 102.2601808,
-    "photo": "images/baba-ang.jpg"
+    "lng": 102.2601808
   },
   {
     "id": "baba-ang-lunch",
@@ -324,8 +305,7 @@
     "day": 2,
     "order": 34,
     "lat": 2.1888683,
-    "lng": 102.2601808,
-    "photo": "images/baba-ang.jpg"
+    "lng": 102.2601808
   },
   {
     "id": "hing-loong",
@@ -340,8 +320,7 @@
     "day": 2,
     "order": 31,
     "lat": 2.2021126,
-    "lng": 102.23199,
-    "photo": "images/hing-loong.jpg"
+    "lng": 102.23199
   },
   {
     "id": "dashu-xia-duck",
@@ -356,8 +335,7 @@
     "day": 2,
     "order": 11,
     "lat": 2.1970929,
-    "lng": 102.2325839,
-    "photo": "images/dashu-xia-duck.jpg"
+    "lng": 102.2325839
   },
   {
     "id": "birdcage",
@@ -372,8 +350,7 @@
     "day": 2,
     "order": 41,
     "lat": 2.1971558,
-    "lng": 102.2466381,
-    "photo": "images/birdcage.jpg"
+    "lng": 102.2466381
   },
   {
     "id": "hock-kee-waffle",
@@ -388,8 +365,7 @@
     "day": 1,
     "order": 7,
     "lat": 2.1958886,
-    "lng": 102.2449774,
-    "photo": "images/hock-kee-waffle.jpg"
+    "lng": 102.2449774
   },
   {
     "id": "kopi-harian",
@@ -403,10 +379,9 @@
     "remarks": "First-day lunch · stop before checking in",
     "day": 1,
     "order": 5,
+    "committed": true,
     "lat": 2.1964468,
-    "lng": 102.2441426,
-    "photo": "images/kopi-harian.jpg",
-    "committed": true
+    "lng": 102.2441426
   },
   {
     "id": "fruit-cones",
@@ -421,8 +396,7 @@
     "day": 2,
     "order": 44,
     "lat": 2.1954059,
-    "lng": 102.2493179,
-    "photo": "images/fruit-cones.jpg"
+    "lng": 102.2493179
   },
   {
     "id": "night-market",
@@ -437,8 +411,7 @@
     "day": 1,
     "order": 50,
     "lat": 2.198071,
-    "lng": 102.2357289,
-    "photo": "images/night-market.jpg"
+    "lng": 102.2357289
   },
   {
     "id": "tan-kim-hock",
@@ -452,10 +425,9 @@
     "remarks": "买手信",
     "day": 3,
     "order": 40,
+    "committed": true,
     "lat": 2.1956369,
-    "lng": 102.2452956,
-    "photo": "images/tan-kim-hock.jpg",
-    "committed": true
+    "lng": 102.2452956
   },
   {
     "id": "hernan-food",
@@ -470,8 +442,7 @@
     "day": 1,
     "order": 10,
     "lat": 2.1965269,
-    "lng": 102.2467365,
-    "photo": "images/hernan-food.jpg"
+    "lng": 102.2467365
   },
   {
     "id": "famosa-chicken-rice-ball",
@@ -486,26 +457,25 @@
     "day": 2,
     "order": 33,
     "lat": 2.1953449,
-    "lng": 102.247767,
-    "photo": "images/famosa-chicken-rice-ball.jpg"
+    "lng": 102.247767
   },
   {
-    "id": "seremban-market",
-    "name": "芙蓉大巴刹 Seremban Central Market",
-    "section": "zapbalang",
+    "id": "dim-sum-jinbo",
+    "name": "珍宝点心 Restoran Dim Sum Jinbo",
+    "section": "jonker",
     "category": "food",
     "mealType": "breakfast",
-    "address": "Jalan Tuanku Munawir, Bandar Seremban, 70000 Seremban, Negeri Sembilan, Malaysia",
-    "mapsUrl": "https://maps.google.com/?cid=6371005338482723188&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "address": "16, Jln KLJ 4, 75200 Malacca, Malaysia",
+    "mapsUrl": "https://maps.google.com/?cid=14665030812270100369&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
     "durationFromAirbnbMin": null,
-    "hours": "4am-2pm (Tue closed)",
-    "remarks": "Meet-up · 11am · breakfast together",
+    "hours": "7am-3pm",
+    "remarks": "Meet-up · 11am · dim sum together",
     "day": 1,
     "order": 1,
-    "lat": 2.7307273999999997,
-    "lng": 101.93659559999999,
-    "photo": "images/seremban-market.jpg",
     "committed": true,
-    "minArriveMin": 660
+    "minArriveMin": 660,
+    "lat": 2.1983464,
+    "lng": 102.231772,
+    "photo": "images/dim-sum-jinbo.jpg"
   }
 ]

@@ -499,12 +499,13 @@
     "mapsUrl": "https://maps.google.com/?cid=6371005338482723188&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
     "durationFromAirbnbMin": null,
     "hours": "4am-2pm (Tue closed)",
-    "remarks": "Meet-up · breakfast together",
+    "remarks": "Meet-up · 11am · breakfast together",
     "day": 1,
     "order": 1,
     "lat": 2.7307273999999997,
     "lng": 101.93659559999999,
     "photo": "images/seremban-market.jpg",
-    "committed": true
+    "committed": true,
+    "minArriveMin": 660
   }
 ]

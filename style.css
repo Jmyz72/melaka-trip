@@ -1196,9 +1196,6 @@ body {
   line-height: 1;
   color: var(--ink);
 }
-.index-day.day-1 h3 { color: var(--red); }
-.index-day.day-2 h3 { color: var(--jade); }
-.index-day.day-3 h3 { color: var(--indigo); }
 .index-day-count {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -1250,17 +1247,6 @@ body {
   background-color: var(--paper-deep);
 }
 .index-item-body { min-width: 0; }
-.index-item-kicker {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  margin-bottom: 4px;
-}
-.index-item.day-1 .index-item-kicker { color: var(--red); }
-.index-item.day-2 .index-item-kicker { color: var(--jade); }
-.index-item.day-3 .index-item-kicker { color: var(--indigo); }
 .index-item h4 {
   margin: 0 0 4px;
   font-family: var(--font-display);

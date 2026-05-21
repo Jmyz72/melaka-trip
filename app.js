@@ -770,12 +770,10 @@ const MEAL_GROUPS = [
 
 function renderIndexItem(p) {
   const { cn, main } = splitName(p.name);
-  const dayCls = p.category === "airbnb" ? "" : (p.day ? `day-${p.day}` : "");
   return `
-    <article class="index-item ${dayCls}" data-place-id="${p.id}" role="button" tabindex="0" aria-label="Locate ${escapeHtml(main)} on the map">
+    <article class="index-item" data-place-id="${p.id}" role="button" tabindex="0" aria-label="Locate ${escapeHtml(main)} on the map">
       <div class="index-item-photo" style="${p.photo ? `background-image:url('${escapeHtml(p.photo)}')` : ""}"></div>
       <div class="index-item-body">
-        <div class="index-item-kicker">${escapeHtml(dayKickerLabel(p))}</div>
         <h4>${escapeHtml(main)}${cn ? `<span class="cn">${escapeHtml(cn)}</span>` : ""}</h4>
         ${p.remarks ? `<p class="remark">${escapeHtml(p.remarks)}</p>` : ""}
         <div class="index-item-foot">

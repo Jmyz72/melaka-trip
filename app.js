@@ -1,11 +1,20 @@
 import { groupByDay, sortDaySchedule } from "./lib/grouping.mjs";
-import { buildSchedule, fmtTime, haversineKm } from "./lib/timeline.mjs";
+import { buildSchedule, fmtTime, haversineKm, setDriveTable } from "./lib/timeline.mjs";
+import { parseHours, checkVisit, fmtClock } from "./lib/hours.mjs";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, arrayUnion, arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const places = await fetch("./places.json").then(r => r.json());
+
+// Optional: load real Google drive times if a precomputed table is present.
+// Built by `node tools/precompute-drives.mjs` with GOOGLE_MAPS_API_KEY set.
+// Absence is fine — driveMinutes() falls back to the haversine heuristic.
+try {
+  const r = await fetch("./lib/drives.json", { cache: "no-store" });
+  if (r.ok) setDriveTable(await r.json());
+} catch { /* offline / not built — use haversine */ }
 
 // ─── Firebase (voting) ──────────────────────────────────────────
 const firebaseConfig = {
@@ -61,7 +70,14 @@ function leaderKey(dayNum, meal) { return `${dayNum}:${meal}`; }
 function computeLeaderId(dayNum, meal) {
   const candidates = (groupByDay(places)[dayNum] || []).filter(p => p.mealType === meal);
   if (candidates.length === 0) return null;
-  candidates.sort((a, b) => (votesOf(b.id) - votesOf(a.id)) || ((a.order ?? 0) - (b.order ?? 0)));
+  const closedScore = p => contenderStatus(p, dayNum) === "closed" ? 1 : 0;
+  candidates.sort((a, b) => {
+    const dv = votesOf(b.id) - votesOf(a.id);
+    if (dv !== 0) return dv;
+    const dc = closedScore(a) - closedScore(b);
+    if (dc !== 0) return dc;
+    return (a.order ?? 0) - (b.order ?? 0);
+  });
   return candidates[0].id;
 }
 
@@ -127,6 +143,16 @@ const DAY_DEK = {
   3: "One final breakfast. A round of souvenirs. The road home before noon."
 };
 const DAY_ROMAN = { 1: "One", 2: "Two", 3: "Three" };
+
+// Trip is 21-23 May 2026 (Thu/Fri/Sat). dow is 1=Mon … 7=Sun.
+const TRIP_DAYS = {
+  1: { date: "21 May", dowName: "Thursday", dow: 4 },
+  2: { date: "22 May", dowName: "Friday",   dow: 5 },
+  3: { date: "23 May", dowName: "Saturday", dow: 6 }
+};
+
+// Pre-parse hours once at load time so we don't re-parse on every render.
+const hoursById = Object.fromEntries(places.map(p => [p.id, parseHours(p.hours)]));
 
 // ─── String utilities ───────────────────────────────────────────
 function escapeHtml(s) {
@@ -225,6 +251,67 @@ function renderFacts(p) {
   return facts.length ? `<div class="place-facts">${facts.join("")}</div>` : "";
 }
 
+// Render a hours-vs-arrival warning for the leader card. Returns "" when
+// the visit looks fine (open with healthy margin) or the hours weren't
+// parseable. The warning sits above the place card so it's hard to miss.
+function renderHoursWarning(p, dayNumber, arriveMin, departMin) {
+  const hours = hoursById[p.id];
+  const trip = TRIP_DAYS[dayNumber];
+  if (!hours || !trip) return "";
+  const v = checkVisit(hours, trip.dow, arriveMin, departMin);
+  switch (v.status) {
+    case "closed-today":
+      return `<div class="hours-warning sev-bad"><b>Closed ${escapeHtml(trip.dowName)}</b> — pick another option in this slot.</div>`;
+    case "arrive-before-open":
+      return `<div class="hours-warning sev-warn"><b>Opens at ${fmtClock(v.openMin)}</b> — you arrive ${v.opensIn} min early. Plan a buffer.</div>`;
+    case "arrive-after-close":
+      return `<div class="hours-warning sev-bad"><b>Already closed</b> by the time you arrive (closes ${fmtClock(v.closeMin)}).</div>`;
+    case "closing-soon":
+      return `<div class="hours-warning sev-warn"><b>Closing soon</b> — only ${v.marginMin} min before they shut at ${fmtClock(v.closeMin)}.</div>`;
+    case "between-service":
+      return `<div class="hours-warning sev-bad"><b>Between service hours</b> — they reopen at ${fmtClock(v.opensAt)} (in ${v.opensIn} min). Pick another option or shift the time.</div>`;
+    case "unknown":
+    case "open":
+    default:
+      return "";
+  }
+}
+
+// Quick "is this contender closed today?" check — used to dim the photo
+// and overlay a CLOSED ribbon so voters don't promote something shut.
+function contenderStatus(p, dayNumber) {
+  const hours = hoursById[p.id];
+  const trip = TRIP_DAYS[dayNumber];
+  if (!hours || !trip || !hours.parsed) return null;
+  const intervals = hours.byDow[trip.dow];
+  if (intervals == null) return null;
+  if (intervals.length === 0) return "closed";
+  return "open";
+}
+
+// Pretty-print a duration in minutes: 75 → "1h 15m", 25 → "25m"
+function fmtDuration(min) {
+  if (min < 60) return `${min}m`;
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
+// Informational closing-margin chip beneath the place name (only when the
+// warning didn't already fire). Tells you "you leave 3h before they shut".
+function renderClosingMargin(p, dayNumber, arriveMin, departMin) {
+  const hours = hoursById[p.id];
+  const trip = TRIP_DAYS[dayNumber];
+  if (!hours || !hours.parsed || !trip) return "";
+  const v = checkVisit(hours, trip.dow, arriveMin, departMin);
+  if (v.status !== "open") return ""; // bad cases handled by the warning
+  return `
+    <div class="closes-at">
+      Closes <b>${fmtClock(v.closeMin)}</b> · ${fmtDuration(v.marginMin)} margin after we leave
+    </div>
+  `;
+}
+
 function renderRemark(p, { drop = false } = {}) {
   if (!p.remarks) return "";
   if (isReservation(p.remarks)) {
@@ -266,7 +353,7 @@ function renderPlace(p, { dropcap = false, leading = false } = {}) {
 // Horizontal row of other choices in the same slot. Voting on a card
 // promotes it — if its vote count overtakes the leader, the next render
 // makes it the featured (big) card.
-function renderOthers(others) {
+function renderOthers(others, dayNumber) {
   return `
     <div class="contenders">
       <div class="contenders-head">
@@ -274,19 +361,25 @@ function renderOthers(others) {
         <span class="contenders-hint">vote to feature →</span>
       </div>
       <div class="contenders-rail">
-        ${others.map(renderContender).join("")}
+        ${others.map(p => renderContender(p, dayNumber)).join("")}
       </div>
     </div>
   `;
 }
 
-function renderContender(p) {
+function renderContender(p, dayNumber) {
   const { cn, main } = splitName(p.name);
   const photoStyle = p.photo ? `background-image:url('${escapeHtml(p.photo)}')` : "";
   const remarkLine = p.remarks ? `<p class="contender-remark">${escapeHtml(p.remarks)}</p>` : "";
+  const status = contenderStatus(p, dayNumber);
+  const closedBadge = status === "closed"
+    ? `<span class="contender-closed">Closed ${escapeHtml(TRIP_DAYS[dayNumber].dowName)}</span>`
+    : "";
+  const photoCls = status === "closed" ? "contender-photo is-closed" : "contender-photo";
   return `
     <article class="contender">
-      <button class="contender-photo" data-vote-place="${p.id}" aria-pressed="false" aria-label="Vote for ${escapeHtml(main)}" style="${photoStyle}">
+      <button class="${photoCls}" data-vote-place="${p.id}" aria-pressed="false" aria-label="Vote for ${escapeHtml(main)}" style="${photoStyle}">
+        ${closedBadge}
         <span class="contender-vote">${ICON.heart}<span class="vote-count">0</span></span>
       </button>
       <h4 class="contender-name">${escapeHtml(main)}${cn ? `<span class="cn">${escapeHtml(cn)}</span>` : ""}</h4>
@@ -346,12 +439,16 @@ function renderDayView(dayNumber, containerEl) {
   }
 
   // Within each slot, the leader is whichever option has the most votes.
-  // Tiebreak: original `order` (so the planner's default wins when nobody voted).
+  // Tiebreaks: prefer a place that isn't closed today, then lowest `order`
+  // (so the planner's default wins when nobody voted).
+  const closedScore = p => contenderStatus(p, dayNumber) === "closed" ? 1 : 0;
   const slots = slotOrder.map(meal => {
     const list = slotsByMeal.get(meal);
     const sorted = [...list].sort((a, b) => {
       const dv = votesOf(b.id) - votesOf(a.id);
       if (dv !== 0) return dv;
+      const dc = closedScore(a) - closedScore(b);
+      if (dc !== 0) return dc;
       return (a.order ?? 0) - (b.order ?? 0);
     });
     return { meal, leader: sorted[0], others: sorted.slice(1), total: sorted.length };
@@ -412,9 +509,36 @@ function renderDayView(dayNumber, containerEl) {
     const p = step.place;
     const slot = slots[idx];
     const others = slot.others;
-    const driveHtml = step.driveToNext != null && schedule.steps[idx + 1]
-      ? bridgeText(step.driveToNext, p, schedule.steps[idx + 1].place)
+    const warning = renderHoursWarning(p, dayNumber, step.arriveMin, step.departMin);
+    const margin = renderClosingMargin(p, dayNumber, step.arriveMin, step.departMin);
+    const next = schedule.steps[idx + 1];
+    const driveHtml = step.driveToNext != null && next
+      ? bridgeText(step.driveToNext, p, next.place)
       : "";
+
+    // Free-time band: when the next stop's arrival was pushed back by a
+    // meal anchor, you have idle time after the drive until that anchor.
+    let freeBand = "";
+    if (next && next.waitMin > 30) {
+      const freeStart = step.departMin + (step.driveToNext || 0);
+      const freeEnd = next.arriveMin;
+      const freeMin = freeEnd - freeStart;
+      freeBand = `
+        <li class="entry entry-free" aria-label="Free time">
+          <div class="entry-rail">
+            <time class="entry-time">${fmtTimeRich(freeStart)}</time>
+            <span class="entry-slot">Free time</span>
+          </div>
+          <div class="entry-body">
+            <div class="free-band">
+              <span class="free-band-duration">${fmtDuration(freeMin)}</span>
+              <span class="free-band-detail">until ${fmtClock(freeEnd)} — coffee, rest, or improvise.</span>
+            </div>
+          </div>
+        </li>
+      `;
+    }
+
     return `
       <li class="entry">
         <div class="entry-rail">
@@ -423,11 +547,14 @@ function renderDayView(dayNumber, containerEl) {
           ${others.length ? `<span class="entry-choices">${slot.total} choices</span>` : ""}
         </div>
         <div class="entry-body">
+          ${warning}
           ${renderPlace(p, { dropcap: idx === 0, leading: others.length > 0 })}
-          ${others.length ? renderOthers(others) : ""}
+          ${margin}
+          ${others.length ? renderOthers(others, dayNumber) : ""}
         </div>
         ${driveHtml}
       </li>
+      ${freeBand}
     `;
   }).join("");
 

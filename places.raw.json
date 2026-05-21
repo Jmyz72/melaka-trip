@@ -42,7 +42,7 @@
     "hours": "Fri 11am-12:30am; Sat-Sun 10am-12:30am",
     "remarks": "玩 — same lot as ATV/Go-Kart",
     "day": 2,
-    "order": 36
+    "order": 46
   },
   {
     "id": "go-kart",
@@ -55,7 +55,7 @@
     "hours": "until 5pm",
     "remarks": "Same place as Mocity Cosmic Park",
     "day": 2,
-    "order": 37
+    "order": 47
   },
   {
     "id": "atv-zapbalang",
@@ -68,7 +68,7 @@
     "hours": "Not stated",
     "remarks": "",
     "day": 2,
-    "order": 35
+    "order": 45
   },
   {
     "id": "old-merchant",

@@ -94,7 +94,10 @@
     "hours": "12pm-7pm",
     "remarks": "IG: churrrmochi — preorder and pickup",
     "day": 1,
-    "order": 6
+    "order": 6,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "seafood-96",
@@ -212,7 +215,10 @@
     "hours": "11am-10pm",
     "remarks": "千层蛋糕",
     "day": 1,
-    "order": 8
+    "order": 8,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "jia-hung-pastry",
@@ -239,7 +245,10 @@
     "hours": "8:30am-6pm",
     "remarks": "Croissant",
     "day": 1,
-    "order": 9
+    "order": 9,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "baba-ang",
@@ -304,7 +313,10 @@
     "hours": "3pm-7pm",
     "remarks": "买蛋糕 — dessert alternative",
     "day": 2,
-    "order": 41
+    "order": 41,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "hock-kee-waffle",
@@ -317,7 +329,10 @@
     "hours": "9:30am-6pm",
     "remarks": "waffle",
     "day": 1,
-    "order": 7
+    "order": 7,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "kopi-harian",
@@ -344,7 +359,10 @@
     "hours": "11am-7:30pm",
     "remarks": "Near 马六甲河 and 红屋 — must try mixberry",
     "day": 2,
-    "order": 44
+    "order": 44,
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "night-market",
@@ -384,7 +402,10 @@
     "hours": "10am-8pm",
     "remarks": "猫山王 durian",
     "day": 1,
-    "order": 10
+    "order": 10,
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "famosa-chicken-rice-ball",

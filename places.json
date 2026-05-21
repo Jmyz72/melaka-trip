@@ -115,7 +115,8 @@
     "order": 6,
     "lat": 2.1934791,
     "lng": 102.2329354,
-    "photo": "images/churrrmochi.jpg"
+    "photo": "images/churrrmochi.jpg",
+    "extraDays": [2]
   },
   {
     "id": "seafood-96",
@@ -260,7 +261,10 @@
     "order": 8,
     "lat": 2.1967172,
     "lng": 102.2509139,
-    "photo": "images/something-bakery.jpg"
+    "photo": "images/something-bakery.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "jia-hung-pastry",
@@ -293,7 +297,10 @@
     "order": 9,
     "lat": 2.1856531,
     "lng": 102.2603769,
-    "photo": "images/la-mille-bakers.jpg"
+    "photo": "images/la-mille-bakers.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "baba-ang",
@@ -373,7 +380,10 @@
     "order": 41,
     "lat": 2.1971558,
     "lng": 102.2466381,
-    "photo": "images/birdcage.jpg"
+    "photo": "images/birdcage.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "hock-kee-waffle",
@@ -389,7 +399,10 @@
     "order": 7,
     "lat": 2.1958886,
     "lng": 102.2449774,
-    "photo": "images/hock-kee-waffle.jpg"
+    "photo": "images/hock-kee-waffle.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "kopi-harian",
@@ -422,7 +435,10 @@
     "order": 44,
     "lat": 2.1954059,
     "lng": 102.2493179,
-    "photo": "images/fruit-cones.jpg"
+    "photo": "images/fruit-cones.jpg",
+    "extraDays": [
+      1
+    ]
   },
   {
     "id": "night-market",
@@ -471,7 +487,10 @@
     "order": 10,
     "lat": 2.1965269,
     "lng": 102.2467365,
-    "photo": "images/hernan-food.jpg"
+    "photo": "images/hernan-food.jpg",
+    "extraDays": [
+      2
+    ]
   },
   {
     "id": "famosa-chicken-rice-ball",

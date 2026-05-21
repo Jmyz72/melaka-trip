@@ -26,18 +26,36 @@ async function resolveCoords(shortUrl) {
 }
 
 const raw = JSON.parse(await readFile(RAW, "utf8"));
+
+// Preserve photo + already-resolved coords from the previous places.json.
+// Photos are downloaded by tools/add-place.mjs / tools/fetch-photos.mjs into
+// images/{id}.jpg and are never carried in raw. Coords are sometimes already
+// in places.json (e.g. add-place.mjs writes them directly from the Places API
+// for cid-style URLs the resolver below can't follow). Without this preserve
+// step, every rebuild would silently drop both.
+const prevById = new Map();
+try {
+  const prev = JSON.parse(await readFile(OUT, "utf8"));
+  for (const p of prev) prevById.set(p.id, p);
+} catch { /* no previous places.json — first build */ }
+
 const out = [];
 let missing = 0;
 for (const p of raw) {
   process.stdout.write(`Resolving ${p.id} ... `);
+  const prev = prevById.get(p.id);
+  const photo = prev?.photo ?? null;
   const coords = await resolveCoords(p.mapsUrl);
-  if (!coords) {
+  if (coords) {
+    console.log(`${coords.lat}, ${coords.lng}`);
+    out.push({ ...p, lat: coords.lat, lng: coords.lng, photo });
+  } else if (prev && typeof prev.lat === "number" && typeof prev.lng === "number") {
+    console.log(`kept ${prev.lat}, ${prev.lng} (resolver could not follow ${p.mapsUrl.slice(0, 40)}…)`);
+    out.push({ ...p, lat: prev.lat, lng: prev.lng, photo });
+  } else {
     console.log("MISSING");
     missing++;
-    out.push({ ...p, lat: null, lng: null });
-  } else {
-    console.log(`${coords.lat}, ${coords.lng}`);
-    out.push({ ...p, lat: coords.lat, lng: coords.lng });
+    out.push({ ...p, lat: null, lng: null, photo });
   }
 }
 

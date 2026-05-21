@@ -502,10 +502,10 @@
     "remarks": "Meet-up · 11am · dim sum together",
     "day": 1,
     "order": 1,
+    "committed": true,
+    "minArriveMin": 660,
     "lat": 2.7127702,
     "lng": 101.91189639999999,
-    "photo": "images/dim-sum-jinbo.jpg",
-    "committed": true,
-    "minArriveMin": 660
+    "photo": "images/dim-sum-jinbo.jpg"
   }
 ]

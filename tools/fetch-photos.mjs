@@ -18,8 +18,11 @@ await mkdir(IMAGES_DIR, { recursive: true });
 const places = JSON.parse(await readFile(PLACES_JSON, "utf8"));
 
 async function findPhotoName(p) {
-  // Text Search (New). Strip any parenthetical / Chinese suffix to improve match.
-  const cleanName = p.name.replace(/\(.*?\)/g, "").replace(/[一-鿿]/g, "").trim();
+  // Text Search (New) supports CJK directly, so keep the original name and
+  // only drop parenthetical asides (which often hold disambiguators like
+  // "(loklok 宵夜)" that throw the match off).
+  let cleanName = p.name.replace(/\(.*?\)/g, "").trim();
+  if (!cleanName) cleanName = p.id.replace(/-/g, " ");
   const query = `${cleanName} Melaka`;
   const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
     method: "POST",
@@ -72,8 +75,15 @@ async function downloadPhoto(photoName, outPath) {
   return true;
 }
 
-let ok = 0, miss = 0;
+// Optional argv filter: `node tools/fetch-photos.mjs id1 id2 ...` only
+// refreshes those entries. Useful when one place's photo is wrong and
+// you don't want to re-roll all 30.
+const argv = process.argv.slice(2);
+const onlyIds = argv.length ? new Set(argv) : null;
+
+let ok = 0, miss = 0, skipped = 0;
 for (const p of places) {
+  if (onlyIds && !onlyIds.has(p.id)) { skipped++; continue; }
   const out = `images/${p.id}.jpg`;
   process.stdout.write(`${p.id} ... `);
   try {

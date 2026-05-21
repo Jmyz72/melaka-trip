@@ -57,3 +57,43 @@ test("tripPhase: post-trip", () => {
   assert.equal(r.phase, "post-trip");
   assert.equal(r.dayNumber, null);
 });
+
+import { recommendNow } from "../lib/now.mjs";
+
+const FIXTURE = [
+  { id: "lunch-place", name: "Lunch Place", category: "food",
+    mealType: "lunch", hours: "11am-3pm",
+    lat: 2.197, lng: 102.252, mapsUrl: "https://example/1", order: 1 },
+  { id: "dinner-place", name: "Dinner Place", category: "food",
+    mealType: "dinner", hours: "6pm-10pm",
+    lat: 2.198, lng: 102.253, mapsUrl: "https://example/2", order: 2 },
+  { id: "closed-place", name: "Closed Place", category: "food",
+    mealType: "lunch", hours: "Mon closed; Tue-Sun 12pm-2pm",
+    lat: 2.199, lng: 102.254, mapsUrl: "https://example/3", order: 3 },
+  { id: "souvenir-place", name: "Souvenir Place", category: "souvenir",
+    mealType: "souvenir", hours: "9am-9pm",
+    lat: 2.200, lng: 102.255, mapsUrl: "https://example/4", order: 4 }
+];
+
+test("recommendNow: lunch time ranks lunch-typed above dinner-typed", () => {
+  const r = recommendNow(FIXTURE, { now: new Date("2026-05-22T12:30:00+08:00") });
+  assert.equal(r.empty, null);
+  assert.equal(r.top.place.id, "lunch-place");
+});
+
+test("recommendNow: pre-trip empty state", () => {
+  const r = recommendNow(FIXTURE, { now: new Date("2026-05-21T22:00:00+08:00") });
+  assert.equal(r.empty.reason, "pre-trip");
+  assert.equal(r.top, null);
+  assert.equal(r.alternatives.length, 0);
+});
+
+test("recommendNow: pre-trip on May 18", () => {
+  const r = recommendNow(FIXTURE, { now: new Date("2026-05-18T13:00:00+08:00") });
+  assert.equal(r.empty.reason, "pre-trip");
+});
+
+test("recommendNow: post-trip empty state", () => {
+  const r = recommendNow(FIXTURE, { now: new Date("2026-05-30T10:00:00+08:00") });
+  assert.equal(r.empty.reason, "post-trip");
+});

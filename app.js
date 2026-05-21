@@ -896,12 +896,16 @@ const MEAL_GROUPS = [
 
 function renderIndexItem(p) {
   const { cn, main } = splitName(p.name);
+  const hoursLine = p.hours
+    ? `<p class="index-item-hours">${ICON.clock}<span>${escapeHtml(p.hours)}</span></p>`
+    : "";
   return `
     <article class="index-item" data-place-id="${p.id}" role="button" tabindex="0" aria-label="Locate ${escapeHtml(main)} on the map">
       <div class="index-item-photo" style="${p.photo ? `background-image:url('${escapeHtml(p.photo)}')` : ""}"></div>
       <div class="index-item-body">
         <h4>${escapeHtml(main)}${cn ? `<span class="cn">${escapeHtml(cn)}</span>` : ""}</h4>
         ${p.remarks ? `<p class="remark">${escapeHtml(p.remarks)}</p>` : ""}
+        ${hoursLine}
         <div class="index-item-foot">
           <a href="${p.mapsUrl}" target="_blank" rel="noopener">Maps ↗</a>
           <button class="vote-btn" data-vote-place="${p.id}" aria-pressed="false" aria-label="Vote for ${escapeHtml(main)}">

@@ -1275,6 +1275,18 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.index-item-hours {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+}
+.index-item-hours svg { width: 11px; height: 11px; opacity: .65; flex-shrink: 0; }
+
 .index-item-foot {
   display: flex;
   align-items: center;

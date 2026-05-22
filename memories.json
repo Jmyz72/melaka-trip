@@ -9,6 +9,8 @@
     "lng": 102.2486,
     "mapsUrl": "https://maps.app.goo.gl/sample",
     "rating": 4,
-    "media": []
+    "media": [
+      { "src": "media/jonker-walk/placeholder.svg", "type": "photo", "w": 800, "h": 600 }
+    ]
   }
 ]

@@ -765,7 +765,7 @@ body::before {
   width: min(95vw, 1200px);
   height: min(80vh, 800px);
   border-radius: 4px;
-  filter: sepia(0.35) saturate(0.85) hue-rotate(-8deg) contrast(0.95) brightness(1.02);
+  filter: sepia(0.15) saturate(0.95) contrast(0.98) brightness(1.02);
   box-shadow: 0 20px 60px -20px rgba(29,43,79,0.4);
 }
 .map::after {
@@ -788,6 +788,66 @@ body::before {
   font-size: 12px;
   border: 2px solid var(--paper);
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Pin tooltip — "card stuck to a polaroid" look */
+.leaflet-tooltip.trip-tooltip {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid rgba(29, 43, 79, 0.25);
+  border-radius: 3px;
+  padding: 8px 12px 9px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.5) inset,
+    0 10px 22px -10px rgba(58, 50, 30, 0.45);
+  font-family: var(--serif);
+  white-space: nowrap;
+}
+.leaflet-tooltip.trip-tooltip::before { display: none; }  /* hide Leaflet's default arrow */
+.trip-tip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.trip-tip-num {
+  flex: 0 0 auto;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--vermillion);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(158, 42, 30, 0.35);
+}
+.trip-tip-body { line-height: 1.2; }
+.trip-tip-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.trip-tip-cn {
+  font-family: var(--brush);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.92em;
+  color: var(--vermillion-deep);
+  letter-spacing: 0.04em;
+  margin-left: 2px;
+}
+.trip-tip-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--aged-soft);
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 
 /* ─── Audio toggle ────────────────────────────────────────────── */

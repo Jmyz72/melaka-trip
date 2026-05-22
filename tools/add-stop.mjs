@@ -53,18 +53,15 @@ async function main() {
     }
   }
 
-  const day = Number(flags.day ?? await prompt(rl, "day (1/2/3)", {
-    default: exif.day != null ? String(exif.day) : undefined,
+  // For each field: flag wins, then EXIF (silently), then prompt the user.
+  const day = Number(flags.day ?? (exif.day != null ? String(exif.day) : await prompt(rl, "day (1/2/3)", {
     validate: v => ["1","2","3"].includes(v) ? null : "must be 1, 2, or 3"
-  }));
-  const time = flags.time ?? await prompt(rl, "time (HH:MM)", {
-    default: exif.time ?? undefined,
+  })));
+  const time = flags.time ?? exif.time ?? await prompt(rl, "time (HH:MM)", {
     validate: v => /^[0-2]\d:[0-5]\d$/.test(v) ? null : "must be HH:MM"
   });
   const exifLatLng = exif.lat != null ? `${exif.lat},${exif.lng}` : undefined;
-  const mapsInput = flags.maps ?? await prompt(rl, "maps URL or lat,lng", {
-    default: exifLatLng
-  });
+  const mapsInput = flags.maps ?? exifLatLng ?? await prompt(rl, "maps URL or lat,lng");
 
   rl.close();
 

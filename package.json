@@ -1,0 +1,12 @@
+{
+  "name": "melaka-trip-memory-book",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.mjs",
+    "add-stop": "node tools/add-stop.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}

@@ -99,7 +99,7 @@ async function main() {
     audioBtn.setAttribute("aria-pressed", "true");
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      audioEl = new Audio("media/audio/rain.mp3");
+      audioEl = new Audio("media/audio/cheers.mp3");
       audioEl.loop = true;
       audioEl.crossOrigin = "anonymous";
       audioEl.preload = "auto";

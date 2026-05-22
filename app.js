@@ -10,7 +10,6 @@ import { mountMap } from "./lib/map.mjs";
 import { subscribeAll, setRating } from "./lib/ratings.mjs";
 import { mountFluidBG } from "./lib/fluid-bg.mjs";
 import { mountCover3D } from "./lib/cover-3d.mjs";
-import { mountInkCursor } from "./lib/ink-cursor.mjs";
 import { rate_splash, burst } from "./lib/rating-splash.mjs";
 import { mountTransitions, mountTicker } from "./lib/transitions.mjs";
 
@@ -18,10 +17,7 @@ async function main() {
   // ── Layer 1: WebGL fluid ink background ─────────────────────────
   const fluid = mountFluidBG(document.getElementById("fluid-bg"));
 
-  // ── Layer 2: Ink-trail cursor (desktop only, no-op on touch) ────
-  const inkCursor = mountInkCursor(document.getElementById("ink-cursor"));
-
-  // ── Layer 3: Load memories and render timeline ──────────────────
+  // ── Layer 2: Load memories and render timeline ──────────────────
   const memories = await fetch("memories.json").then(r => r.json());
   const timelineEl = document.getElementById("timeline");
   const stops = renderDays(memories, timelineEl);

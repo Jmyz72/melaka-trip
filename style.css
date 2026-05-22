@@ -55,7 +55,6 @@ body { overflow-x: hidden; }
                    radial-gradient(900px 600px at 80% 75%, rgba(94, 60, 36, 0.10), transparent 60%);
                  filter: url(#paper-grain);
 }
-.layer--cursor { z-index: 9; }
 .layer--splash { z-index: 50; }
 
 /* ─── Paper grain noise fallback (when SVG filter unsupported) ──── */

@@ -3,70 +3,35 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Melaka — A Travel Journal, Vol. 01</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="style.css" />
+  <title>Melaka — Memories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header class="masthead">
-    <div class="masthead-rule left"><span class="pip"></span> Volume One &nbsp;·&nbsp; A Short Trip Southward</div>
-    <h1 class="masthead-title">Mel<span class="amp">a</span>ka</h1>
-    <p class="masthead-dek">A travel journal in <b>three days</b>, <b>two nights</b>, and <b>twenty-nine</b> small pilgrimages of the appetite.</p>
-    <div class="masthead-byline">
-      <span>22–24 May, 2026</span>
-      <span>No. 29 / 29</span>
+    <div class="eyebrow">MEMORIES</div>
+    <h1 class="title">Melaka</h1>
+    <p class="dek">22–24 May 2026</p>
+    <div class="tile-strip" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
   </header>
 
-  <nav class="contents" role="tablist" aria-label="Trip sections">
-    <div class="contents-inner">
-      <button class="tab" data-view="map" aria-selected="true"><span class="roman">I.</span>Atlas &amp; Index</button>
-      <button class="tab" data-view="table" aria-selected="false"><span class="roman">II.</span>Itinerary</button>
-      <button class="tab" data-view="day1" aria-selected="false"><span class="roman">III.</span>Day One</button>
-      <button class="tab" data-view="day2" aria-selected="false"><span class="roman">IV.</span>Day Two</button>
-      <button class="tab" data-view="day3" aria-selected="false"><span class="roman">V.</span>Day Three</button>
-      <button class="tab" data-view="now" aria-selected="false"><span class="roman">VI.</span>Now</button>
-    </div>
-  </nav>
+  <div id="map" class="map"></div>
 
-  <main id="app">
-    <section id="view-map" class="view active">
-      <div class="map-legend">
-        <span class="leg"><span class="swatch" style="background:#c89849"></span>Breakfast</span>
-        <span class="leg"><span class="swatch" style="background:#6a7e3b"></span>Lunch</span>
-        <span class="leg"><span class="swatch" style="background:#872b3f"></span>Dinner</span>
-        <span class="leg"><span class="swatch" style="background:#c47a8e"></span>Dessert</span>
-        <span class="leg"><span class="swatch" style="background:#5a3e2a"></span>Drinks</span>
-        <span class="leg"><span class="swatch" style="background:#2c3e63"></span>Late-night</span>
-        <span class="leg"><span class="swatch" style="background:#a83423"></span>Night market</span>
-        <span class="leg"><span class="swatch" style="background:#d18936"></span>Outings</span>
-        <span class="leg"><span class="swatch" style="background:#a07b3a"></span>Souvenir</span>
-        <span class="leg"><span class="swatch" style="background:#8a6618;border-radius:2px"></span>Airbnb</span>
-      </div>
-      <div id="leaflet-map"></div>
-      <div id="index-content"></div>
-    </section>
-    <section id="view-table" class="view"></section>
-    <section id="view-day1" class="view"></section>
-    <section id="view-day2" class="view"></section>
-    <section id="view-day3" class="view"></section>
-    <section id="view-now" class="view"></section>
-  </main>
+  <main id="timeline"></main>
 
-  <footer class="colophon">
-    Set in Fraunces, Newsreader &amp; JetBrains Mono · Printed digitally
-    <em>“The further one travels, the less one knows.” — Laozi</em>
-  </footer>
-
-  <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
-  <aside id="sheet" class="sheet" hidden aria-hidden="true" aria-label="Place detail">
-    <div class="sheet-head">
-      <span id="sheet-kicker">Place</span>
-      <button id="sheet-close" class="sheet-close" aria-label="Close detail">×</button>
-    </div>
-    <div id="sheet-body"></div>
-  </aside>
+  <div id="lightbox" class="lightbox" hidden aria-hidden="true">
+    <button class="lightbox-close" aria-label="Close">×</button>
+    <div class="lightbox-counter"></div>
+    <div class="lightbox-stage"></div>
+    <button class="lightbox-prev" aria-label="Previous">‹</button>
+    <button class="lightbox-next" aria-label="Next">›</button>
+    <div class="lightbox-progress"></div>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script type="module" src="app.js"></script>

@@ -73,49 +73,46 @@ async function main() {
     if (e.target === mapOverlay) mapOverlay.hidden = true;
   });
 
-  // ── Layer 6: Audio toggle (ambient brush + rain, off by default) ──
-  // Tiny WebAudio noise generator — no asset dependency.
+  // ── Layer 6: Audio toggle (ambient rain, off by default) ──
+  // Plays a soft rain-on-window loop (media/audio/rain.mp3). The file is
+  // lazy-loaded on first click so the page weight stays the same for users
+  // who never turn audio on. Fade in/out via WebAudio's GainNode for a
+  // gentle on/off rather than an abrupt mute.
   const audioBtn = document.getElementById("audio-toggle");
+  const TARGET_GAIN = 0.55;  // 0..1; the mp3 itself is fairly quiet
   let audioCtx = null;
-  let audioNodes = null;
+  let audioEl  = null;
+  let audioGain = null;
+
   audioBtn.addEventListener("click", () => {
     const on = audioBtn.getAttribute("aria-pressed") === "true";
     if (on) {
       audioBtn.setAttribute("aria-pressed", "false");
-      if (audioNodes) {
-        audioNodes.gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+      if (audioGain) {
+        audioGain.gain.cancelScheduledValues(audioCtx.currentTime);
+        audioGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+        // pause once the fade-out completes so the tab doesn't keep decoding
+        setTimeout(() => audioEl?.pause(), 600);
       }
-    } else {
-      audioBtn.setAttribute("aria-pressed", "true");
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        // Pink-ish noise (rain texture)
-        const bufSize = 2 * audioCtx.sampleRate;
-        const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-        const data = buf.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0;
-        for (let i = 0; i < bufSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.99765 * b0 + white * 0.0990460;
-          b1 = 0.96300 * b1 + white * 0.2965164;
-          b2 = 0.57000 * b2 + white * 1.0526913;
-          data[i] = (b0 + b1 + b2 + white * 0.1848) * 0.18;
-        }
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buf;
-        noise.loop = true;
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = "lowpass";
-        filter.frequency.value = 900;
-        const gain = audioCtx.createGain();
-        gain.gain.value = 0;
-        noise.connect(filter).connect(gain).connect(audioCtx.destination);
-        noise.start();
-        audioNodes = { noise, filter, gain };
-      }
-      audioNodes.gain.gain.cancelScheduledValues(audioCtx.currentTime);
-      audioNodes.gain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.6);
+      return;
     }
+    audioBtn.setAttribute("aria-pressed", "true");
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioEl = new Audio("media/audio/rain.mp3");
+      audioEl.loop = true;
+      audioEl.crossOrigin = "anonymous";
+      audioEl.preload = "auto";
+      const src = audioCtx.createMediaElementSource(audioEl);
+      audioGain = audioCtx.createGain();
+      audioGain.gain.value = 0;
+      src.connect(audioGain).connect(audioCtx.destination);
+    }
+    // Resume context (browsers require a user gesture before audio plays)
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    audioEl.play().catch(err => console.warn("audio play failed:", err));
+    audioGain.gain.cancelScheduledValues(audioCtx.currentTime);
+    audioGain.gain.linearRampToValueAtTime(TARGET_GAIN, audioCtx.currentTime + 0.7);
   });
 
   // ── Layer 7: Live ratings ─────────────────────────────────────────

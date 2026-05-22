@@ -3,27 +3,71 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Melaka — Memories</title>
+  <meta name="theme-color" content="#f4ead5" />
+  <title>Melaka — A Painted Postcard</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Ma+Shan+Zheng&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="masthead">
-    <div class="eyebrow">MEMORIES</div>
-    <h1 class="title">Melaka</h1>
-    <p class="dek">22–24 May 2026</p>
-    <div class="tile-strip" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
-  </header>
+<body data-low-power="auto">
+  <!-- Layer 1: WebGL fluid ink simulation (full viewport, behind everything) -->
+  <canvas id="fluid-bg" class="layer layer--bg" aria-hidden="true"></canvas>
 
-  <div id="map" class="map"></div>
+  <!-- Layer 2: Paper grain overlay -->
+  <div class="layer layer--paper" aria-hidden="true"></div>
 
-  <main id="timeline"></main>
+  <!-- Layer 3: Ink cursor trail (above content, ignores pointer) -->
+  <canvas id="ink-cursor" class="layer layer--cursor" aria-hidden="true"></canvas>
 
+  <!-- Layer 4: Particle splash overlay (rating bursts, seal impact) -->
+  <canvas id="splash" class="layer layer--splash" aria-hidden="true"></canvas>
+
+  <!-- Layer 5: Audio toggle (top-right, tiny) -->
+  <button id="audio-toggle" class="audio-toggle" aria-label="Toggle ambient sound" aria-pressed="false">
+    <span class="audio-toggle-icon"></span>
+  </button>
+
+  <!-- Layer 6: Floating map button (bottom-left, appears after hero) -->
+  <button id="map-toggle" class="map-toggle" aria-label="Open map" hidden>
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- Layer 7: Map overlay (hidden by default; opens on map-toggle) -->
+  <div id="map-overlay" class="map-overlay" hidden aria-hidden="true">
+    <button class="map-overlay-close" aria-label="Close map">×</button>
+    <div id="map" class="map"></div>
+  </div>
+
+  <!-- Layer 8: Main content scroll-snap container -->
+  <main id="scroll" class="scroll">
+    <!-- Hero: 3D postcard mounted here by lib/cover-3d.mjs -->
+    <section id="cover" class="snap cover" data-section="cover">
+      <div id="cover-3d-mount" class="cover-3d-mount"></div>
+      <div class="cover-meta">
+        <div class="cover-eyebrow">A&nbsp;·&nbsp;P&nbsp;·&nbsp;A&nbsp;·&nbsp;I&nbsp;·&nbsp;N&nbsp;·&nbsp;T&nbsp;·&nbsp;E&nbsp;·&nbsp;D&nbsp;&nbsp;P&nbsp;·&nbsp;O&nbsp;·&nbsp;S&nbsp;·&nbsp;T&nbsp;·&nbsp;C&nbsp;·&nbsp;A&nbsp;·&nbsp;R&nbsp;·&nbsp;D</div>
+        <h1 class="cover-title">Melaka<span class="cover-title-cn">马六甲</span></h1>
+        <p class="cover-dates">22 — 24 · V · MMXXVI</p>
+        <p class="cover-ticker" id="cover-ticker">
+          <span class="ticker-dot"></span>
+          <span class="ticker-text">listening for friends…</span>
+        </p>
+        <p class="cover-cue">scroll&nbsp;↓</p>
+      </div>
+    </section>
+
+    <!-- Day sections + stops injected here by lib/render.mjs -->
+    <div id="timeline"></div>
+
+    <!-- Closing seal: appended by lib/render.mjs after all stops -->
+  </main>
+
+  <!-- Layer 9: Lightbox -->
   <div id="lightbox" class="lightbox" hidden aria-hidden="true">
     <button class="lightbox-close" aria-label="Close">×</button>
     <div class="lightbox-counter"></div>
@@ -32,6 +76,37 @@
     <button class="lightbox-next" aria-label="Next">›</button>
     <div class="lightbox-progress"></div>
   </div>
+
+  <!-- Reusable SVG defs: brush masks, seal artwork, paper grain -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="paper-grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+        <feColorMatrix values="0 0 0 0 0.3  0 0 0 0 0.25  0 0 0 0 0.15  0 0 0 0.18 0"/>
+        <feComposite in2="SourceGraphic" operator="in"/>
+      </filter>
+      <filter id="watercolor-edge">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="7"/>
+        <feDisplacementMap in="SourceGraphic" scale="14"/>
+      </filter>
+      <filter id="ink-bleed">
+        <feGaussianBlur stdDeviation="0.6"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2"/>
+      </filter>
+      <!-- Brush mask: torn-paper organic shape used for photo reveals -->
+      <clipPath id="brush-mask" clipPathUnits="objectBoundingBox">
+        <path d="M0.03,0.10 C0.01,0.05 0.05,0.01 0.12,0.02 C0.30,0.00 0.50,0.04 0.72,0.02 C0.90,0.00 0.99,0.04 0.98,0.14 C1.00,0.32 0.96,0.55 0.99,0.78 C1.00,0.93 0.94,1.00 0.84,0.98 C0.62,1.00 0.38,0.96 0.18,0.99 C0.04,1.00 0.00,0.92 0.02,0.80 C0.04,0.55 0.00,0.32 0.03,0.10 Z"/>
+      </clipPath>
+      <!-- Seal artwork: vermillion square stamp with calligraphy -->
+      <symbol id="seal" viewBox="0 0 100 100">
+        <rect x="6" y="6" width="88" height="88" fill="#c8392b" rx="4"/>
+        <rect x="10" y="10" width="80" height="80" fill="none" stroke="#f4ead5" stroke-width="2.5"/>
+        <text x="50" y="44" font-family="Ma Shan Zheng, serif" font-size="32" fill="#f4ead5" text-anchor="middle" font-weight="700">马六</text>
+        <text x="50" y="80" font-family="Ma Shan Zheng, serif" font-size="32" fill="#f4ead5" text-anchor="middle" font-weight="700">甲印</text>
+      </symbol>
+    </defs>
+  </svg>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script type="module" src="app.js"></script>

@@ -1,5 +1,7 @@
 import { renderDays } from "./lib/render.mjs";
 import { mountGallery } from "./lib/gallery.mjs";
+import { openLightbox } from "./lib/lightbox.mjs";
+import { splitName } from "./lib/name.mjs";
 
 async function main() {
   const memories = await fetch("memories.json").then(r => r.json());
@@ -9,7 +11,8 @@ async function main() {
   for (const stop of stops) {
     const container = timeline.querySelector(`.stop-gallery[data-id="${stop.id}"]`);
     if (container) mountGallery(stop, container, (s, i) => {
-      console.log("clicked", s.id, i); // lightbox wires in next task
+      const label = splitName(s.name).main;
+      openLightbox(s.media, i, label);
     });
   }
 }

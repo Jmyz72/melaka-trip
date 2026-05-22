@@ -821,45 +821,39 @@ body::before {
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
-/* Pin tooltip — "card stuck to a polaroid" look */
+/* Permanent pin labels — compact inline tag, paper background with a soft
+   shadow. Time in mono caps, name in italic serif, brushy CJK accent. */
 .leaflet-tooltip.trip-tooltip {
   background: var(--paper);
   color: var(--ink);
-  border: 1px solid rgba(29, 43, 79, 0.25);
+  border: 1px solid rgba(29, 43, 79, 0.22);
   border-radius: 3px;
-  padding: 8px 12px 9px;
+  padding: 4px 9px 5px;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.5) inset,
-    0 10px 22px -10px rgba(58, 50, 30, 0.45);
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 6px 16px -10px rgba(58, 50, 30, 0.45);
   font-family: var(--serif);
   white-space: nowrap;
+  line-height: 1.1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  pointer-events: none;
 }
 .leaflet-tooltip.trip-tooltip::before { display: none; }  /* hide Leaflet's default arrow */
-.trip-tip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.trip-tip-num {
-  flex: 0 0 auto;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: var(--vermillion);
-  color: var(--paper);
+.trip-tip-time {
   font-family: var(--mono);
-  font-weight: 600;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(158, 42, 30, 0.35);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--aged-soft);
+  text-transform: uppercase;
+  flex: 0 0 auto;
 }
-.trip-tip-body { line-height: 1.2; }
 .trip-tip-name {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--ink);
   letter-spacing: -0.005em;
 }
@@ -871,14 +865,6 @@ body::before {
   color: var(--vermillion-deep);
   letter-spacing: 0.04em;
   margin-left: 2px;
-}
-.trip-tip-time {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.28em;
-  color: var(--aged-soft);
-  text-transform: uppercase;
-  margin-top: 2px;
 }
 
 /* ─── Audio toggle ────────────────────────────────────────────── */

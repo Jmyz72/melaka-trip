@@ -166,7 +166,7 @@ test("every media entry points to an existing file", async () => {
 
 - [ ] **Step 3: Run the tests**
 
-Run: `node --test tests/`
+Run: `node --test tests/*.mjs`
 Expected: all 3 tests pass (the sample stop has no media, so the third test loops zero times).
 
 - [ ] **Step 4: Commit**
@@ -747,7 +747,7 @@ Write to `package.json`:
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/",
+    "test": "node --test tests/*.mjs",
     "add-stop": "node tools/add-stop.mjs"
   },
   "devDependencies": {
@@ -1650,7 +1650,7 @@ Lives at https://jmyz72.github.io/melaka-trip/.
 
 ```bash
 python3 -m http.server 8000  # then open http://localhost:8000/
-node --test tests/           # run all tests
+node --test tests/*.mjs      # run all tests
 ```
 
 ## Adding a stop
@@ -1700,7 +1700,7 @@ deploys.
 
 ```bash
 python3 -m http.server 8000         # serve at http://localhost:8000/
-node --test tests/                  # run all tests
+node --test tests/*.mjs             # run all tests
 node tools/add-stop.mjs [flags]     # add or update a stop (see README.md)
 ```
 
@@ -1760,13 +1760,13 @@ Validated in `tests/data.test.mjs`: id format `^[a-z0-9-]{1,40}$` and unique,
   spec for details).
 - **Videos commit to the repo.** Acceptable up to ~1 GB total; if it bloats
   further, revisit Cloudflare R2 or GitHub Releases per the design spec.
-- **Tests are the only gate** — no CI, no linter. Run `node --test tests/` after
-  any change to `memories.json`, `lib/`, or the tools.
+- **Tests are the only gate** — no CI, no linter. Run `node --test tests/*.mjs`
+  after any change to `memories.json`, `lib/`, or the tools.
 ```
 
 - [ ] **Step 3: Final sanity check — all tests pass**
 
-Run: `node --test tests/`
+Run: `node --test tests/*.mjs`
 Expected: all tests pass across `data.test.mjs`, `name.test.mjs`, `gallery.test.mjs`, `resolve-maps.test.mjs`.
 
 - [ ] **Step 4: Commit**

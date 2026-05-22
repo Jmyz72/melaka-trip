@@ -1,0 +1,14 @@
+[
+  {
+    "id": "jonker-walk",
+    "name": "Jonker Walk 鸡场街",
+    "day": 1,
+    "order": 1,
+    "time": "14:30",
+    "lat": 2.1956,
+    "lng": 102.2486,
+    "mapsUrl": "https://maps.app.goo.gl/sample",
+    "rating": 4,
+    "media": []
+  }
+]

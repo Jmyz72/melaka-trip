@@ -61,9 +61,6 @@ async function main() {
     default: exif.time ?? undefined,
     validate: v => /^[0-2]\d:[0-5]\d$/.test(v) ? null : "must be HH:MM"
   });
-  const rating = Number(flags.rating ?? await prompt(rl, "rating (1-5)", {
-    validate: v => ["1","2","3","4","5"].includes(v) ? null : "must be 1..5"
-  }));
   const exifLatLng = exif.lat != null ? `${exif.lat},${exif.lng}` : undefined;
   const mapsInput = flags.maps ?? await prompt(rl, "maps URL or lat,lng", {
     default: exifLatLng
@@ -90,7 +87,7 @@ async function main() {
     ? Number(flags.order)
     : Math.max(0, ...memories.filter(m => m.day === day).map(m => m.order)) + 1;
 
-  const entry = { id, name, day, order, time, lat, lng, mapsUrl, rating, media };
+  const entry = { id, name, day, order, time, lat, lng, mapsUrl, media };
 
   // Upsert
   const i = memories.findIndex(m => m.id === id);

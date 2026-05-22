@@ -20,7 +20,6 @@ test("every entry has required scalar fields with valid values", () => {
     assert.ok(m.lat > 2 && m.lat < 3, `lat out of range on ${m.id}: ${m.lat}`);
     assert.ok(m.lng > 101 && m.lng < 103, `lng out of range on ${m.id}: ${m.lng}`);
     assert.ok(typeof m.mapsUrl === "string" && m.mapsUrl.startsWith("https://"), `bad mapsUrl on ${m.id}`);
-    assert.ok([1, 2, 3, 4, 5].includes(m.rating), `bad rating on ${m.id}: ${m.rating}`);
     assert.ok(Array.isArray(m.media), `media not an array on ${m.id}`);
   }
 });

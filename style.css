@@ -538,8 +538,17 @@ body::before {
   width: min(95vw, 1200px);
   height: min(80vh, 800px);
   border-radius: 4px;
-  filter: url(#watercolor-edge);
+  filter: sepia(0.35) saturate(0.85) hue-rotate(-8deg) contrast(0.95) brightness(1.02);
   box-shadow: 0 20px 60px -20px rgba(29,43,79,0.4);
+}
+.map::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(244,234,213,0.18) 0%, transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(202,170,120,0.10) 0%, transparent 50%);
+  mix-blend-mode: multiply;
 }
 .trip-pin-inner {
   background: var(--vermillion);

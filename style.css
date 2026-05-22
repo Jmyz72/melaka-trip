@@ -2122,3 +2122,20 @@ body {
     transition-duration: .01ms !important;
   }
 }
+
+.trip-pin-inner {
+  background: #b91c1c;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.map { height: 40vh; }

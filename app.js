@@ -12,6 +12,7 @@ import { mountFluidBG } from "./lib/fluid-bg.mjs";
 import { mountCover3D } from "./lib/cover-3d.mjs";
 import { rate_splash, burst } from "./lib/rating-splash.mjs";
 import { mountTransitions, mountTicker } from "./lib/transitions.mjs";
+import { mountSideTimeline } from "./lib/side-timeline.mjs";
 
 async function main() {
   // ── Layer 1: WebGL fluid ink background ─────────────────────────
@@ -29,6 +30,10 @@ async function main() {
       openLightbox(s.media, i, splitName(s.name).main);
     });
   }
+
+  // ── Layer 3b: Side timeline rail ────────────────────────────────
+  const scrollElForRail = document.getElementById("scroll");
+  mountSideTimeline(stops, scrollElForRail, document.getElementById("side-timeline"));
 
   // ── Layer 4: 3D postcard hero ───────────────────────────────────
   const mountEl = document.getElementById("cover-3d-mount");

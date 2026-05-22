@@ -491,6 +491,234 @@ body::before {
   color: var(--aged-soft);
 }
 
+/* ─── Side timeline rail ─────────────────────────────────────── */
+
+.side-timeline {
+  position: fixed;
+  top: 50%;
+  left: 28px;
+  transform: translateY(-50%);
+  z-index: 55;
+  max-height: 88vh;
+  max-height: 88dvh;
+  padding: 14px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translate(-12px, -50%);
+}
+.side-timeline::-webkit-scrollbar { display: none; }
+.side-timeline.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%);
+}
+
+/* The hand-drawn vermillion spine, behind every dot */
+.side-timeline-rail {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 18px;
+  width: 2px;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      rgba(200, 57, 43, 0.0) 2%,
+      rgba(200, 57, 43, 0.55) 6%,
+      rgba(200, 57, 43, 0.85) 50%,
+      rgba(200, 57, 43, 0.55) 94%,
+      rgba(200, 57, 43, 0.0) 98%,
+      transparent 100%
+    );
+  border-radius: 1px;
+  filter: blur(0.3px) drop-shadow(0 0 4px rgba(200, 57, 43, 0.18));
+}
+.side-timeline-rail::before,
+.side-timeline-rail::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(200, 57, 43, 0.5);
+  filter: blur(1.5px);
+}
+.side-timeline-rail::before { top: -2px; }
+.side-timeline-rail::after  { bottom: -2px; }
+
+.side-timeline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Day cluster header — Chinese numeral above the cluster */
+.side-day {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 14px 0 6px;
+  padding-left: 38px;
+  font-family: var(--brush);
+  color: var(--ink-faint);
+  transition: color 0.45s ease;
+}
+.side-day:first-child { margin-top: 0; }
+.side-day-num {
+  font-size: 22px;
+  line-height: 1;
+  color: inherit;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 0 rgba(29,43,79,0.04);
+}
+.side-day-roman {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--aged-soft);
+  opacity: 0.75;
+}
+.side-day.is-active {
+  color: var(--vermillion-deep);
+}
+.side-day.is-active .side-day-roman {
+  color: var(--vermillion-deep);
+  opacity: 1;
+}
+
+/* Stop row */
+.side-stop { position: relative; }
+.side-stop-link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 38px auto auto;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 4px 0 4px 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: inherit;
+  width: 100%;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.side-stop-link:hover { transform: translateX(2px); }
+.side-stop-link:focus-visible {
+  outline: 1px dashed var(--vermillion);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* The dot — a small ink circle, sits ON the spine */
+.side-stop-dot {
+  position: relative;
+  justify-self: center;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1.2px solid var(--ink-faint);
+  box-shadow: 0 0 0 2px var(--paper);
+  transition: background 0.35s ease, border-color 0.35s ease,
+              transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+              box-shadow 0.35s ease;
+}
+.side-stop-link:hover .side-stop-dot {
+  border-color: var(--vermillion);
+  transform: scale(1.15);
+}
+.side-stop.is-active .side-stop-dot {
+  background: var(--vermillion);
+  border-color: var(--vermillion-deep);
+  transform: scale(1.45);
+  box-shadow:
+    0 0 0 2px var(--paper),
+    0 0 0 6px rgba(200, 57, 43, 0.18),
+    0 0 14px 2px rgba(200, 57, 43, 0.35);
+}
+
+.side-stop-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--aged-soft);
+  white-space: nowrap;
+  transition: color 0.35s ease;
+}
+.side-stop-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 18ch;
+  transition: color 0.35s ease, max-width 0.35s ease;
+}
+.side-stop-link:hover .side-stop-name { color: var(--ink); }
+.side-stop-link:hover .side-stop-time { color: var(--ink-soft); }
+.side-stop.is-active .side-stop-name {
+  color: var(--vermillion-deep);
+  max-width: 26ch;
+}
+.side-stop.is-active .side-stop-time { color: var(--vermillion-deep); }
+
+/* Compact mode for narrower viewports: dots + time only.
+   Names appear only on hover or for the active stop. */
+@media (max-width: 1080px) {
+  .side-timeline { left: 18px; }
+  .side-stop-name {
+    opacity: 0;
+    max-width: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.3s ease, max-width 0.3s ease, transform 0.3s ease;
+  }
+  .side-stop-link:hover .side-stop-name,
+  .side-stop.is-active .side-stop-name {
+    opacity: 1;
+    max-width: 22ch;
+    transform: translateX(0);
+  }
+  .side-day-roman { display: none; }
+}
+
+/* Reserve left gutter so stop content doesn't slide under the rail */
+@media (min-width: 720px) {
+  .stop { padding-left: max(8vw, 200px); }
+}
+@media (min-width: 1080px) {
+  .stop { padding-left: max(8vw, 230px); }
+}
+
+/* Hide entirely on small screens — no room without compromising content */
+@media (max-width: 640px) {
+  .side-timeline { display: none; }
+}
+
+/* Reduced motion: no slide-in */
+@media (prefers-reduced-motion: reduce) {
+  .side-timeline { transform: translate(0, -50%); transition: opacity 0.2s; }
+  .side-stop-link, .side-stop-dot, .side-stop-name { transition: none; }
+}
+
 /* ─── Map overlay ─────────────────────────────────────────────── */
 
 .map-toggle {

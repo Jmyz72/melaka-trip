@@ -1,87 +1,80 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in this repo.
 
 ## What this is
 
-A single-page static site for a 3-day-2-night Melaka trip (22–24 May 2026). Vanilla ES modules — **no bundler, no package manager, no build step for the app itself**. Hosting is GitHub Pages; Firestore is used only for the public vote counts on each place. The PDF in the repo root is the original source the data was hand-curated from.
+A single-page static site documenting a 3-day Melaka trip (22–24 May 2026).
+**Memory book**: photos, videos, ratings on a vertical per-day timeline anchored
+by a sticky watercolor map. Single curator (Carson); contributions come in via
+the `tools/add-stop.mjs` script, not via the website.
+
+No bundler. Vanilla ES modules. Hosted on GitHub Pages — `git push origin main`
+deploys.
 
 ## Commands
 
 ```bash
-# Serve locally (open http://localhost:8000/)
-python3 -m http.server 8000
-
-# Run tests (node:test, no test runner dep)
-node --test tests/
-node --test tests/hours.test.mjs                 # single file
-node --test tests/ --test-name-pattern="closing"  # by name
-
-# Regenerate places.json from places.raw.json (resolves maps short URLs → lat/lng)
-node tools/build-places.mjs
-
-# Refresh real Google drive times → lib/drives.json (optional; ~$4 of free credit)
-GOOGLE_MAPS_API_KEY=AIza... node tools/precompute-drives.mjs
-
-# Add a new place end-to-end (Places API search + photo download + JSON insert)
-# Needs GOOGLE_PLACES_API_KEY in .env.local
-node tools/add-place.mjs <id> "<query>" <section> <category> <mealType> <day> <order>
-
-# Refresh photos for some/all places (writes images/{id}.jpg, updates places.json)
-node tools/fetch-photos.mjs [id1 id2 ...]
+python3 -m http.server 8000         # serve at http://localhost:8000/
+node --test tests/*.mjs             # run all tests
+node tools/add-stop.mjs [flags]     # add or update a stop (see README.md)
 ```
-
-There's no linter, formatter, or CI configured. Tests are the only automated gate; run them after any data or `lib/` change.
 
 ## Architecture
 
-### Data flow
+`memories.json` is the only runtime data file. The app:
 
-`places.raw.json` (hand-edited, no coords) → `tools/build-places.mjs` (resolves `maps.app.goo.gl` shortlinks) → **`places.json`** (single runtime source of truth, with `lat`/`lng` and `photo` filled in).
+1. `app.js` fetches `memories.json`, calls `lib/render.mjs` to mount day sections.
+2. `lib/render.mjs` filters out stops with no media, groups by `day`, sorts by
+   `order`, emits day headings + stop cards with a dot on a vertical red line.
+3. `lib/map.mjs` mounts a Leaflet map with numbered red pins + polyline.
+   Clicking a pin smooth-scrolls to that stop's card.
+4. `lib/gallery.mjs` decides each tile's grid span via `sizeFor()` (landscape →
+   2 cols, portrait → 2 rows, else 1×1). Tapping a tile opens the lightbox.
+5. `lib/lightbox.mjs` is a single global overlay; swipe / arrow keys to navigate,
+   ESC to close.
+6. `lib/name.mjs` exposes `splitName()` for bilingual names like
+   `"Jonker Walk 鸡场街"` → `{ main: "Jonker Walk", cn: "鸡场街" }`.
 
-At load time `app.js`:
-1. Fetches `places.json`.
-2. Tries to fetch `lib/drives.json` and calls `setDriveTable()` — absence is fine, `driveMinutes()` falls back to a haversine heuristic in `lib/timeline.mjs`.
-3. Subscribes to the Firestore `votes` collection for live vote counts.
+## Data shape
 
-Pure logic lives in `lib/` and is unit-tested in `tests/`:
-- `lib/grouping.mjs` — `groupByDay`, `sortDaySchedule`, `getAlternatives`.
-- `lib/timeline.mjs` — schedule construction with `DAY_START_MIN`, `MEAL_START_MIN` anchors, dwell times, and the haversine/Google-drive override.
-- `lib/hours.mjs` — pragmatic free-text hours parser. Returns `{ parsed: false }` for messy strings; supports per-day chunks, midnight-wrap (`close > 1440`), `(Tue closed)` exclusions, and `until 5pm` shorthand. `checkVisit()` returns one of `open / closing-soon / closed-today / arrive-before-open / between-service / arrive-after-close / unknown`.
+Each entry in `memories.json`:
 
-`app.js` (~1000 lines, single file) owns all rendering. Day-of-week is hard-coded for the trip dates in `TRIP_DAYS` (Fri/Sat/Sun = dow 5/6/7).
+```json
+{
+  "id": "jonker-walk",
+  "name": "Jonker Walk 鸡场街",
+  "day": 1,
+  "order": 3,
+  "time": "14:30",
+  "lat": 2.1956,
+  "lng": 102.2486,
+  "mapsUrl": "https://maps.app.goo.gl/...",
+  "rating": 4,
+  "media": [
+    { "src": "media/jonker-walk/01.jpg", "type": "photo", "w": 1600, "h": 1200 },
+    { "src": "media/jonker-walk/02.mp4", "type": "video", "poster": "media/jonker-walk/02-thumb.jpg", "w": 1920, "h": 1080 }
+  ]
+}
+```
 
-### Place schema
-
-Validated in `tests/data.test.mjs`. Key fields and the valid values:
-- `category` ∈ `food | entertainment | souvenir | airbnb`
-- `section` ∈ `entertainment | zapbalang | jonker | airbnb` (original PDF groupings)
-- `mealType` ∈ `breakfast | lunch | dinner | snack | dessert | late-night | drinks | souvenir | entertainment | stay | night-market`
-- `day` ∈ `1 | 2 | 3 | null`, `order` is a number used to sort within a day
-- Optional overrides: `dwellMin` (custom dwell), `minArriveMin` (hard "no earlier than" floor — e.g. Airbnb check-in)
-- `committed: true` marks an entry as already booked/non-negotiable
-
-### Committed vs. candidate slots (the voting model)
-
-Within a day, each `mealType` is one **slot**. A place with `committed: true` gets its own timeline row and is **not part of the vote** (`computeLeaderId` and the day-view splitter both filter it out). Non-committed places compete inside their slot: sorted by vote count, then by open-on-trip-day (closed places sink), then by `order`. The top one is the featured "leader"; the rest render as contender thumbnails.
-
-`applyVoteSnapshot` runs on every Firestore push. It **always** does a cheap button refresh, but only triggers a full re-render when a leader actually flips — `currentLeaders` (keyed `${day}:${meal}`) tracks the previous state so we don't blow away ~120 DOM nodes (and Leaflet maps) on every vote tick.
-
-### Firestore + auth
-
-No real auth. Each browser mints a UUID into `localStorage.melaka_uid` on first load. Writes go to `votes/{placeId}` with shape `{ voters: [uid, ...] }` (`arrayUnion` / `arrayRemove`). `firestore.rules` is the only safety net — it locks the doc id to `^[a-z0-9-]{1,40}$`, restricts the field set to `voters`, and caps the array at 50. **If you add a new place id, make sure it matches that regex** or writes will be silently rejected. The Firebase API key in `app.js` is a public web-SDK identifier; do not treat it as a secret.
-
-### Drive times
-
-Two-tier system. `driveMinutes(a, b)` first looks up the pair in the override table built from `lib/drives.json` (real Google Routes API durations for `${fromId}__${toId}`). Falls back to a haversine heuristic: `<15 km` uses a Melaka-city formula (~17 km/h equivalent with parking buffer), longer assumes highway. The precompute script splits the 29×29 matrix into two batches (Routes API caps at 625 elements per request) and uses `TRAFFIC_AWARE` with `departureTime: 2026-05-22T08:00:00+08:00` — rerun closer to the trip for fresher predictions.
+Validated in `tests/data.test.mjs`: id format `^[a-z0-9-]{1,40}$` and unique,
+`day ∈ {1,2,3}`, `time` matches `HH:MM`, lat/lng in Peninsular Malaysia,
+`rating ∈ 1..5`, every media path exists on disk, video posters exist.
 
 ## Conventions and gotchas
 
-- **Always edit `places.raw.json`, not `places.json` directly.** Re-run `node tools/build-places.mjs` to refill coordinates from the maps shortlinks. `places.json` is treated as generated.
-- After data edits, run `node --test tests/` — `data.test.mjs` catches bad `category` / `section` / `mealType` values, missing GPS, duplicate ids, and ensures days 1–2 each have a dinner.
-- `node tools/precompute-drives.mjs` is **idempotent** (only writes if the table differs) and pulls coords from `places.json`, so run it *after* `build-places.mjs` whenever you add or move a place.
-- Bilingual names: `splitName()` expects `<CJK> <Latin>` or `<Latin> <CJK>` — the leading/trailing CJK run becomes `cn`, the rest becomes `main`. Mixed-script middles defeat the split and fall back to the original.
-- Times throughout `lib/` are **minutes from midnight**. Intervals spanning midnight have `close > 1440` (e.g. `5pm–2am` → `close = 1560`); call sites must handle that.
-- Meals are anchored: a `breakfast` stop will never start before 10:00 even if the day starts earlier (a "wait" appears in the schedule). See `MEAL_START_MIN` in `lib/timeline.mjs`.
-- `lib/drives.json` is generated. Don't hand-edit it.
-- `firebase.json` only references `firestore.rules` — there is no `hosting` config and Firebase Hosting is not used. Deploy is "push to `main` → GitHub Pages".
+- **`memories.json` is hand-curated only via `add-stop.mjs`** — never invent
+  entries; the script is the source of truth for ID format, file paths, and
+  poster generation.
+- **Always commit `memories.json` + `media/<id>/` together.** A new entry that
+  points to media files that aren't in git breaks the live site.
+- **`splitName()` requires `<CJK> <Latin>` or `<Latin> <CJK>`** — mixed-middle
+  strings fall back to `{ cn: null, main: original }`.
+- **Map tiles** come from Stadia's Stamen Watercolor endpoint. If unauthenticated
+  requests get rate-limited later, switch to OSM with a sepia CSS filter (see
+  spec for details).
+- **Videos commit to the repo.** Acceptable up to ~1 GB total; if it bloats
+  further, revisit Cloudflare R2 or GitHub Releases per the design spec.
+- **Tests are the only gate** — no CI, no linter. Run `node --test tests/*.mjs`
+  after any change to `memories.json`, `lib/`, or the tools.

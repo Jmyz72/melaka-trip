@@ -1,8 +1,9 @@
-import { renderDays } from "./lib/render.mjs";
+import { renderDays, applyRatingForStop } from "./lib/render.mjs";
 import { mountGallery } from "./lib/gallery.mjs";
 import { openLightbox } from "./lib/lightbox.mjs";
 import { splitName } from "./lib/name.mjs";
 import { mountMap } from "./lib/map.mjs";
+import { subscribeAll, setRating } from "./lib/ratings.mjs";
 
 async function main() {
   const memories = await fetch("memories.json").then(r => r.json());
@@ -33,6 +34,25 @@ async function main() {
       openLightbox(s.media, i, splitName(s.name).main);
     });
   }
+
+  // Live ratings subscription
+  subscribeAll((map) => {
+    for (const stop of stops) {
+      const summary = map.get(stop.id) || { my: null, avg: null, count: 0 };
+      applyRatingForStop(stop.id, summary);
+    }
+  });
+
+  // Delegated click handler for star buttons
+  timeline.addEventListener("click", (e) => {
+    const btn = e.target.closest(".star");
+    if (!btn) return;
+    const stopId = btn.dataset.id;
+    const stars = Number(btn.dataset.star);
+    setRating(stopId, stars).catch(err => {
+      console.error("rating write failed:", err);
+    });
+  });
 }
 
 main().catch(err => {

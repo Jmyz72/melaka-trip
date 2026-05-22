@@ -6,6 +6,35 @@ import { spawnSync } from "node:child_process";
 import { resolveCoords } from "./lib/resolve-maps.mjs";
 import { importMedia } from "./lib/media-import.mjs";
 import { firstPhoto, readExif } from "./lib/exif.mjs";
+import { splitName } from "../lib/name.mjs";
+
+// Regenerate the STOPS array in lib/cover-3d.mjs from the current sorted
+// memories. The postcard hero renders pins from this list; without sync it
+// would silently drift behind memories.json every time a stop is added.
+// Failures here log a warning but don't abort — the user can sync by hand.
+async function syncCoverStops(memories) {
+  const path = "lib/cover-3d.mjs";
+  let src;
+  try { src = await readFile(path, "utf8"); }
+  catch (err) {
+    console.warn(`⚠ Could not read ${path} for sync: ${err.message}`);
+    return;
+  }
+  const lines = memories.map((m, i) => {
+    const { main } = splitName(m.name);
+    // Keep comment to ASCII so the source file stays readable in plain editors
+    const safe = (main || m.id).replace(/[^\x20-\x7E]/g, "").trim() || m.id;
+    return `  { lat: ${(+m.lat).toFixed(5)}, lng: ${(+m.lng).toFixed(5)}, n: ${i + 1} }, // ${safe}`;
+  }).join("\n");
+  const block = `const STOPS = [\n${lines}\n];`;
+  const next = src.replace(/const STOPS = \[[\s\S]*?\n\];/, block);
+  if (next === src) {
+    console.warn(`⚠ Could not locate STOPS array in ${path} — postcard map not updated`);
+    return;
+  }
+  await writeFile(path, next);
+  console.log(`Synced ${path} STOPS array (${memories.length} stops)`);
+}
 
 function parseFlags(args) {
   const out = {};
@@ -103,6 +132,9 @@ async function main() {
   const { renameSync } = await import("node:fs");
   renameSync(tmp, "memories.json");
 
+  // Keep the postcard hero's STOPS array in sync with memories.json
+  await syncCoverStops(memories);
+
   // Run the data test as a sanity check
   console.log("Running data tests…");
   const result = spawnSync("node", ["--test", "tests/data.test.mjs"], { stdio: "inherit" });
@@ -112,7 +144,7 @@ async function main() {
   }
 
   console.log(`\n✓ Added/updated "${id}". Next:`);
-  console.log(`  git add memories.json media/${id}/`);
+  console.log(`  git add memories.json media/${id}/ lib/cover-3d.mjs`);
   console.log(`  git commit -m "memories: ${id}"`);
 }
 

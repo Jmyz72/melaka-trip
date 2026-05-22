@@ -497,7 +497,6 @@ body::before {
   position: fixed;
   top: 50%;
   left: 28px;
-  transform: translateY(-50%);
   z-index: 55;
   max-height: 88vh;
   max-height: 88dvh;
@@ -507,14 +506,20 @@ body::before {
   scrollbar-width: none;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.7s ease, transform 0.7s ease;
   transform: translate(-12px, -50%);
+  /* Default = fade-out direction: gentle 0.6s glide back to invisible. */
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .side-timeline::-webkit-scrollbar { display: none; }
-.side-timeline.is-visible {
+/* Rail surfaces only while the user is scrolling — applies at every viewport.
+   `is-visible` is set after the cover scrolls past; `is-scrolling` is added on
+   each scroll event and cleared ~700ms after motion stops. Fade-IN is faster
+   (0.18s) so quick scroll flicks reach full opacity instead of half-rendering. */
+.side-timeline.is-visible.is-scrolling {
   opacity: 1;
   pointer-events: auto;
   transform: translate(0, -50%);
+  transition-duration: 0.18s;
 }
 
 /* The hand-drawn vermillion spine, behind every dot */
@@ -700,47 +705,14 @@ body::before {
   .side-day-roman { display: none; }
 }
 
-/* Reserve left gutter so stop content doesn't slide under the rail */
-@media (min-width: 720px) {
-  .stop { padding-left: max(8vw, 200px); }
-}
-@media (min-width: 1080px) {
-  .stop { padding-left: max(8vw, 230px); }
-}
-
-/* Phone: rail overlaps content, surfaces only while scrolling. A soft paper
-   tint fades from the rail outward so dots/names stay legible without a
-   hard card edge. Tap a stop to jump; the rail then fades back out. */
+/* Phone: rail stays transparent (no card backdrop), just compact sizing so
+   dots + active name fit without crowding the photo. Show-while-scrolling
+   behaviour is inherited from the base rules. */
 @media (max-width: 640px) {
   .side-timeline {
-    left: 0;
-    padding: 14px 28px 14px 10px;
-    background: linear-gradient(
-      to right,
-      rgba(244, 234, 213, 0.92) 0%,
-      rgba(244, 234, 213, 0.78) 55%,
-      rgba(244, 234, 213, 0.0) 100%
-    );
-    border-radius: 0 10px 10px 0;
-    box-shadow: 0 12px 30px -18px rgba(58, 50, 30, 0.35);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    transition: opacity 0.45s ease, transform 0.45s ease;
+    left: 14px;
+    padding: 14px 0;
   }
-  /* Override desktop's .is-visible rule: on phone, is-visible alone is not
-     enough — we also require is-scrolling. Same specificity (0,2,0) so the
-     later media-query declaration wins by source order. */
-  .side-timeline.is-visible {
-    opacity: 0;
-    pointer-events: none;
-    transform: translate(-6px, -50%);
-  }
-  .side-timeline.is-visible.is-scrolling {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(0, -50%);
-  }
-  .side-timeline-rail { left: 14px; }
   .side-stop-link {
     grid-template-columns: 28px auto auto;
     gap: 8px;

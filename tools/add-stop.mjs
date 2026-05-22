@@ -60,16 +60,22 @@ async function main() {
   const time = flags.time ?? exif.time ?? await prompt(rl, "time (HH:MM)", {
     validate: v => /^[0-2]\d:[0-5]\d$/.test(v) ? null : "must be HH:MM"
   });
-  const exifLatLng = exif.lat != null ? `${exif.lat},${exif.lng}` : undefined;
-  const mapsInput = flags.maps ?? exifLatLng ?? await prompt(rl, "maps URL or lat,lng");
+  // Coords: EXIF is the truth (where you actually took the photo).
+  // Only fall back to URL/prompt resolution when EXIF lacks GPS.
+  let lat, lng;
+  if (exif.lat != null) {
+    lat = exif.lat; lng = exif.lng;
+  } else {
+    const input = flags.maps ?? await prompt(rl, "maps URL or lat,lng");
+    ({ lat, lng } = await resolveCoords(input));
+  }
+
+  // Display URL: --maps if it's an https link; else a generic search on coords.
+  const mapsUrl = (flags.maps && flags.maps.startsWith("https://"))
+    ? flags.maps
+    : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
   rl.close();
-
-  // Resolve coords (handles short URLs, long URLs, or "lat,lng" pairs).
-  const { lat, lng } = await resolveCoords(mapsInput);
-  const mapsUrl = mapsInput.startsWith("https://")
-    ? mapsInput
-    : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
   // Import media
   console.log(`Importing media from ${mediaDir}…`);

@@ -111,6 +111,13 @@
         "type": "photo",
         "w": 3024,
         "h": 4032
+      },
+      {
+        "src": "media/wildseed-cafe/09.mp4",
+        "type": "video",
+        "poster": "media/wildseed-cafe/09-thumb.jpg",
+        "w": 480,
+        "h": 854
       }
     ]
   },

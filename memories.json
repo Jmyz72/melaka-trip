@@ -113,5 +113,23 @@
         "h": 4032
       }
     ]
+  },
+  {
+    "id": "loklok",
+    "name": "Loklok 啰啰",
+    "day": 1,
+    "order": 6,
+    "time": "21:00",
+    "lat": 2.198519,
+    "lng": 102.2278814,
+    "mapsUrl": "https://maps.app.goo.gl/nKiWWDsxXxPTzJo79",
+    "media": [
+      {
+        "src": "media/loklok/01.jpg",
+        "type": "photo",
+        "w": 244,
+        "h": 183
+      }
+    ]
   }
 ]

@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Per-stop rating doc. id matches the stop id format.
+    match /ratings/{placeId} {
+      allow read: if true;
+
+      // Writes must:
+      //  - target a valid place id
+      //  - touch only the `by` map
+      //  - keep total rater count <= 100
+      //  - every value in `by` must be an integer 1..5
+      allow write: if placeId.matches('^[a-z0-9-]{1,40}$')
+                   && request.resource.data.keys().hasOnly(['by'])
+                   && request.resource.data.by is map
+                   && request.resource.data.by.size() <= 100
+                   && request.resource.data.by.values().toSet()
+                        .difference([1,2,3,4,5].toSet()).size() == 0;
+    }
+
+    // Lock everything else.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

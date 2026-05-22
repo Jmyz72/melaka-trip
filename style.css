@@ -708,9 +708,68 @@ body::before {
   .stop { padding-left: max(8vw, 230px); }
 }
 
-/* Hide entirely on small screens — no room without compromising content */
+/* Phone: rail overlaps content, surfaces only while scrolling. A soft paper
+   tint fades from the rail outward so dots/names stay legible without a
+   hard card edge. Tap a stop to jump; the rail then fades back out. */
 @media (max-width: 640px) {
-  .side-timeline { display: none; }
+  .side-timeline {
+    left: 0;
+    padding: 14px 28px 14px 10px;
+    background: linear-gradient(
+      to right,
+      rgba(244, 234, 213, 0.92) 0%,
+      rgba(244, 234, 213, 0.78) 55%,
+      rgba(244, 234, 213, 0.0) 100%
+    );
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 12px 30px -18px rgba(58, 50, 30, 0.35);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  /* Override desktop's .is-visible rule: on phone, is-visible alone is not
+     enough — we also require is-scrolling. Same specificity (0,2,0) so the
+     later media-query declaration wins by source order. */
+  .side-timeline.is-visible {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-6px, -50%);
+  }
+  .side-timeline.is-visible.is-scrolling {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(0, -50%);
+  }
+  .side-timeline-rail { left: 14px; }
+  .side-stop-link {
+    grid-template-columns: 28px auto auto;
+    gap: 8px;
+    padding: 3px 0;
+  }
+  .side-stop-time {
+    font-size: 8px;
+    letter-spacing: 0.14em;
+  }
+  /* Hide name by default on phone; surface for active stop only */
+  .side-stop-name {
+    display: inline-block;
+    opacity: 0;
+    max-width: 0;
+    transform: translateX(-2px);
+    font-size: 12px;
+    transition: opacity 0.3s ease, max-width 0.3s ease, transform 0.3s ease;
+  }
+  .side-stop.is-active .side-stop-name {
+    opacity: 1;
+    max-width: 18ch;
+    transform: translateX(0);
+  }
+  .side-day {
+    padding-left: 32px;
+    margin: 10px 0 4px;
+  }
+  .side-day-num { font-size: 18px; }
+  .side-day-roman { display: none; }
 }
 
 /* Reduced motion: no slide-in */

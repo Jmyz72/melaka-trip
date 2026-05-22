@@ -135,10 +135,6 @@ html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); fo
   letter-spacing: 1px;
   color: var(--muted);
 }
-.stop-stars {
-  font-size: 13px;
-  color: var(--gold);
-}
 .stop-name {
   margin: 0;
   font-size: 22px;
@@ -259,4 +255,36 @@ html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); fo
   .day-line::before { left: 26px; }
   .stop-dot { left: -27px; }
   .stop-gallery { grid-auto-rows: 64px; }
+}
+
+/* ─── Rating ──────────────────────────────── */
+.rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.rating-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+.star {
+  background: none;
+  border: 0;
+  padding: 0 2px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+}
+.star.filled { color: var(--gold); }
+.rating-stars:hover .star { color: var(--gold); opacity: 0.6; }
+.rating-stars:hover .star:hover ~ .star { color: var(--muted); opacity: 1; }
+.rating-stars:hover .star:hover { opacity: 1; }
+.rating-avg {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--muted);
 }

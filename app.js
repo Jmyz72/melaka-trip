@@ -9,12 +9,23 @@ async function main() {
   const timeline = document.getElementById("timeline");
   const stops = renderDays(memories, timeline);
 
-  mountMap(document.getElementById("map"), stops, {
+  const map = mountMap(document.getElementById("map"), stops, {
     onPinClick: (s) => {
       const card = document.getElementById(`stop-${s.id}`);
       if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   });
+
+  const mapEl = document.getElementById("map");
+  let shrunk = false;
+  window.addEventListener("scroll", () => {
+    const should = window.scrollY > window.innerHeight * 0.3;
+    if (should !== shrunk) {
+      shrunk = should;
+      mapEl.classList.toggle("shrunk", shrunk);
+      if (map) map.invalidateSize();
+    }
+  }, { passive: true });
 
   for (const stop of stops) {
     const container = timeline.querySelector(`.stop-gallery[data-id="${stop.id}"]`);

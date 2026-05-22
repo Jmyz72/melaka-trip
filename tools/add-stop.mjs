@@ -5,6 +5,7 @@ import { stdin, stdout, argv } from "node:process";
 import { spawnSync } from "node:child_process";
 import { resolveCoords } from "./lib/resolve-maps.mjs";
 import { importMedia } from "./lib/media-import.mjs";
+import { firstPhoto, readExif } from "./lib/exif.mjs";
 
 function parseFlags(args) {
   const out = {};
@@ -36,23 +37,45 @@ async function main() {
     validate: v => /^[a-z0-9-]{1,40}$/.test(v) ? null : "must match ^[a-z0-9-]{1,40}$"
   });
   const name = flags.name ?? await prompt(rl, "name (EN + 中文)");
+  const mediaDir = flags.media ?? await prompt(rl, "media folder path");
+
+  // Read EXIF from the first photo in the folder to seed prompt defaults.
+  let exif = { time: null, lat: null, lng: null, day: null };
+  const probe = await firstPhoto(mediaDir).catch(() => null);
+  if (probe) {
+    exif = await readExif(probe);
+    if (exif.time || exif.day || exif.lat != null) {
+      const bits = [];
+      if (exif.day) bits.push(`day ${exif.day}`);
+      if (exif.time) bits.push(exif.time);
+      if (exif.lat != null) bits.push(`${exif.lat.toFixed(5)},${exif.lng.toFixed(5)}`);
+      console.log(`📷 EXIF defaults from ${probe.split("/").pop()}: ${bits.join(" · ")}`);
+    }
+  }
+
   const day = Number(flags.day ?? await prompt(rl, "day (1/2/3)", {
+    default: exif.day != null ? String(exif.day) : undefined,
     validate: v => ["1","2","3"].includes(v) ? null : "must be 1, 2, or 3"
   }));
   const time = flags.time ?? await prompt(rl, "time (HH:MM)", {
+    default: exif.time ?? undefined,
     validate: v => /^[0-2]\d:[0-5]\d$/.test(v) ? null : "must be HH:MM"
   });
   const rating = Number(flags.rating ?? await prompt(rl, "rating (1-5)", {
     validate: v => ["1","2","3","4","5"].includes(v) ? null : "must be 1..5"
   }));
-  const mapsInput = flags.maps ?? await prompt(rl, "maps URL or lat,lng");
-  const mediaDir = flags.media ?? await prompt(rl, "media folder path");
+  const exifLatLng = exif.lat != null ? `${exif.lat},${exif.lng}` : undefined;
+  const mapsInput = flags.maps ?? await prompt(rl, "maps URL or lat,lng", {
+    default: exifLatLng
+  });
 
   rl.close();
 
-  // Resolve coords
+  // Resolve coords (handles short URLs, long URLs, or "lat,lng" pairs).
   const { lat, lng } = await resolveCoords(mapsInput);
-  const mapsUrl = mapsInput.startsWith("https://") ? mapsInput : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  const mapsUrl = mapsInput.startsWith("https://")
+    ? mapsInput
+    : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
   // Import media
   console.log(`Importing media from ${mediaDir}…`);
@@ -77,7 +100,7 @@ async function main() {
   // Write atomically: write to temp, then rename
   const tmp = "memories.json.tmp";
   await writeFile(tmp, JSON.stringify(memories, null, 2) + "\n");
-  const { renameSync, unlinkSync } = await import("node:fs");
+  const { renameSync } = await import("node:fs");
   renameSync(tmp, "memories.json");
 
   // Run the data test as a sanity check

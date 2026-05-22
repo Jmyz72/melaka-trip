@@ -138,5 +138,43 @@
         "h": 183
       }
     ]
+  },
+  {
+    "id": "late-night",
+    "name": "Late Night 深夜",
+    "day": 2,
+    "order": 1,
+    "time": "01:00",
+    "lat": 2.1966638888888887,
+    "lng": 102.23116388888889,
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.1966638888888887,102.23116388888889",
+    "media": [
+      {
+        "src": "media/late-night/01.mp4",
+        "type": "video",
+        "poster": "media/late-night/01-thumb.jpg",
+        "w": 480,
+        "h": 854
+      },
+      {
+        "src": "media/late-night/02.mp4",
+        "type": "video",
+        "poster": "media/late-night/02-thumb.jpg",
+        "w": 480,
+        "h": 854
+      },
+      {
+        "src": "media/late-night/03.jpg",
+        "type": "photo",
+        "w": 2316,
+        "h": 3088
+      },
+      {
+        "src": "media/late-night/04.jpg",
+        "type": "photo",
+        "w": 3024,
+        "h": 4032
+      }
+    ]
   }
 ]

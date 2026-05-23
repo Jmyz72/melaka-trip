@@ -142,54 +142,6 @@
         "type": "photo",
         "w": 1600,
         "h": 2133
-      },
-      {
-        "src": "media/loklok/03.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 1200
-      },
-      {
-        "src": "media/loklok/04.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 2133
-      },
-      {
-        "src": "media/loklok/05.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 1200
-      },
-      {
-        "src": "media/loklok/06.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 1600
-      },
-      {
-        "src": "media/loklok/07.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 2133
-      },
-      {
-        "src": "media/loklok/08.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 900
-      },
-      {
-        "src": "media/loklok/09.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 1200
-      },
-      {
-        "src": "media/loklok/10.jpg",
-        "type": "photo",
-        "w": 1600,
-        "h": 1200
       }
     ]
   },

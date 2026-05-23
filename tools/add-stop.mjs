@@ -27,9 +27,14 @@ async function syncCoverStops(memories) {
     return `  { lat: ${(+m.lat).toFixed(5)}, lng: ${(+m.lng).toFixed(5)}, n: ${i + 1} }, // ${safe}`;
   }).join("\n");
   const block = `const STOPS = [\n${lines}\n];`;
-  const next = src.replace(/const STOPS = \[[\s\S]*?\n\];/, block);
-  if (next === src) {
+  const re = /const STOPS = \[[\s\S]*?\n\];/;
+  if (!re.test(src)) {
     console.warn(`⚠ Could not locate STOPS array in ${path} — postcard map not updated`);
+    return;
+  }
+  const next = src.replace(re, block);
+  if (next === src) {
+    console.log(`${path} STOPS array already in sync`);
     return;
   }
   await writeFile(path, next);

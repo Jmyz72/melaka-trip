@@ -265,8 +265,10 @@ body::before {
 }
 @keyframes pageflip {
   0%   { transform: rotateY(0deg);   filter: brightness(1); }
-  50%  { transform: rotateY(90deg);  filter: brightness(0.7); }
-  100% { transform: rotateY(180deg); filter: brightness(1); }
+  25%  { transform: rotateY(90deg);  filter: brightness(0.7); }
+  50%  { transform: rotateY(180deg); filter: brightness(0.55); }
+  75%  { transform: rotateY(270deg); filter: brightness(0.7); }
+  100% { transform: rotateY(360deg); filter: brightness(1); }
 }
 
 /* ─── Stop section ─────────────────────────────────────────────── */

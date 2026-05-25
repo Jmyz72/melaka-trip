@@ -426,7 +426,7 @@
     "time": "11:30",
     "lat": 2.18473,
     "lng": 102.26013,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.18473,102.26013",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Mille%20Bakers%2C%20Jalan%20Melaka%20Raya%2015%2C%2075000%20Melaka",
     "media": [
       {
         "src": "media/la-mille-bakers/01.jpg",
@@ -444,7 +444,7 @@
     "time": "14:16",
     "lat": 2.19464,
     "lng": 102.25308,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.19464,102.25308",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Something%20Bakery%2C%2011%20Jalan%20Bukit%20Cina%2C%2075100%20Melaka",
     "media": [
       {
         "src": "media/something-bakery/02.jpg",

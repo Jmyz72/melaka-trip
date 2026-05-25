@@ -320,5 +320,151 @@
         "h": 4032
       }
     ]
+  },
+  {
+    "id": "seaside",
+    "name": "Seaside 海边",
+    "day": 2,
+    "order": 7,
+    "time": "17:48",
+    "lat": 2.1897916666666664,
+    "lng": 102.21981944444444,
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.1897916666666664,102.21981944444444",
+    "media": [
+      {
+        "src": "media/seaside/01.jpg",
+        "type": "photo",
+        "w": 3024,
+        "h": 4032
+      },
+      {
+        "src": "media/seaside/02.jpg",
+        "type": "photo",
+        "w": 3024,
+        "h": 4032
+      },
+      {
+        "src": "media/seaside/03.jpg",
+        "type": "photo",
+        "w": 3024,
+        "h": 4032
+      },
+      {
+        "src": "media/seaside/04.jpg",
+        "type": "photo",
+        "w": 1706,
+        "h": 2560
+      }
+    ]
+  },
+  {
+    "id": "hock-chin",
+    "name": "Hock Chin Seafood",
+    "day": 2,
+    "order": 8,
+    "time": "19:59",
+    "lat": 2.263247222222222,
+    "lng": 102.24213333333333,
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.263247222222222,102.24213333333333",
+    "media": [
+      {
+        "src": "media/hock-chin/01.jpg",
+        "type": "photo",
+        "w": 3024,
+        "h": 4032
+      }
+    ]
+  },
+  {
+    "id": "lim-jiu",
+    "name": "Lim Jiu 喝酒",
+    "day": 3,
+    "order": 1,
+    "time": "00:46",
+    "lat": 2.1966527777777776,
+    "lng": 102.23114722222222,
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.1966527777777776,102.23114722222222",
+    "media": [
+      {
+        "src": "media/lim-jiu/01.jpg",
+        "type": "photo",
+        "w": 3024,
+        "h": 4032
+      },
+      {
+        "src": "media/lim-jiu/02.mp4",
+        "type": "video",
+        "poster": "media/lim-jiu/02-thumb.jpg",
+        "w": 1920,
+        "h": 1080
+      },
+      {
+        "src": "media/lim-jiu/03.jpg",
+        "type": "photo",
+        "w": 1242,
+        "h": 2208
+      },
+      {
+        "src": "media/lim-jiu/04.jpg",
+        "type": "photo",
+        "w": 2560,
+        "h": 1920
+      },
+      {
+        "src": "media/lim-jiu/05.jpg",
+        "type": "photo",
+        "w": 2560,
+        "h": 1920
+      }
+    ]
+  },
+  {
+    "id": "la-mille-bakers",
+    "name": "La Mille Bakers",
+    "day": 3,
+    "order": 2,
+    "time": "10:00",
+    "lat": 2.18473,
+    "lng": 102.26013,
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.18473,102.26013",
+    "media": [
+      {
+        "src": "media/la-mille-bakers/01.jpg",
+        "type": "photo",
+        "w": 1242,
+        "h": 2208
+      }
+    ]
+  },
+  {
+    "id": "something-bakery",
+    "name": "Something Bakery",
+    "day": 3,
+    "order": 3,
+    "time": "14:30",
+    "lat": 2.19464,
+    "lng": 102.25308,
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=2.19464,102.25308",
+    "media": [
+      {
+        "src": "media/something-bakery/02.jpg",
+        "type": "photo",
+        "w": 1242,
+        "h": 2208
+      },
+      {
+        "src": "media/something-bakery/03.mp4",
+        "type": "video",
+        "poster": "media/something-bakery/03-thumb.jpg",
+        "w": 720,
+        "h": 1280
+      },
+      {
+        "src": "media/something-bakery/01.jpg",
+        "type": "photo",
+        "w": 1085,
+        "h": 1450
+      }
+    ]
   }
 ]

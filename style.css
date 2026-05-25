@@ -305,7 +305,7 @@ body::before {
 }
 
 .stop-title-wrap {
-  margin-bottom: 18px;
+  margin-bottom: 22px;
   max-width: 90vw;
 }
 .stop-title {
@@ -359,7 +359,7 @@ body::before {
   grid-template-columns: repeat(12, 1fr);
   grid-auto-rows: clamp(118px, 18vh, 168px);
   gap: 12px;
-  margin: 12px 0 18px;
+  margin: 18px 0 24px;
   min-height: 0;
   align-content: center;
 }
@@ -440,7 +440,7 @@ body::before {
   align-items: flex-end;
   gap: 20px;
   flex-wrap: wrap;
-  padding-top: 10px;
+  padding-top: 14px;
   border-top: var(--rule);
 }
 .stop-maps {
@@ -461,7 +461,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  gap: 7px;
 }
 .rating-label {
   font-family: var(--mono);
@@ -469,31 +469,58 @@ body::before {
   letter-spacing: 0.4em;
   color: var(--aged-soft);
   text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+/* Unrated: turn the prompt vermillion and let it breathe so the friend knows
+   the stars are theirs to tap. */
+.rating.is-unrated .rating-label {
+  color: var(--vermillion);
+  animation: rating-hint 2.6s ease-in-out infinite;
+}
+@keyframes rating-hint {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
 }
 .rating-stars {
   display: inline-flex;
-  gap: 4px;
+  gap: 5px;
+}
+/* Unrated star row gently bobs to invite a tap. Bob lives on the row, hover
+   scale lives on each star — so the two never fight. */
+.rating.is-unrated .rating-stars {
+  animation: rating-bob 2.8s ease-in-out infinite;
+}
+@keyframes rating-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
 }
 .star {
   background: none;
   border: 0;
-  padding: 0 2px;
+  padding: 2px 3px;
   margin: 0;
-  font-size: 26px;
+  font-size: 30px;
   line-height: 1;
   color: var(--ink-faint);
   cursor: pointer;
   font-family: inherit;
-  transition: color 0.15s ease, transform 0.1s ease;
+  transform-origin: center 72%;
+  transition: color 0.15s ease,
+              transform 0.18s cubic-bezier(0.2, 0.7, 0.2, 1),
+              text-shadow 0.2s ease;
 }
-.star.filled { color: var(--vermillion); }
-.star:hover { transform: scale(1.15); }
+.star.filled {
+  color: var(--vermillion);
+  text-shadow: 0 1px 7px rgba(200, 57, 43, 0.4);
+}
+.star:hover { transform: scale(1.2) translateY(-1px); }
+.star:active { transform: scale(0.9); }
 .rating-stars:hover .star { color: var(--vermillion); opacity: 0.5; }
 .rating-stars:hover .star:hover ~ .star { color: var(--ink-faint); opacity: 1; }
 .rating-stars:hover .star:hover { opacity: 1; }
 .rating-avg {
   font-family: var(--hand);
-  font-size: 15px;
+  font-size: 17px;
   color: var(--ink-soft);
 }
 .rating-count {
@@ -534,6 +561,17 @@ body::before {
   transition-duration: 0.18s;
 }
 
+/* Desktop (≥900px): content is pushed right into its own column, so the rail
+   has clear space — keep it persistently visible once past the cover instead
+   of fading out the moment scrolling stops. */
+@media (min-width: 900px) {
+  .side-timeline.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(0, -50%);
+  }
+}
+
 /* The hand-drawn vermillion spine, behind every dot */
 .side-timeline-rail {
   position: absolute;
@@ -546,14 +584,14 @@ body::before {
       to bottom,
       transparent 0,
       rgba(200, 57, 43, 0.0) 2%,
-      rgba(200, 57, 43, 0.55) 6%,
-      rgba(200, 57, 43, 0.85) 50%,
-      rgba(200, 57, 43, 0.55) 94%,
+      rgba(200, 57, 43, 0.7) 6%,
+      rgba(200, 57, 43, 0.95) 50%,
+      rgba(200, 57, 43, 0.7) 94%,
       rgba(200, 57, 43, 0.0) 98%,
       transparent 100%
     );
   border-radius: 1px;
-  filter: blur(0.3px) drop-shadow(0 0 4px rgba(200, 57, 43, 0.18));
+  filter: blur(0.3px) drop-shadow(0 0 4px rgba(200, 57, 43, 0.24));
 }
 .side-timeline-rail::before,
 .side-timeline-rail::after {

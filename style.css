@@ -961,6 +961,110 @@ body::before {
   margin-left: 2px;
 }
 
+/* ─── Home-base pin (collapsed co-located moments) ────────────── */
+
+.trip-pin-inner--home {
+  position: relative;
+  width: 36px; height: 36px;
+  background: var(--vermillion);
+  color: var(--paper);
+  border: 2px solid var(--paper);
+  box-shadow:
+    0 0 0 4px rgba(200, 57, 43, 0.16),
+    0 3px 8px rgba(0, 0, 0, 0.3);
+}
+.trip-pin-inner--home svg { display: block; }
+/* The ×N chip riding the pin's upper-right corner */
+.trip-pin-count {
+  position: absolute;
+  top: -7px; right: -8px;
+  min-width: 17px; height: 17px;
+  padding: 0 3px;
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--vermillion-deep);
+  border: 1.5px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+/* The base's permanent label carries the same ×N as a quiet trailing chip */
+.trip-tip-count {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--vermillion-deep);
+  border: 1px solid rgba(158, 42, 30, 0.4);
+  border-radius: 8px;
+  padding: 1px 5px;
+  margin-left: 2px;
+}
+
+/* Click-to-expand popup listing every moment spent at the base */
+.trip-popup .leaflet-popup-content-wrapper {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid rgba(29, 43, 79, 0.22);
+  border-radius: 4px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 14px 36px -16px rgba(58, 50, 30, 0.5);
+}
+.trip-popup .leaflet-popup-content { margin: 10px 12px; }
+.trip-popup .leaflet-popup-tip { background: var(--paper); }
+.trip-pop-head {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 8px;
+  white-space: nowrap;
+}
+.trip-pop-base {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--aged-soft);
+  margin-left: 4px;
+  vertical-align: 1px;
+}
+.trip-moment {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: 0;
+  border-top: 1px dotted rgba(58, 74, 120, 0.18);
+  padding: 5px 2px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.18s ease;
+}
+.trip-moment:hover { background: rgba(200, 57, 43, 0.07); }
+.trip-moment-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--aged-soft);
+  flex: 0 0 auto;
+  min-width: 38px;
+}
+.trip-moment-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.trip-moment:hover .trip-moment-name { color: var(--vermillion-deep); }
+
 /* ─── Audio toggle ────────────────────────────────────────────── */
 
 .audio-toggle {
